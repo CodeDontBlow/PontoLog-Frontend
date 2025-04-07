@@ -1,20 +1,19 @@
 :root {
-
     /* White */
     --base-white: #FFFFFF;
-    --white-700: #d9d9d9;
-    --white-500: #a6a6aa;
-    --white-300: #595959;
+    --white-700: #D3D8DF;
+    --white-500: #E2E5E9;
+    --white-300: #EBEDF0;
 
     /* Black */
     --base-black: #000000;
-    --black-700: #1a1a1a;
-    --black-500: #333333;
+    --black-700: #3A3731;
+    --black-500: #585041;
     --black-300: #4d4d4d;
 
     /* Navy */
     --base-navy: #01204e;
-    --navy-700: #2d4c6c;
+    --navy-700: #2D4C6C;
     --navy-500: #3c6d8d;
     --navy-300: #4c7d9d;
 
@@ -26,37 +25,37 @@
 
     /* Teal */
     --base-teal: #028391;
-    --teal-700: #66a8a8;
+    --teal-700: #16707A;
     --teal-500: #80B8B8;
     --teal-300: #A0D0D0;
 
     /* Sun */
     --base-sun: #F79F44;
-    --sun-700: #FEAE6F;
+    --sun-700: #D88938;
     --sun-500: #FDD080;
     --sun-300: #EBD29B;
 
     /* Pink */
     --base-pink: #D92B66;
-    --pink-700: #B91E4F;
+    --pink-700: #B81D4E;
     --pink-500: #F5A4C3;
     --pink-300: #F1A1B5;
 
     /* Green */
     --base-green: #14A538;
-    --green-700: #39B85C;
+    --green-700: #0B7E28;
     --green-500: #76D386;
     --green-300: #A9E6B4;
 
     /* Orange */
     --base-orange: #EB641C;
-    --orange-700: #F79F44;
+    --orange-700: #CB5110;
     --orange-500: #F2A65D;
     --orange-300: #F5C493;
 
     /* Purple */
     --base-purple: #731CA5;
-    --purple-700: #8B3CA7;
+    --purple-700: #541877;
     --purple-500: #9C5BB7; 
     --purple-300: #B88FD3;
 }
