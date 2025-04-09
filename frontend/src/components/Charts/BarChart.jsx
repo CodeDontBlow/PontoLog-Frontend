@@ -1,21 +1,24 @@
 import Chart from "react-apexcharts"
 import { useState } from "react";
 
-function BarChart({items , values}){
+function BarChart({items , values , chartTitle , colorPalette}){
     const [options] = useState (
         {
-            char: {
+            colors: colorPalette,
+            chart: {
                 id: "bar-chart",
-                type: "bar"
+                type: "bar",
+                height: "100px"
             },
-            fill: {
-                colors : "#D92B66"
+            title: {
+                text: chartTitle
             },
             xaxis: {
                 categories: items
             },
             plotOptions: {
                 bar: {
+                    barHeight: "50%",
                     borderRadius: 3,
                     borderRadiusApplication: "end",
                     horizontal: true,
@@ -29,6 +32,7 @@ function BarChart({items , values}){
 
     const [series] = useState([
         {
+            name: "Ocorrências",
             data: values
         }
     ])

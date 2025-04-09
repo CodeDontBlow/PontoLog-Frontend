@@ -1,33 +1,16 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+
 import './App.css'
+import BarChart from "./components/Charts/BarChart"
+import LineChart from "./components/Charts/LineChart"
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  let cores = ["#D92B66" , "#028391"]
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <BarChart items={["Rodoviária" , "Aquífera" , "Aérea"]} values={[412,213,123]} chartTitle="Principais Vias" colorPalette={cores}/>
+        <LineChart values={[[-323,323,-231,234,-123] , [342,232,232,2342,234]]} period={[2014,2015,2016,2017,2018,2019]} dataName={["Brasil" , "SP"]} chartTitle="Valor Agregado" colorPalette={cores}/>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }

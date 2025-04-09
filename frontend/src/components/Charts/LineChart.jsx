@@ -1,9 +1,11 @@
 import Chart from "react-apexcharts"
 import React , {useState} from 'react'
 
-function LineChart({period , values , dataName}) {
+const LineChart = ({period , values , dataName , chartTitle , colorPalette}) => {
+
     const [options] = useState(
         {
+            colors: colorPalette,
             chart:{
                 id: "line-chart",
                 type: "line",
@@ -11,21 +13,25 @@ function LineChart({period , values , dataName}) {
                     enabled: false
                 }
             },
+            title:{
+                text: chartTitle
+            },
             xaxis: {
                 categories: period
             },
             stroke : {
-                curve: "smooth",
-                colors : "#D92B66"
+                curve: "smooth"
             }
         }
     )
 
+    //Para aplicação dinâmica
     const [series] = useState([
         {
-            name: dataName,
-            data: values
-        }   
+            name: dataName[0],
+            data: values[0]
+        },
+        values.length === 2 ? { name: dataName[1], data: values[1] } : false
     ])
 
     return(
