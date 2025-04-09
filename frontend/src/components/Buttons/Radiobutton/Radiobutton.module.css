@@ -1,1 +1,8 @@
-r
+.radioButton {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: var(--base-pink);
+    accent-color: var(--base-pink);
+    font: var(--label-medium);
+}

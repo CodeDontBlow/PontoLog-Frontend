@@ -1,6 +1,6 @@
 import styles from './Checkbox.module.css'
 
-const Checkbox = ({ id, label = 'Default', value, checked, onClick, onChange }) => {
+const Checkbox = ({ id, label = 'Default', value, checked, onChange }) => {
   return (
     <div className={styles.checkboxContainer}>
       <input 
@@ -8,11 +8,10 @@ const Checkbox = ({ id, label = 'Default', value, checked, onClick, onChange }) 
         type="checkbox"  
         value={value}
         checked={checked} 
-        onClick={onClick} 
         onChange={onChange}
         />
 
-      <label htmlFor="checkbox" className={styles.label}> {label} </label>
+      <label htmlFor={id} className={styles.label}> {label} </label>
     </div>
   )
 }
