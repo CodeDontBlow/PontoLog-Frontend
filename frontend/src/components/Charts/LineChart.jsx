@@ -1,13 +1,13 @@
 import Chart from "react-apexcharts"
 import React , {useState} from 'react'
 
-const LineChart = ({period , values , dataName , chartTitle , colorPalette}) => {
+const LineChart = ({period , values , dataName , chartTitle , colorPalette , group}) => {
 
     const [options] = useState(
         {
             colors: colorPalette,
             chart:{
-                id: "line-chart",
+                group: group,
                 type: "line",
                 zoom : {
                     enabled: false
@@ -20,7 +20,8 @@ const LineChart = ({period , values , dataName , chartTitle , colorPalette}) => 
                 categories: period
             },
             stroke : {
-                curve: "smooth"
+                curve: "smooth",
+                width: "3"
             }
         }
     )
@@ -39,7 +40,6 @@ const LineChart = ({period , values , dataName , chartTitle , colorPalette}) => 
             options = {options}
             series = {series}
             type = "line"
-            width = "500"
         />
     )
 }

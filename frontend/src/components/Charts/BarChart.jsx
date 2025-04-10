@@ -4,29 +4,31 @@ import { useState } from "react";
 function BarChart({items , values , chartTitle , colorPalette}){
     const [options] = useState (
         {
-            colors: colorPalette,
             chart: {
-                id: "bar-chart",
-                type: "bar",
-                height: "100px"
-            },
-            title: {
-                text: chartTitle
+                type: 'bar',
+                height: "100%"
             },
             xaxis: {
                 categories: items
             },
+            title : {
+                text: chartTitle,
+            },
+            colors: colorPalette,
             plotOptions: {
                 bar: {
-                    barHeight: "50%",
-                    borderRadius: 3,
-                    borderRadiusApplication: "end",
+                    barHeight: '90%',
                     horizontal: true,
-                    dataLabels : {
-                        position: "top",
-                    }
+                    borderRadius: 4,
+                    borderRadiusApplication: 'end',
+                    dataLabels: {
+                        position: 'top',
+                    },
                 }
-            }
+            },
+            dataLabels: {
+                textAnchor: 'end'
+            },
         }
     )
 
@@ -42,7 +44,6 @@ function BarChart({items , values , chartTitle , colorPalette}){
             options = {options}
             series = {series}
             type = "bar"
-            width = "500"
         />
     )
 }
