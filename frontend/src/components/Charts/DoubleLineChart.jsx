@@ -1,8 +1,8 @@
 import Chart from "react-apexcharts"
 import React , {useState} from 'react'
 
-//GRÁFICO DE LINHA
-const LineChart = ({period , values , dataName , chartTitle , colorPalette , id , group}) => {
+//GRÁFICO DE DUAS LINHAS
+const DoubleLineChart = ({period , values , dataName , chartTitle , colorPalette}) => {
 
     //PROPS
     //period: Periodo de tempo (eixo x) [lista]
@@ -13,15 +13,13 @@ const LineChart = ({period , values , dataName , chartTitle , colorPalette , id 
     //id: identificador do gráfico, usado para agrupamento
     //group: grupo que o gráfico pertence (gráficos do mesmo grupo são visualmente melhor relacionados)
 
-    //Ex.: <LineChart values={[20,10,20,10,-10]} period={[2014,2015,2016,2017,2018]} dataName={"Valor Agregado"} chartTitle="Valor Agregado" colorPalette="#ff0011" id="id" group="grupo"/>
-
+    //Ex.: <DoubleLineChart values={[[10,-10,10,-10,-50] , [-10,10,-10,10,50]]} period={[2014,2015,2016,2017,2018]} dataName={["Brasil" , "SP"]} chartTitle="Comparação Valor Agregado" colorPalette="#ff0011" id="id" group="grupo"/>
+    
     //Opções de customização do gráfico
     const [options] = useState(
         {
             colors: colorPalette,
             chart:{
-                id: id,
-                group: group,
                 type: "line",
                 zoom : {
                     enabled: false
@@ -43,9 +41,13 @@ const LineChart = ({period , values , dataName , chartTitle , colorPalette , id 
     //Valores do gráfico
     const [series] = useState([
         { 
-            name:dataName, 
-            data: values,
+            name:dataName[0], 
+            data: values[0],
         },
+        {
+            name: dataName[1], 
+            data: values[1],
+        }
     ])
 
     //Componente de gráfico do ApexCharts recebendo os valores definidos acima
@@ -58,4 +60,4 @@ const LineChart = ({period , values , dataName , chartTitle , colorPalette , id 
     )
 }
 
-export default LineChart
+export default DoubleLineChart
