@@ -21,14 +21,6 @@ const regionColors = {
   Sul: "#731CA5",
 };
 
-const regionColorsDark = {
-  Norte: "#0B7E28",
-  Nordeste: "#CB5110",
-  "Centro-Oeste": "#D88938",
-  Sudeste: "#16707A",
-  Sul: "#541877",
-};
-
 const FitBoundsToRegion = ({ features }) => {
   const map = useMap();
 
@@ -60,74 +52,115 @@ const BrazilMap = () => {
     setRegions(grouped);
   }, []);
 
+  const getSelectedStateFeature = () => {
+    return Object.values(regions)
+      .flat()
+      .find((f) => f.properties.name === selectedState);
+  };
+
   const renderGeoJSON = () => {
-    if (selectedRegion) {
-      const regionColor = regionColors[selectedRegion];
-      const regionDark = regionColorsDark[selectedRegion];
+    if (selectedState) {
+      const feature = getSelectedStateFeature();
+      const region = regionMap[parseInt(feature.properties.regiao_id)];
+      const color = regionColors[region];
 
       return (
         <GeoJSON
-          key={`${selectedRegion}-${selectedState || "all"}`}
+          key={`state-${selectedState}`}
+          data={feature}
+          style={{
+            color: "#000",
+            weight: 1,
+            fillColor: color,
+            fillOpacity: 1,
+            cursor: "pointer",
+            transition: "fill 0.3s ease",
+          }}
+          onEachFeature={(feature, layer) => {
+            layer.on({
+              click: () => {
+                setSelectedRegion(null);
+                setSelectedState(null);
+              },
+            });
+            layer.bindPopup(feature.properties.name);
+          }}
+        />
+      );
+    }
+
+    if (selectedRegion) {
+      const regionColor = regionColors[selectedRegion];
+
+      return (
+        <GeoJSON
+          key={`region-${selectedRegion}`}
           data={{
             type: "FeatureCollection",
             features: regions[selectedRegion],
           }}
-          style={(feature) => {
-            const isSelected = feature.properties.name === selectedState;
-            return {
-              color: "#000",
-              weight: 1,
-              fillColor: isSelected ? regionDark : regionColor,
-              fillOpacity: 1,
-              cursor: "pointer",
-              transition: "fill 0.3s ease",
-            };
+          style={{
+            color: "#000",
+            weight: 1,
+            fillColor: regionColor,
+            fillOpacity: 1,
+            cursor: "pointer",
+            transition: "fill 0.3s ease",
           }}
           onEachFeature={(feature, layer) => {
             const stateName = feature.properties.name;
-
             layer.on({
               click: () => {
-                if (stateName === selectedState) {
-                  setSelectedRegion(null);
-                  setSelectedState(null);
-                } else {
-                  setSelectedState(stateName);
-                }
+                setSelectedState(stateName);
               },
             });
-
             layer.bindPopup(stateName);
           }}
         />
       );
+    }
+
+    return Object.entries(regions).map(([regionName, features], index) => (
+      <GeoJSON
+        key={index}
+        data={{
+          type: "FeatureCollection",
+          features,
+        }}
+        style={{
+          color: regionColors[regionName],
+          weight: 1,
+          fillColor: regionColors[regionName],
+          fillOpacity: 1,
+          cursor: "pointer",
+        }}
+        eventHandlers={{
+          click: (e) => {
+            e.originalEvent.stopPropagation();
+            setSelectedRegion(regionName);
+            setSelectedState(null);
+          },
+        }}
+        onEachFeature={(feature, layer) => {
+          layer.bindPopup(regionName);
+        }}
+      />
+    ));
+  };
+
+  const currentFeatures = selectedState
+    ? [getSelectedStateFeature()]
+    : selectedRegion
+    ? regions[selectedRegion]
+    : statesData.features;
+
+  const getDescriptionText = () => {
+    if (selectedState) {
+      return "Para desfazer a seleção de estado atual, clique no mapa acima.";
+    } else if (selectedRegion) {
+      return "Escolha um dos estados para analisar seus dados.";
     } else {
-      return Object.entries(regions).map(([regionName, features], index) => (
-        <GeoJSON
-          key={index}
-          data={{
-            type: "FeatureCollection",
-            features,
-          }}
-          style={{
-            color: regionColors[regionName],
-            weight: 1,
-            fillColor: regionColors[regionName],
-            fillOpacity: 1,
-            cursor: "pointer",
-          }}
-          eventHandlers={{
-            click: (e) => {
-              e.originalEvent.stopPropagation();
-              setSelectedRegion(regionName);
-              setSelectedState(null);
-            },
-          }}
-          onEachFeature={(feature, layer) => {
-            layer.bindPopup(regionName);
-          }}
-        />
-      ));
+      return "Para selecionar um estado, escolha uma das regiões do mapa acima.";
     }
   };
 
@@ -150,12 +183,7 @@ const BrazilMap = () => {
         zoomControl={false}
       >
         {renderGeoJSON()}
-
-        <FitBoundsToRegion
-          features={
-            selectedRegion ? regions[selectedRegion] : statesData.features
-          }
-        />
+        <FitBoundsToRegion features={currentFeatures} />
       </MapContainer>
 
       <div className="map-info">
@@ -164,9 +192,7 @@ const BrazilMap = () => {
         ) : selectedRegion ? (
           <h2>Região selecionada: {selectedRegion}</h2>
         ) : null}
-        <p className="map-description">
-          Para selecionar um estado, escolha uma das regiões do mapa acima
-        </p>
+        <p className="map-description">{getDescriptionText()}</p>
       </div>
     </div>
   );
