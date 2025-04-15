@@ -13,7 +13,7 @@ const regionMap = {
   5: "Centro-Oeste",
 };
 
-const regionColors = {
+export const regionColors = {
   Norte: "#14A538",
   Nordeste: "#EB641C",
   "Centro-Oeste": "#F79F44",
@@ -36,7 +36,7 @@ const FitBoundsToRegion = ({ features }) => {
   return null;
 };
 
-const BrazilMap = () => {
+const BrazilMap = ({ onRegionChange }) => {
   const [regions, setRegions] = useState({});
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
@@ -81,6 +81,7 @@ const BrazilMap = () => {
               click: () => {
                 setSelectedRegion(null);
                 setSelectedState(null);
+                onRegionChange?.(null); // limpa seleção no mundi
               },
             });
             layer.bindPopup(feature.properties.name);
@@ -139,6 +140,7 @@ const BrazilMap = () => {
             e.originalEvent.stopPropagation();
             setSelectedRegion(regionName);
             setSelectedState(null);
+            onRegionChange?.(regionName); // envia nome da região para o mapa mundi
           },
         }}
         onEachFeature={(feature, layer) => {
