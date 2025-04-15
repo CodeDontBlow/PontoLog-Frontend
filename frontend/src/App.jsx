@@ -1,11 +1,11 @@
 
 import './App.css'
 
-function App() {
+import RoutesApp from './routes'
 
+function App() {
   return (
-   <>
-   </>
+    <RoutesApp />
   )
 }
 
