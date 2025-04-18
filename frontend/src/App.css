@@ -5,38 +5,48 @@
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.map-description {
+  font-size: 16px;
+  color: #555;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.brazil-map-container {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  margin: 40px auto;
+  max-width: 900px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.map-info {
+  text-align: center;
+  padding: 16px;
 }
 
-.card {
-  padding: 2em;
+.map-info h2 {
+  margin: 0;
+  color: #333;
 }
 
-.read-the-docs {
-  color: #888;
+.map-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  margin: 2rem auto;
+  max-width: 1000px;
+}
+
+.map-title {
+  margin: 0;
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.map-subtitle {
+  color: #666;
+  margin-bottom: 1rem;
+  text-align: center;
 }
