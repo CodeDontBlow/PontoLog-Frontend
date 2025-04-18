@@ -1,27 +1,39 @@
-import { faChartLine, faBalanceScale, faInfoCircle } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+// importando bibliotecas necessários 
+import { faChartLine, faBalanceScale, faInfo } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
-import Button from '../Buttons/Button/Button'
+// importando components e assets necessários
+import Button from '../Buttons/Button/Button';
+import logoIcon from '../../assets/logos/LOGOSVG.svg';
 
-import styles from './Sidebar.module.css'
+
+
+import styles from './Sidebar.module.css';
 
 const Sidebar = () => {
+  
+  const navigate = useNavigate();
+
+  const handleClick = (route) => {
+    return (
+      navigate(route)
+    )
+  };
+
   return (
-    <div classname={styles.sidebar}>
+    <div className={styles.sidebar}>
       <div className={styles.logo}>
-        <img src="" alt="logo" />
-      </div>
+        <img src={logoIcon} alt="" />
+      </div>  
 
       <div className={styles.mainButtons}>
-        <Button variant={'Btn-icon'} icon={faChartLine} />
-        <Button variant={'Btn-icon'} icon={faBalanceScale} />
+        <Button variant={'Btn-icon'} icon={faChartLine} iconClassname={styles.navButtonIcon} className={styles.navButton} onClick={() => handleClick('/statistics')} />
+        <Button variant={'Btn-icon'} icon={faBalanceScale} iconClassname={styles.navButtonIcon} className={styles.navButton} onClick={() => handleClick('/comparison')} />
       </div>
 
-      <div className={styles.infoButton}>
-        <FontAwesomeIcon icon={faInfoCircle} className={styles.infoIcon} />
-      </div>
+      <Button variant={'Btn-icon'} icon={faInfo} iconClassname={styles.infoIcon} className={styles.infoButton} onClick={() => handleClick('/about')}/>
     </div>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;
