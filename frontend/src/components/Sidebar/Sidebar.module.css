@@ -33,6 +33,13 @@
     height: 3rem;
     background-color: var(--white-300);
 }
+.mainButtons .navButton.active, .infoButton.active {
+    background-color: var(--base-pink);
+}
+
+.mainButtons .navButton.active .navButtonIcon, .infoButton.active .infoIcon {
+    color: var(--pink-500);
+}
 
 .mainButtons .navButtonIcon, .infoIcon {
     width: 1.3rem;
