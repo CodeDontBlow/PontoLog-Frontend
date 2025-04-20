@@ -1,4 +1,7 @@
 import styles from './Statistics.module.css'
+import LineChart from '../../components/Charts/LineChart'
+import BarChart from '../../components/Charts/BarChart'
+
 
 const Statistics = () => {
     return (
@@ -57,7 +60,13 @@ const Statistics = () => {
             <section className={styles.infoGridVertical}>
                 {/* Parte de Cima */}
                 <section className={styles.topArea}>
-                    <div className={styles.component}>Componente Gráfico Linha (Balança Comercial)</div>
+                    <LineChart 
+                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]} 
+                    values={[35, -12, 48, 5, -27, 60, 22, -40, 10, 55, -18, 30]}
+                    dataName="Balança Comercial"
+                    chartTitle="Balança Comercial"
+                    colorPalette={["#D92B66"]}
+                    />
                 </section>
 
                 {/* Parte de Baixo */}

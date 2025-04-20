@@ -28,10 +28,13 @@ const LineChart = ({period , values , dataName , chartTitle , colorPalette , id 
                 }
             },
             title:{
-                text: chartTitle
+                text: chartTitle,
             },
             xaxis: {
                 categories: period
+            },
+            grid: {
+                show: true,
             },
             stroke : {
                 curve: "smooth",
