@@ -1,6 +1,5 @@
-
 import './App.css'
-import Input from './components/Input/input'
+import Input from './components/Input/Input.jsx'
 
 import RoutesApp from './routes'
 
@@ -9,8 +8,8 @@ function App() {
   return (
    <>
    <RoutesApp />
-   <Input></Input>
-   <Input></Input>
+   <Input label="Produto" placeholder="Escolha seu produto" id="a"></Input>
+   <Input label="tchauthcua" placeholder="zzz" id="z"></Input>
    </>
   )
 }
