@@ -1,14 +1,31 @@
 /* Elemento temporário para simular componentes */
-div.component{
+/* div.component{
     background-color: var(--white-700);
     width: 100%;
-    height: 100%;
     padding: 10px 20px;
     
     font: var(--text-light);
     text-align: left;
     
     border-radius: 5px;
+} */
+
+.componentTitle{
+    color: var(--black-500);
+    font: var(--text-medium);
+    text-align: start;
+}
+
+.leaflet-container{
+    background-color: transparent;
+}
+
+div.componentWrapper{
+    background-color: var(--white-300);
+    padding: 10px 10px 0 5px;
+    
+    border: 3px solid var(--white-700);
+    border-radius: 10px;
 }
 
 /* Elemento que engloba todos os demais  */
@@ -82,12 +99,13 @@ div.component{
     section#primaryInfos{
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 25px;
+        gap: 40px;
     }
 
         /* Mapa do brasil */
         section#primaryInfos .navMap{
-
+            width: 100%;
+            height: 100%;
         }
 
     
@@ -127,19 +145,28 @@ div.component{
 
     /* Tempalte Reutilizável de Grid Horizontal */
     section.infoGridHorizontal{
+        width: 100%;
         display: grid;
-        grid-template-columns: 5fr 3fr;
-        gap: 25px;
+        grid-template-columns: 4fr 2fr;
+        gap: 15px;
     }
 
         /* Item 1 do grid */
         section.infoGridHorizontal section.leftArea{
-            
+            height: 100%;
         }
+        
+            section.infoGridHorizontal section.leftArea > *{
+                height: 100%;
+
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
 
         /* Item 2 do grid (recebe 2 elementos filho) */
         section.infoGridHorizontal section.rightArea{
             display: grid;
             grid-template-rows: 1fr 1fr;
-            gap: 15px;
+            gap: 10px;
         }

@@ -14,11 +14,11 @@ const regionMap = {
 };
 
 export const regionColors = {
-  Norte: "#14A538",
-  Nordeste: "#EB641C",
+  Norte: "#14A538",          
+  Nordeste: "#EB641C",       
   "Centro-Oeste": "#F79F44",
-  Sudeste: "#028391",
-  Sul: "#731CA5",
+  Sudeste: "#028391",        
+  Sul: "#731CA5",            
 };
 
 const FitBoundsToRegion = ({ features }) => {
@@ -69,7 +69,6 @@ const BrazilMap = ({ onRegionChange }) => {
           key={`state-${selectedState}`}
           data={feature}
           style={{
-            color: "#000",
             weight: 1,
             fillColor: color,
             fillOpacity: 1,
@@ -101,8 +100,8 @@ const BrazilMap = ({ onRegionChange }) => {
             features: regions[selectedRegion],
           }}
           style={{
-            color: "#000",
-            weight: 1,
+            color: "var(--white-500)",
+            weight: 2,
             fillColor: regionColor,
             fillOpacity: 1,
             cursor: "pointer",
@@ -170,9 +169,10 @@ const BrazilMap = ({ onRegionChange }) => {
     <div className="brazil-map-container">
       <MapContainer
         center={[-14.235, -51.9253]}
+        zoomSnap={0.1}
         zoom={4}
         style={{
-          height: "380px",
+          height: "500px",
           width: "100%",
           borderRadius: "12px",
         }}
@@ -186,16 +186,15 @@ const BrazilMap = ({ onRegionChange }) => {
       >
         {renderGeoJSON()}
         <FitBoundsToRegion features={currentFeatures} />
+
       </MapContainer>
 
-      <div className="map-info">
         {selectedState ? (
-          <h2>Estado selecionado: {selectedState}</h2>
+          <h2 className="map-current-state">{selectedState}</h2>
         ) : selectedRegion ? (
-          <h2>Região selecionada: {selectedRegion}</h2>
+          <h2 className="map-current-state">Região {selectedRegion}</h2>
         ) : null}
         <p className="map-description">{getDescriptionText()}</p>
-      </div>
     </div>
   );
 };
