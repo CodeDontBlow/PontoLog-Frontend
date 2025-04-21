@@ -1,3 +1,8 @@
 rect{
     fill: transparent;
+    width: 100%;
+}
+
+div#reactgooglegraph-1 > *{
+    width: 100% !important;
 }

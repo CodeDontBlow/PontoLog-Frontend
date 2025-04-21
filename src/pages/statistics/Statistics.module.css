@@ -23,7 +23,7 @@
 div.componentWrapper{
     background-color: var(--white-300);
     padding: 10px 10px 0 5px;
-    
+
     border: 3px solid var(--white-700);
     border-radius: 10px;
 }
@@ -148,7 +148,7 @@ div.componentWrapper{
         width: 100%;
         display: grid;
         grid-template-columns: 4fr 2fr;
-        gap: 15px;
+        gap: 25px;
     }
 
         /* Item 1 do grid */

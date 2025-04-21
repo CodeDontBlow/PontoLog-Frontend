@@ -1,10 +1,9 @@
 import React from "react";
 import { Chart } from "react-google-charts";
-import { regionColors } from "./BrazilMap";
 import styles from "./Maps.module.css"
 
 export default function WorldMap({ selectedRegion, countryDatas, tradeType, setTradeType}) {
-  const regionColor = ["#D92B66", "#B81D4E", "#F5A4C3", "#F1A1B5"];
+  const regionColor = ["#F1A1B5","#D92B66" ,"#B81D4E"];
   const showData = Boolean(selectedRegion);
 
   const dadosSelecionados = countryDatas[tradeType];
@@ -44,11 +43,11 @@ export default function WorldMap({ selectedRegion, countryDatas, tradeType, setT
 
   const options = {
     colorAxis: {
-      colors: showData ? [regionColor] : ["#f0f0f0", "#f0f0f0"],
+      colors: showData ? regionColor : ["#f0f0f0", "#f0f0f0"],
       minValue: 0,
       maxValue: maxQuantidade,
     },
-    datalessRegionColor: regionColor[3],
+    datalessRegionColor: regionColor[0],
     tooltip: { isHtml: true },
     legend: "none",
   };
@@ -71,9 +70,6 @@ export default function WorldMap({ selectedRegion, countryDatas, tradeType, setT
       </h2>
 
       <p className="map-subtitle">
-        {showData
-          ? "Passe o mouse sobre um país para ver os detalhes"
-          : "Selecione uma região no mapa do Brasil para visualizar os dados"}
       </p>
 
       <Chart
@@ -81,7 +77,7 @@ export default function WorldMap({ selectedRegion, countryDatas, tradeType, setT
         data={data}
         options={options}
         width="100%"
-        height="500px"
+        height="400px"
       />
     </>
   );
