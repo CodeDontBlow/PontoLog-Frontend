@@ -1,4 +1,3 @@
-import styles from "./Charts.module.css"
 import Chart from "react-apexcharts"
 import { useState } from "react";
 
@@ -17,7 +16,6 @@ function BarChart({items , values , chartTitle , colorPalette}){
         {
             chart: {
                 type: 'bar',
-                height: "100%"
             },
             xaxis: {
                 categories: items
@@ -81,6 +79,7 @@ function BarChart({items , values , chartTitle , colorPalette}){
             options = {options}
             series = {series}
             type = "bar"
+            height="100%"
         />
     )
 }

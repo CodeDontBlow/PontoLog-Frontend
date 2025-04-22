@@ -22,7 +22,12 @@
 
 div.componentWrapper{
     background-color: var(--white-300);
-    padding: 10px 10px 0 5px;
+    height: 100%;
+    padding: 10px 10px 5px 5px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
     border: 3px solid var(--white-700);
     border-radius: 10px;
@@ -111,7 +116,7 @@ div.componentWrapper{
     
     /* Dados de Exportação / Importação */
     section#ExpImpInfos{
-        padding: 10px 25px;
+        padding: 10px 100px;
         display: flex;
         flex-direction: column;
         gap: 30px;
@@ -145,7 +150,6 @@ div.componentWrapper{
 
     /* Tempalte Reutilizável de Grid Horizontal */
     section.infoGridHorizontal{
-        width: 100%;
         display: grid;
         grid-template-columns: 4fr 2fr;
         gap: 25px;
@@ -153,15 +157,9 @@ div.componentWrapper{
 
         /* Item 1 do grid */
         section.infoGridHorizontal section.leftArea{
-            height: 100%;
         }
         
-            section.infoGridHorizontal section.leftArea > *{
-                height: 100%;
-
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
+        section.infoGridHorizontal section.leftArea > *{
             }
 
         /* Item 2 do grid (recebe 2 elementos filho) */
