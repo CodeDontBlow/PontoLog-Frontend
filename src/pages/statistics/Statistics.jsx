@@ -27,11 +27,6 @@ const Statistics = () => {
     }
 
     // TESTE ATUALIZAÇÃO DO ESTADO YEAR
-    useEffect(() => {
-        if (year.length === 4) {
-            console.log("ano selecionado: ", year)
-        }
-    }, [year])
 
 
     return (
@@ -143,7 +138,6 @@ const Statistics = () => {
 
 
             </section>
-
         </div>
     )
 }
