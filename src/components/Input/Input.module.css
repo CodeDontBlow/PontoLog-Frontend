@@ -1,4 +1,4 @@
-label{
+label.label{
     width: 100%;
 
     color: var(--black-500);
@@ -6,26 +6,26 @@ label{
     cursor: text;
 }
 
-p{
+p.labelTxt{
     font: var(--text-medium);
     font-weight: 600;
     text-align: left; 
-    text-indent: 5px;
+    text-indent: 0.313rem;
 }
 
-input {
+input.input {
     background-color: var(--white-700);
     width: 100%;
-    padding: 10px 20px;
+    padding: 0.313rem 1.25rem;
 
     font: var(--text-light);
 
     border: none;
-    border-radius: 5px;
+    border-radius:  0.313rem;
 
     transition: all 150ms ease-out;
 }
 
-input:focus{
+input.input:focus{
     outline: 1px solid var(--black-300);
 }
