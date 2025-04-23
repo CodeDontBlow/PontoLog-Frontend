@@ -1,43 +1,44 @@
 .footer {
   background-color: var(--black-700);
   color: var(--white-300);
-  padding: 25px 5%;
   font-family: 'Roboto', sans-serif;
-  position: static;
+  padding: 1.875rem 0;
+  position: absolute;
+  width: 100%;
+  display: flex;
   bottom: 0;
-  margin: 0;
-  max-width: 100%;
 }
 
 .container {
-  max-width: 75rem;
-  margin: 0 auto;
+  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 30px;
-  padding: 0;
+  padding: 0.625rem 6.25rem;
 }
 
 .grouped {
   display: flex;
   flex-direction: row;
-  gap: 50px; 
+  gap: 1.875rem; 
 }
 
 .column {
   display: flex;
   flex-direction: column;
+  text-align: left;
   min-width: 9.375rem;
-  gap: 8px;
+  gap: 0.5rem;
   width: 100%;
+  padding: 0;
+  margin: 0;
 }
 
 .title {
   font-size: 1rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
+  white-space: nowrap;
 }
 
 .list {
@@ -46,6 +47,7 @@
   font-size: 0.938rem;
   padding: 0;
   margin: 0;
+
 }
 
 .list li {
@@ -62,40 +64,29 @@
 }
 
 .copyright {
-  max-width: 17.5rem;
+  max-width: 100%;
   font-size: var(--label-large);
   color: var(--white-300);
   align-content: end;
+  text-align: left;
 }
 
-
-
-@media (max-width: 320px) {
-  .footer {
-    padding: 10px;
-  }
-
+@media (max-width: 768px) {
   .container {
-    gap: 15px; 
-    padding: 5px; 
+    flex-direction: column;
+    gap: 30px;
   }
 
   .grouped {
-    gap: 15px; 
+    flex-direction: column;
+    gap: 20px;
   }
 
   .column {
-    padding: 5px; 
-    min-width: 0; 
-    width: 100%;
-    gap: 4px; 
-  }
-
-  .list {
-    font-size: 0.7rem; 
+    min-width: 100%;
   }
 
   .title {
-    font-size: 0.875rem; 
+    white-space: normal;
   }
 }
