@@ -8,14 +8,12 @@ import Statistics from './pages/statistics/Statistics'
 
 const RoutesApp = () => {
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path='/' element={<Home />} />
-                <Route path='/about' element={<About />} />
-                <Route path='/comparison' element={<Comparison />} />
-                <Route path='/statistics' element={<Statistics />} />
-            </Routes>
-        </BrowserRouter>
+        <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/about' element={<About />} />
+            <Route path='/comparison' element={<Comparison />} />
+            <Route path='/statistics' element={<Statistics />} />
+        </Routes>
     )
 }
 
