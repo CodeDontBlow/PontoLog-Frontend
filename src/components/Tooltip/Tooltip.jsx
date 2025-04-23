@@ -1,24 +1,66 @@
-import styles from "./Tooltip.module.css"; 
+import React, { useState } from "react";
+import styles from "./Tooltip.module.css";
+import Button from "../Buttons/Button/Button";
 
-const Tooltip = ({variant, content, onClick, buttonType = "default", buttonLabel,}) => {
+const Tooltip = ({
+  variant,
+  content,
+  onClick,
+  buttonType = "default",
+  buttonLabel,
+  position = "top", // posição padrão do tooltip
+}) => {
+  const [isVisible, setIsVisible] = useState(false);
+
   const getButtonText = () => {
-    if (buttonLabel) return buttonLabel;
-    switch (buttonType) {
-      case "fechar":
-        return "Fechar";
-      default:
-        return "Ok";
-    }
+    return buttonLabel || "Ok"; //"Ok" como padrão
+  };
+
+  const handleMouseEnter = () => {
+    setIsVisible(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsVisible(false);
+  };
+
+  const handleButtonClick = () => {
+    setIsVisible(false);
+    if (onClick) onClick();
+  };
+
+  const handleCloseClick = () => {
+    setIsVisible(false);
   };
 
   return (
-    <div className={styles.tooltip}> {/* Use styles.nomeDaClasse */}
-      {content}
-      {variant === "withButton" && (
-        <button className={styles.button} onClick={onClick}>
-          {getButtonText()}
-        </button>
-      )}
+    <div
+      className={styles.tooltipWrapper}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div
+        className={`${styles.tooltip} ${
+          isVisible ? styles.visible : styles.hidden
+        } ${styles[position]}`} // adiciona dinamicamente uma classe CSS com base no valor da prop position
+      >
+        <div className={`${styles.tooltipArrow} ${styles[`arrow-${position}`]}`}></div> {/* triângulozinho da tooltip */}
+        <div className={styles.tooltipContent}>
+          {content}
+          {variant === "withButton" && (
+            <Button onClick={handleButtonClick} type={buttonType}>
+              {getButtonText()}
+            </Button>
+          )}
+          <button
+            className={styles.closeButton}
+            onClick={handleCloseClick}
+            aria-label="Close Tooltip"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,28 +1,122 @@
-CSS
+.tooltipWrapper {
+  position: relative;
+  display: inline-block;
+}
 
 .tooltip {
-  background-color: var(--black-300);
-  color: var(--base-white);
+  position: absolute;
+  background-color: var(--black-300); 
+  color: var(--base-white); 
   padding: 12px;
   border-radius: 8px;
   font: var(--text-light);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 8px;
   max-width: 300px;
-  word-wrap: break-word;
+  white-space: pre-wrap; 
   display: flex;
   flex-direction: column;
   gap: 8px;
+  opacity: 0; 
+  transform: translateY(-10px); 
+  transition: opacity 0.3s ease, transform 0.3s ease; 
+  position: relative; 
 }
 
-.button {
-  margin-left: auto;
-  margin-top: auto;
-  background-color: var(--navy-500);
-  color: var(--base-white);
+.tooltip.visible {
+  opacity: 1; 
+  transform: translateY(0); 
+}
+
+.tooltip.hidden {
+  opacity: 0; 
+  transform: translateY(-10px); 
+}
+
+/* posições do tooltip */
+.tooltip.top {
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tooltip.bottom {
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tooltip.left {
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.tooltip.right {
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* triângulozinho da tooltip */
+.tooltipArrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+/* triângulozinho para cada posição */
+.arrow-top {
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px 6px 0 6px;
+  border-color: var(--black-300) transparent transparent transparent;
+}
+
+.arrow-bottom {
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 6px 6px 6px;
+  border-color: transparent transparent var(--black-300) transparent;
+}
+
+.arrow-left {
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 6px 0 6px 6px;
+  border-color: transparent transparent transparent var(--black-300);
+}
+
+.arrow-right {
+  left: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 6px 6px 6px 0;
+  border-color: transparent var(--black-300) transparent transparent;
+}
+
+.tooltipContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 24px; 
+}
+
+.closeButton {
+  background: none;
   border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  font: var(--label-small);
+  color: var(--base-white);
+  font-size: 16px;
   cursor: pointer;
+  position: absolute; 
+  top: 8px; 
+  right: 8px; 
+  z-index: 1; 
+}
+
+.closeButton:hover {
+  color: var(--navy-500); 
 }
