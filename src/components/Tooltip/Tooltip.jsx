@@ -6,7 +6,7 @@ const Tooltip = ({
   variant,
   content,
   onClick,
-  buttonType = "default",
+  buttonVariant = "Btn-lbl",
   buttonLabel,
   position = "top", // posição padrão do tooltip
 }) => {
@@ -48,7 +48,7 @@ const Tooltip = ({
         <div className={styles.tooltipContent}>
           {content}
           {variant === "withButton" && (
-            <Button onClick={handleButtonClick} type={buttonType}>
+            <Button onClick={handleButtonClick} variant={buttonVariant} label={buttonLabel}>
               {getButtonText()}
             </Button>
           )}
