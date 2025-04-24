@@ -170,7 +170,7 @@ const BrazilMap = ({ onRegionChange }) => {
       <MapContainer
         center={[-14.235, -51.9253]}
         zoomSnap={0.1}
-        zoom={4}
+        zoom={5}
         style={{
           height: "500px",
           width: "100%",
