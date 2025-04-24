@@ -1,31 +1,42 @@
-label.label{
+.label {
     width: 100%;
-
     color: var(--black-500);
-
+    font: var(--text-medium);
+    font-weight: 600;
+    text-align: left;
+    text-indent: 0.313rem;
     cursor: text;
 }
 
-p.labelTxt{
-    font: var(--text-medium);
-    font-weight: 600;
-    text-align: left; 
-    text-indent: 0.313rem;
-}
-
-input.input {
+.inputContainer {
     background-color: var(--white-700);
-    width: 100%;
-    padding: 0.313rem 1.25rem;
-
+    width: auto;
+    padding: 0.313rem 1rem;
     font: var(--text-light);
-
     border: none;
-    border-radius:  0.313rem;
-
+    border-radius: 0.313rem;
     transition: all 150ms ease-out;
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
 }
 
-input.input:focus{
-    outline: 1px solid var(--black-300);
+
+.input {
+    appearance: none;
+    border: none;
+    outline: none;
+    background: none;
+    font: var(--text-light);
+    width: 100%
+}
+
+.input {
+    appearance: none;
+    border: none;
+    outline: none;
+}
+
+.icon {
+    cursor: pointer;
 }
