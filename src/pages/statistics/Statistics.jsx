@@ -1,3 +1,11 @@
+// Importando biblioteca de terceiros
+import { useEffect, useState } from 'react'
+
+// Importando componentes e api
+import api from '../../api/api'
+import Button from '../../components/Buttons/Button/Button'
+
+// Importando CSS
 import styles from './Statistics.module.css'
 import LineChart from '../../components/Charts/LineChart'
 import BarChart from '../../components/Charts/BarChart'
@@ -5,7 +13,27 @@ import Card from '../../components/Cards/Card'
 import BrazilMap from '../../components/Maps/BrazilMap'
 import WorldMap from '../../components/Maps/WorldMap'
 
+
 const Statistics = () => {
+    // ESTADO YEAR(ANO) EXEMPLO PARA TESTE
+    const [year, setYear] = useState(null)
+
+    // MÉTODO QUE DISPARA A REQUISIÇÃO PARA O BACKEND
+    const getByYear = async (year) => {
+        try {
+            const response = await api.get(`/exportacao/vl_agregado/${year}`)
+
+            const data = response.data
+
+            console.log(data)
+        } catch (error) {
+            console.error("Error fetching data:", error)
+        }
+    }
+
+    // TESTE ATUALIZAÇÃO DO ESTADO YEAR
+
+
     
     const dadosTeste = {
       exportacao: [
@@ -133,49 +161,53 @@ const Statistics = () => {
     };
     
     return (
-    <div id={styles.statisticsPage}>
+        <div id={styles.statisticsPage}>
 
-        {/* Área dos Inputs */}
-        <section id={styles.inputArea}>
-            {/* Input do Nome do Produto */}
-            <div className={styles.productArea}>
-                <div className={styles.component}> Input Produto </div>
-                {/* Botões SH4 e SH6 */}
-                <div className={styles.inputOptions}>
-                    {/* SH4 */}
-                    <input type="radio" name="sh-selection" id="sh4" defaultChecked/>
-                    <label htmlFor="sh4"> SH4 </label>
-                    
-                    {/* SH6 */}
-                    <input type="radio" name="sh-selection" id="sh6" />
-                    <label htmlFor="sh6"> SH6 </label>
-                </div>
-            </div>
+            {/* TESTE DA REQUISIÇÃO */}
+            <input type="text" onChange={(e) => setYear(e.target.value)} />
+            <Button label={'get'} onClick={() => getByYear(year)} />
 
-            {/* Input de Periodo de Tempo */}
-            <div className={styles.periodArea}>
-                {/* Inputs */}
-                <div className={styles.periodInputs}>
-                    {/* Primeiro Ano do Período */}
-                    <div className={styles.firstYear}>
-                        <div className={styles.component}> Input Ano 1 </div>
-                    </div>
+            {/* Área dos Inputs */}
+            <section id={styles.inputArea}>
+                {/* Input do Nome do Produto */}
+                <div className={styles.productArea}>
+                    <div className={styles.component}> Input Produto </div>
+                    {/* Botões SH4 e SH6 */}
+                    <div className={styles.inputOptions}>
+                        {/* SH4 */}
+                        <input type="radio" name="sh-selection" id="sh4" defaultChecked />
+                        <label htmlFor="sh4"> SH4 </label>
 
-                    {/* Último Ano do Período */}
-                    <div className={styles.lastYear}>
-                        <div className={styles.component}> Input Ano 2 </div>
+                        {/* SH6 */}
+                        <input type="radio" name="sh-selection" id="sh6" />
+                        <label htmlFor="sh6"> SH6 </label>
                     </div>
                 </div>
-                
-                {/* Checkbox */}
-                <div className={styles.inputOptions}>
-                    <div className={styles.component}> Componente Checkbox </div>
-                </div>
-            </div>
-        </section>
 
-        {/* Alerta de quais Informações estão sendo exibidas */}
-        <div className={styles.component}>Componente Alerta com Ícone</div>
+                {/* Input de Periodo de Tempo */}
+                <div className={styles.periodArea}>
+                    {/* Inputs */}
+                    <div className={styles.periodInputs}>
+                        {/* Primeiro Ano do Período */}
+                        <div className={styles.firstYear}>
+                            <div className={styles.component}> Input Ano 1 </div>
+                        </div>
+
+                        {/* Último Ano do Período */}
+                        <div className={styles.lastYear}>
+                            <div className={styles.component}> Input Ano 2 </div>
+                        </div>
+                    </div>
+
+                    {/* Checkbox */}
+                    <div className={styles.inputOptions}>
+                        <div className={styles.component}> Componente Checkbox </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Alerta de quais Informações estão sendo exibidas */}
+            <div className={styles.component}>Componente Alerta com Ícone</div>
 
         {/* Primeiras Informações da Página + mapa do brasil */}
         <section id={styles.primaryInfos}>
@@ -211,7 +243,7 @@ const Statistics = () => {
             </section>
         </section>
 
-        <div className={styles.component}> Componente Tab </div>
+            <div className={styles.component}> Componente Tab </div>
 
         {/* Informação completas de Exportação ou Importação */}
         <section id={styles.ExpImpInfos}>
@@ -250,11 +282,11 @@ const Statistics = () => {
                 </section>
             </section>
 
-            {/* Molde de Grid Horizontal Reutilizável */}
-            <section className={styles.infoGridHorizontal}>
-                {/* Parte da Esquerda */}
-                <section className={styles.leftArea}>
-                    <div className={styles.componentWrapper}>
+                {/* Molde de Grid Horizontal Reutilizável */}
+                <section className={styles.infoGridHorizontal}>
+                    {/* Parte da Esquerda */}
+                    <section className={styles.leftArea}>
+                        <div className={styles.componentWrapper}>
                         <LineChart
                         period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                         values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
@@ -265,11 +297,11 @@ const Statistics = () => {
                         group="bottomInfo1"
                         />
                     </div>
-                </section>
-                {/* Parte da Direita */}
-                <section className={styles.rightArea}>
-                    {/* Item 1 */}
-                    <div className={styles.componentWrapper}>
+                    </section>
+                    {/* Parte da Direita */}
+                    <section className={styles.rightArea}>
+                        {/* Item 1 */}
+                        <div className={styles.componentWrapper}>
                         <LineChart
                         period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                         values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
@@ -280,8 +312,8 @@ const Statistics = () => {
                         group="bottomInfo1"
                         />
                     </div>
-                    {/* Item 2 */}
-                    <div className={styles.componentWrapper}>
+                        {/* Item 2 */}
+                        <div className={styles.componentWrapper}>
                         <LineChart
                         period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                         values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
@@ -292,14 +324,13 @@ const Statistics = () => {
                         group="bottomInfo1"
                         />
                     </div>
+                    </section>
                 </section>
+
+
             </section>
-
-            
-        </section>
-
-    </div>
-  )
+        </div>
+    )
 }
 
 export default Statistics
