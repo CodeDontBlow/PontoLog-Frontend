@@ -122,8 +122,6 @@ div.componentWrapper{
         gap: 30px;
     }
 
-
-
     /* Tempalte Reutilizável de Grid Vertical */
     section.infoGridVertical{
         display: flex;

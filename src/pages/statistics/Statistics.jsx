@@ -5,13 +5,20 @@ import { useEffect, useState } from 'react'
 import api from '../../api/api'
 import Button from '../../components/Buttons/Button/Button'
 
-// Importando CSS
+// Importando CSS e Componentes
 import styles from './Statistics.module.css'
 import LineChart from '../../components/Charts/LineChart'
 import BarChart from '../../components/Charts/BarChart'
 import Card from '../../components/Cards/Card'
 import BrazilMap from '../../components/Maps/BrazilMap'
 import WorldMap from '../../components/Maps/WorldMap'
+import Input from '../../components/Input/Input'
+
+//---TODO
+//Ajustar padding e fonte do mapa mundi
+//Criar componente de Alert fixo
+//Definir altura propria pro grafico da balanca comercial
+//Alinhas input sem label
 
 
 const Statistics = () => {
@@ -164,14 +171,14 @@ const Statistics = () => {
         <div id={styles.statisticsPage}>
 
             {/* TESTE DA REQUISIÇÃO */}
-            <input type="text" onChange={(e) => setYear(e.target.value)} />
-            <Button label={'get'} onClick={() => getByYear(year)} />
+            {/* <input type="text" onChange={(e) => setYear(e.target.value)} />
+            <Button label={'get'} onClick={() => getByYear(year)} /> */}
 
             {/* Área dos Inputs */}
             <section id={styles.inputArea}>
                 {/* Input do Nome do Produto */}
                 <div className={styles.productArea}>
-                    <div className={styles.component}> Input Produto </div>
+                    <Input label="Nome do Produto" type="text" placeholder="Produto" id="product"/>
                     {/* Botões SH4 e SH6 */}
                     <div className={styles.inputOptions}>
                         {/* SH4 */}
@@ -190,12 +197,12 @@ const Statistics = () => {
                     <div className={styles.periodInputs}>
                         {/* Primeiro Ano do Período */}
                         <div className={styles.firstYear}>
-                            <div className={styles.component}> Input Ano 1 </div>
+                            <Input label="Período de Tempo" placeholder="Ano de Início" type="number" id="firstYear"/>
                         </div>
 
                         {/* Último Ano do Período */}
                         <div className={styles.lastYear}>
-                            <div className={styles.component}> Input Ano 2 </div>
+                            <Input label="resolver isso" placeholder="Ano de Término" type="Number" id="lastYear"/>
                         </div>
                     </div>
 
