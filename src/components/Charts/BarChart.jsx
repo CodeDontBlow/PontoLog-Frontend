@@ -1,5 +1,5 @@
 import Chart from "react-apexcharts"
-import { useState } from "react";
+import { useState , useEffect } from "react";
 
 //GRÁFICO DE BARRA
 function BarChart({items , values , chartTitle , colorPalette}){

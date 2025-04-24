@@ -15,13 +15,12 @@ body{
 }
 
 .map-current-state{
-  font: var(--text-large);
+  font: var(--text-medium);
   color: var(--black-500);
 }
 
 .map-description {
-
-  font: var(--text-medium);
+  font: var(--text-light);
   color: var(--black-500);
 }
 

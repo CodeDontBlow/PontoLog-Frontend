@@ -167,12 +167,21 @@ const BrazilMap = ({ onRegionChange }) => {
 
   return (
     <div className="brazil-map-container">
+      
+      <p className="map-description">{getDescriptionText()}</p>
+      
+      {selectedState ? (
+          <h2 className="map-current-state">{selectedState}</h2>
+        ) : selectedRegion ? (
+          <h2 className="map-current-state">Região {selectedRegion}</h2>
+        ) : null}
+
       <MapContainer
         center={[-14.235, -51.9253]}
         zoomSnap={0.1}
         zoom={5}
         style={{
-          height: "500px",
+          height: "400px",
           width: "100%",
           borderRadius: "12px",
         }}
@@ -189,12 +198,6 @@ const BrazilMap = ({ onRegionChange }) => {
 
       </MapContainer>
 
-        {selectedState ? (
-          <h2 className="map-current-state">{selectedState}</h2>
-        ) : selectedRegion ? (
-          <h2 className="map-current-state">Região {selectedRegion}</h2>
-        ) : null}
-        <p className="map-description">{getDescriptionText()}</p>
     </div>
   );
 };

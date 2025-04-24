@@ -124,23 +124,25 @@ div.componentWrapper{
 
     /* Tempalte Reutilizável de Grid Vertical */
     section.infoGridVertical{
-        display: flex;
-        flex-direction: column;
+        display: grid;
+        grid-template-rows: 1fr max-content;
         gap: 15px;
     }
 
         /* Item 1 do grid */
         section.infoGridVertical section.topArea{
-
+            height: 100%;
         }
 
         /* Item 2 do grid */
         section.infoGridVertical section.midArea{
-
+            height: 100%;
         }
 
         /* Item 3 do grid (recebe 2 elementos filho) */
         section.infoGridVertical section.bottomArea{
+            height: 100%;
+
             display: grid;
             grid-template-columns: repeat(2 , 1fr);
             gap: 10px;
@@ -149,7 +151,8 @@ div.componentWrapper{
     /* Tempalte Reutilizável de Grid Horizontal */
     section.infoGridHorizontal{
         display: grid;
-        grid-template-columns: 4fr 2fr;
+        height: 400px;
+        grid-template-columns: 5fr 3fr;
         gap: 25px;
     }
 

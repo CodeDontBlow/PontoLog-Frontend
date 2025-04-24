@@ -1,0 +1,26 @@
+div.card{
+    background-color: var(--white-700);
+    padding: 10px 20px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    border-radius:  0.313rem;
+}
+
+.icon{
+    color: var(--base-pink);
+}
+
+p.text{
+    font: var(--text-light);
+    color: var(--black-500);
+}
+
+span.dataDisplay{
+    color: var(--base-pink);
+    font-weight: 600;
+    text-decoration: underline;
+    margin-left: .33em;
+}

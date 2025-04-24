@@ -1,5 +1,5 @@
 // Importando biblioteca de terceiros
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 // Importando componentes e api
 import api from '../../api/api'
@@ -9,15 +9,16 @@ import Button from '../../components/Buttons/Button/Button'
 import styles from './Statistics.module.css'
 import LineChart from '../../components/Charts/LineChart'
 import BarChart from '../../components/Charts/BarChart'
-import Card from '../../components/Cards/Card'
+import InfoCard from '../../components/Cards/InfoCard/Card'
+import AlertCard from '../../components/Cards/AlertCard/AlertCard'
 import BrazilMap from '../../components/Maps/BrazilMap'
 import WorldMap from '../../components/Maps/WorldMap'
 import Input from '../../components/Input/Input'
 
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
+
 //---TODO
 //Ajustar padding e fonte do mapa mundi
-//Criar componente de Alert fixo
-//Definir altura propria pro grafico da balanca comercial
 //Alinhas input sem label
 
 
@@ -202,7 +203,7 @@ const Statistics = () => {
 
                         {/* Último Ano do Período */}
                         <div className={styles.lastYear}>
-                            <Input label="resolver isso" placeholder="Ano de Término" type="Number" id="lastYear"/>
+                            <Input label="resolve isso" placeholder="Ano de Término" type="Number" id="lastYear"/>
                         </div>
                     </div>
 
@@ -213,8 +214,12 @@ const Statistics = () => {
                 </div>
             </section>
 
+
+
             {/* Alerta de quais Informações estão sendo exibidas */}
-            <div className={styles.component}>Componente Alerta com Ícone</div>
+            <AlertCard icon={faCircleInfo} product="Todos os Produtos" region="Brasil" period={[2019 , 2020]}/>
+
+
 
         {/* Primeiras Informações da Página + mapa do brasil */}
         <section id={styles.primaryInfos}>
@@ -227,25 +232,23 @@ const Statistics = () => {
             <section className={styles.infoGridVertical}>
                 {/* Parte de Cima */}
                 <section className={styles.topArea}>
-                    <div className={styles.component}>
-                        <div className={styles.componentWrapper}>
-                            <LineChart
-                            period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                            values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
-                            chartTitle="Balança Comercial"
-                            dataName="Balança Comercial"
-                            colorPalette={["#D92B66"]}
-                            />
-                        </div>
+                    <div className={styles.componentWrapper} id={styles.balancaComercial}>
+                        <LineChart
+                        period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                        values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
+                        chartTitle="Balança Comercial"
+                        dataName="Balança Comercial"
+                        colorPalette={["#D92B66"]}
+                        />
                     </div>
                 </section>
 
                 {/* Parte de Baixo */}
                 <section className={styles.bottomArea}>
                     {/* Item 1 */}
-                    <Card title="Exportação" fatorAgregado="Muito manufaturado" produto="Grãos de Soja"/>
+                    <InfoCard title="Exportação" fatorAgregado="Muito manufaturado" produto="Grãos de Soja"/>
                     {/* Item 2 */}
-                    <Card title="Importação" fatorAgregado="Pouco manufaturado" produto="Grãos de Arroz"/>
+                    <InfoCard title="Importação" fatorAgregado="Pouco manufaturado" produto="Grãos de Arroz"/>
                 </section>
             </section>
         </section>

@@ -1,4 +1,4 @@
-import React from "react";
+import React , {useEffect} from "react";
 import { Chart } from "react-google-charts";
 import styles from "./Maps.module.css"
 
@@ -77,7 +77,7 @@ export default function WorldMap({ selectedRegion, countryDatas, tradeType, setT
         data={data}
         options={options}
         width="100%"
-        height="400px"
+        height="100%"
       />
     </>
   );
