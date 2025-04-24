@@ -1,16 +1,21 @@
+import { useState } from 'react';
 import './App.css'
-import Input from './components/Input/Input.jsx'
+import { Dropdown } from './components/Dropdown/Dropdown';
 
 import RoutesApp from './routes'
 
 function App() {
 
+  const [selectedOption, setSelectedOption] = useState(null)
+
+
+  const options = ['opção1', 'opção2', 'opção3', 'alternativa', 'alternativa']
+
   return (
-   <>
-   <RoutesApp />
-   <Input label="Produto" placeholder="Escolha seu produto" id="a"></Input>
-   <Input label="tchauthcua" placeholder="zzz" id="z"></Input>
-   </>
+    <>
+      <RoutesApp />
+      <Dropdown search={true} options={options} onSelect={(option) => setSelectedOption(option)}/>
+    </>
   )
 }
 
