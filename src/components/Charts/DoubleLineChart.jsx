@@ -31,7 +31,7 @@ const DoubleLineChart = ({period , values , dataName, chartDescription , colorPa
                 text: {chartDescription},
                 align: "left",
                 style: {
-                    fontSize: "20px",
+                    fontSize: "1rem",
                     fontFamily: "roboto",
                     color: "var(--black-500)",
                 }

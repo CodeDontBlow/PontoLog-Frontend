@@ -29,7 +29,7 @@ function BarChart({items , values , chartDescription , colorPalette}){
             title: {
                 text: chartDescription,                
                 style: {
-                    fontSize: "16px",
+                    fontSize: "1rem",
                     fontWeight: "regular",
                     fontFamily: "'Roboto', sans-serif",
                     color: "var(--black-500)",

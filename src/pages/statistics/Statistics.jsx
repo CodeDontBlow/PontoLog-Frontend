@@ -202,10 +202,8 @@ const Statistics = () => {
                         </div>
                     </div>
 
-                    {/* Checkbox */}
-                    <div className={styles.inputOptions}>
-                        <div className={styles.component}> Componente Checkbox </div>
-                    </div>
+                    {/* Checkbox (Decidir se iremos utilizar)*/}
+                    {/* <div className={styles.inputOptions}> </div> */}
                 </div>
             </section>
 

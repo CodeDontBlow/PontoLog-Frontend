@@ -1,45 +1,9 @@
-
-
-.map-current-state{
-  font: var(--text-medium);
-  color: var(--black-500);
-}
-
-.map-description {
-  font: var(--text-light);
-  color: var(--black-500);
-}
-
+/* Cor de fundo do mapa do Brasil */
 .leaflet-container {
-  background: transparent !important;
+    background: transparent !important;
 }
+
+/* Logo do leaflet (biblioteca usada para o mapa do brasil) */
 .leaflet-bottom{
-  display: none;
-}
-
-
-
-
-
-
-.map-info h2 {
-  margin: 0;
-  font-size: 2em;
-  color: #333;
-}
-
-.map-title {
-  margin: 0;
-  color: #333;
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-align: center;
-}
-
-
-
-.map-subtitle {
-  color: #666;
-  margin-bottom: 1rem;
-  text-align: center;
+    display: none;
 }

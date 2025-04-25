@@ -1,8 +1,20 @@
+
+/* BrazilMap */
+.mapCurrentState{
+    margin-top: 0.875rem;
+    color: var(--black-500);
+    font: var(--title-regular);
+    text-align: center;
+  }
+  
+  .mapDescription {
+    color: var(--black-500);
+    font: var(--text-medium);
+    text-align: center;
+  }
+  
+/* WorldMap */
 rect{
     fill: transparent;
     width: 100%;
-}
-
-div#reactgooglegraph-1 > *{
-    width: 100% !important;
 }

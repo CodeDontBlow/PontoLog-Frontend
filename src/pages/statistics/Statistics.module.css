@@ -2,12 +2,12 @@
 /* div.component{
     background-color: var(--white-700);
     width: 100%;
-    padding: 10px 20px;
+    padding: 0.625rem 1.25rem;
     
     font: var(--text-light);
     text-align: left;
     
-    border-radius: 5px;
+    border-radius: 0.313rem;
 } */
 
 .componentTitle{
@@ -24,34 +24,34 @@
 #statisticsPage{
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 1.875rem;
 }
 
     /* Área de Input */
     section#inputArea{
         display: grid;
         grid-template-columns: 4fr 2fr;
-        gap: 20px;
+        gap: 1.25rem;
     }
 
         section#inputArea > div{
             justify-items: start;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 0.313rem;
         }
 
             .periodInputs{
                 width: 100%;
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
+                gap: 0.625rem;
             }
 
             /* Opções de Input (botões e checkbox) */
             .inputOptions{
                 display: flex;
-                gap: 10px;
+                gap: 0.625rem;
             }
 
                 /* Botões SH4 e SH6 */
@@ -61,13 +61,13 @@
 
                 .inputOptions > label{
                     background-color: var(--white-700);
-                    padding: 5px 20px;
+                    padding: 0.313rem 1.25rem;
                     
                     color: var(--black-500);
                     font: var(--text-light);
 
                     border: none;
-                    border-radius: 7px;
+                    border-radius: 0.438rem;
 
                     transition: all 200ms ease-out;
                     user-select: none;
@@ -91,7 +91,7 @@
     section#primaryInfos{
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 40px;
+        gap: 2.5rem;
     }
 
         /* Mapa do brasil */
@@ -103,8 +103,8 @@
     
     /* Dados de Exportação / Importação */
     section#ExpImpInfos{
-        padding: 10px 100px;
+        padding: 0.625rem 6.25rem;
         display: flex;
         flex-direction: column;
-        gap: 30px;
+        gap: 1.875rem;
     }

@@ -1,6 +1,7 @@
 import React , {useEffect} from "react";
 import { Chart } from "react-google-charts";
 import styles from "./Maps.module.css"
+import { tooltip } from "leaflet";
 
 export default function WorldMap({ selectedRegion, countryDatas, tradeType, setTradeType}) {
   const regionColor = ["#F1A1B5","#D92B66" ,"#B81D4E"];
@@ -22,12 +23,13 @@ export default function WorldMap({ selectedRegion, countryDatas, tradeType, setT
         ...dadosSelecionados.map((item) => {
           const tooltip = `
             <div>
-              <u>${
+              <h5>${
                 tradeType === "exportacao" ? "Exportação" : "Importação"
-              }:</u><br/>
-              Quantidade: ${item.quantidade}<br/>
-              VL_AGREGADO: R$ ${item.vl.toLocaleString()}<br/>
-              KG_LIQUIDO: ${item.kg.toLocaleString()} kg
+              }:</h5>
+              <br/>
+              <b>Quantidade: </b> ${item.quantidade}<br/>
+              <b>Valor Agregado: </b> R$ ${item.vl.toLocaleString()}<br/>
+              <b>Quilograma Líquido: </b>${item.kg.toLocaleString()} kg
             </div>
           `;
           return [item.country, item.quantidade, tooltip];
@@ -48,7 +50,9 @@ export default function WorldMap({ selectedRegion, countryDatas, tradeType, setT
       maxValue: maxQuantidade,
     },
     datalessRegionColor: regionColor[0],
-    tooltip: { isHtml: true },
+    tooltip: {
+      isHtml: true 
+    },
     legend: "none",
   };
 
