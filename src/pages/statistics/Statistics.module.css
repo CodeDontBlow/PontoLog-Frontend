@@ -20,19 +20,6 @@
     background-color: transparent;
 }
 
-div.componentWrapper{
-    background-color: var(--white-300);
-    height: 100%;
-    padding: 10px 10px 5px 5px;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    border: 3px solid var(--white-700);
-    border-radius: 10px;
-}
-
 /* Elemento que engloba todos os demais  */
 #statisticsPage{
     display: flex;

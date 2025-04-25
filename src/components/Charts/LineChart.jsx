@@ -73,13 +73,15 @@ const LineChart = ({period , values , dataName , chartTitle , colorPalette , id 
 
     //Componente de gráfico do ApexCharts recebendo os valores definidos acima
     return(
-        <Chart
-            options = {options}
-            series = {series}
-            width="100%"
-            height="100%"
-            type = "line"
-        />
+        <div className="componentWrapper">
+            <Chart
+                options = {options}
+                series = {series}
+                width="100%"
+                height="100%"
+                type = "line"
+            />
+        </div>
     )
 }
 

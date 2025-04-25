@@ -14,6 +14,7 @@ import AlertCard from '../../components/Cards/AlertCard/AlertCard'
 import BrazilMap from '../../components/Maps/BrazilMap'
 import WorldMap from '../../components/Maps/WorldMap'
 import Input from '../../components/Input/Input'
+import IconTitle from '../../components/IconTitle/IconTitle'
 
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 
@@ -232,7 +233,6 @@ const Statistics = () => {
             <section className={styles.infoGridVertical}>
                 {/* Parte de Cima */}
                 <section className={styles.topArea}>
-                    <div className={styles.componentWrapper} id={styles.balancaComercial}>
                         <LineChart
                         period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                         values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
@@ -240,7 +240,6 @@ const Statistics = () => {
                         dataName="Balança Comercial"
                         colorPalette={["#D92B66"]}
                         />
-                    </div>
                 </section>
 
                 {/* Parte de Baixo */}
@@ -261,34 +260,29 @@ const Statistics = () => {
             <section className={styles.infoGridHorizontal}>
                 {/* Parte da Esquerda */}
                 <section className={styles.leftArea}>
-                    <div className={styles.componentWrapper}>
+                    <IconTitle variant="map" title="Mapa do brasil"/>
                         <WorldMap
                         selectedRegion="Norte"
                         tradeType="exportacao"
                         countryDatas={dadosTeste}
                         />
-                    </div>
                 </section>
                 {/* Parte da Direita */}
                 <section className={styles.rightArea}>
                     {/* Item 1 */}
-                    <div className={styles.componentWrapper}>
-                        <BarChart
-                        items={["Via Aquífera" , "Via Rodoviária" , "Via Aérea"]}
-                        values={[512, 485, 271]}
-                        chartTitle="Principais Vias"
-                        colorPalette={["#D92B66"]}
-                        />
-                    </div>
+                    <BarChart
+                    items={["Via Aquífera" , "Via Rodoviária" , "Via Aérea"]}
+                    values={[512, 485, 271]}
+                    chartTitle="Principais Vias"
+                    colorPalette={["#D92B66"]}
+                    />
                     {/* Item 2 */}
-                    <div className={styles.componentWrapper}>
-                        <BarChart
-                        items={["Porto 123" , "Rodovia 123" , "Aeroporto 123"]}
-                        values={[52, 45, 21]}
-                        chartTitle="Principais URF's"
-                        colorPalette={["#D92B66"]}
-                        />
-                    </div>
+                    <BarChart
+                    items={["Porto 123" , "Rodovia 123" , "Aeroporto 123"]}
+                    values={[52, 45, 21]}
+                    chartTitle="Principais URF's"
+                    colorPalette={["#D92B66"]}
+                    />
                 </section>
             </section>
 
@@ -296,7 +290,6 @@ const Statistics = () => {
                 <section className={styles.infoGridHorizontal}>
                     {/* Parte da Esquerda */}
                     <section className={styles.leftArea}>
-                        <div className={styles.componentWrapper}>
                         <LineChart
                         period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                         values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
@@ -306,12 +299,10 @@ const Statistics = () => {
                         id="bottomInfo11"
                         group="bottomInfo1"
                         />
-                    </div>
                     </section>
                     {/* Parte da Direita */}
                     <section className={styles.rightArea}>
                         {/* Item 1 */}
-                        <div className={styles.componentWrapper}>
                         <LineChart
                         period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                         values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
@@ -321,9 +312,7 @@ const Statistics = () => {
                         id="bottomInfo12"
                         group="bottomInfo1"
                         />
-                    </div>
                         {/* Item 2 */}
-                        <div className={styles.componentWrapper}>
                         <LineChart
                         period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                         values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
@@ -333,7 +322,6 @@ const Statistics = () => {
                         id="bottomInfo13"
                         group="bottomInfo1"
                         />
-                    </div>
                     </section>
                 </section>
 

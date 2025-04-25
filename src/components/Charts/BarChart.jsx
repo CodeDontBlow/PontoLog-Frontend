@@ -1,5 +1,5 @@
 import Chart from "react-apexcharts"
-import { useState , useEffect } from "react";
+import { useState } from "react";
 
 //GRÁFICO DE BARRA
 function BarChart({items , values , chartTitle , colorPalette}){
@@ -75,12 +75,14 @@ function BarChart({items , values , chartTitle , colorPalette}){
 
     //Componente de gráfico do ApexCharts recebendo os valores definidos acima
     return(
-        <Chart
-            options = {options}
-            series = {series}
-            type = "bar"
-            height="100%"
-        />
+        <div className="componentWrapper">
+            <Chart
+                options = {options}
+                series = {series}
+                type = "bar"
+                height="100%"
+            />
+        </div>
     )
 }
 

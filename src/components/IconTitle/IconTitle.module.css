@@ -1,0 +1,23 @@
+.container{
+    display: flex;
+    align-items: center;
+    gap: 10px;    
+}
+
+.container.regular > *{
+    font: var(--text-light);
+}
+
+.container.large > *{
+    font: var(--title-medium);
+}
+
+
+
+.icon{
+    color: var(--base-pink);
+}
+
+.title{
+    color: var(--black-500);
+}

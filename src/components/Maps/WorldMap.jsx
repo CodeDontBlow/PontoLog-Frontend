@@ -53,7 +53,7 @@ export default function WorldMap({ selectedRegion, countryDatas, tradeType, setT
   };
 
   return (
-    <>
+    <div className="componentWrapper">
         {/* <button //botão apenas para vizualizar imp e exp separados
           onClick={() =>
             setTradeType((prev) =>
@@ -64,14 +64,6 @@ export default function WorldMap({ selectedRegion, countryDatas, tradeType, setT
           Ver {tradeType === "exportacao" ? "Importação" : "Exportação"}
         </button> */}
 
-      <h2 className="map-title">
-        Principais países{" "}
-        {tradeType === "exportacao" ? "Exportadores" : "Importadores"}
-      </h2>
-
-      <p className="map-subtitle">
-      </p>
-
       <Chart
         chartType="GeoChart"
         data={data}
@@ -79,6 +71,6 @@ export default function WorldMap({ selectedRegion, countryDatas, tradeType, setT
         width="100%"
         height="100%"
       />
-    </>
+    </div>
   );
 }

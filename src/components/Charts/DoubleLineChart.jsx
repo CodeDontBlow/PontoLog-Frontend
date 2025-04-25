@@ -26,7 +26,7 @@ const DoubleLineChart = ({period , values , dataName, chartTitle , colorPalette}
             },
             title: {
                 text: {chartTitle},
-                align: left,
+                align: "left",
                 style: {
                     fontSize: "20px",
                     fontFamily: "roboto",
@@ -57,11 +57,13 @@ const DoubleLineChart = ({period , values , dataName, chartTitle , colorPalette}
 
     //Componente de gráfico do ApexCharts recebendo os valores definidos acima
     return(
-        <Chart
-            options = {options}
-            series = {series}
-            type = "line"
-        />
+        <div className="componentWrapper">
+            <Chart
+                options = {options}
+                series = {series}
+                type = "line"
+            />
+        </div>
     )
 }
 
