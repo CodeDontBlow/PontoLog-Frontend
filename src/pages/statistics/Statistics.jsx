@@ -15,13 +15,9 @@ import BrazilMap from '../../components/Maps/BrazilMap'
 import WorldMap from '../../components/Maps/WorldMap'
 import Input from '../../components/Input/Input'
 import IconTitle from '../../components/IconTitle/IconTitle'
+import TabNavigation from '../../components/Tab/TabNavigation'
 
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
-
-//---TODO
-//Ajustar padding e fonte do mapa mundi
-//Alinhas input sem label
-
 
 const Statistics = () => {
     // ESTADO YEAR(ANO) EXEMPLO PARA TESTE
@@ -41,8 +37,6 @@ const Statistics = () => {
     }
 
     // TESTE ATUALIZAÇÃO DO ESTADO YEAR
-
-
     
     const dadosTeste = {
       exportacao: [
@@ -204,7 +198,7 @@ const Statistics = () => {
 
                         {/* Último Ano do Período */}
                         <div className={styles.lastYear}>
-                            <Input label="resolve isso" placeholder="Ano de Término" type="Number" id="lastYear"/>
+                            <Input label="..." placeholder="Ano de Término" type="Number" id="lastYear"/>
                         </div>
                     </div>
 
@@ -230,20 +224,22 @@ const Statistics = () => {
             </div>
             
             {/* Molde de Grid Vertical Reutilizável */}
-            <section className={styles.infoGridVertical}>
+            <section className="infoGridVertical">
                 {/* Parte de Cima */}
-                <section className={styles.topArea}>
+                <section className="topArea">
+                    <div className="gridItem">
+                        <IconTitle title="Balança Comercial" variant="lineChart" size='medium'/>
                         <LineChart
-                        period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                        values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
-                        chartTitle="Balança Comercial"
-                        dataName="Balança Comercial"
-                        colorPalette={["#D92B66"]}
+                            period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                            values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
+                            dataName="Balança Comercial"
+                            colorPalette={["#D92B66"]}
                         />
+                    </div>
                 </section>
 
                 {/* Parte de Baixo */}
-                <section className={styles.bottomArea}>
+                <section className="bottomArea">
                     {/* Item 1 */}
                     <InfoCard title="Exportação" fatorAgregado="Muito manufaturado" produto="Grãos de Soja"/>
                     {/* Item 2 */}
@@ -252,76 +248,94 @@ const Statistics = () => {
             </section>
         </section>
 
-            <div className={styles.component}> Componente Tab </div>
+
+        {/* Deve-se definir melhor o uso do tab navigation!!! */}
+        {/* <TabNavigation tab={tabs} contents={contents} /> */}
+
+
 
         {/* Informação completas de Exportação ou Importação */}
         <section id={styles.ExpImpInfos}>
             {/* Molde de Grid Horizontal Reutilizável */}
-            <section className={styles.infoGridHorizontal}>
-                {/* Parte da Esquerda */}
-                <section className={styles.leftArea}>
-                    <IconTitle variant="map" title="Mapa do brasil"/>
+            <section className="infoGridHorizontal">
+                {/* Parte da Esquerda (Mapa do Mundo) */}
+                <section className="leftArea">
+                    <div className="gridItem">
+                        <IconTitle variant="map" title="Principais Países" size='medium'/>
                         <WorldMap
-                        selectedRegion="Norte"
-                        tradeType="exportacao"
-                        countryDatas={dadosTeste}
+                            selectedRegion="Norte"
+                            tradeType="exportacao"
+                            countryDatas={dadosTeste}
                         />
+                    </div>
                 </section>
+                
                 {/* Parte da Direita */}
-                <section className={styles.rightArea}>
+                <section className="rightArea">
                     {/* Item 1 */}
-                    <BarChart
-                    items={["Via Aquífera" , "Via Rodoviária" , "Via Aérea"]}
-                    values={[512, 485, 271]}
-                    chartTitle="Principais Vias"
-                    colorPalette={["#D92B66"]}
-                    />
+                    <div className="gridItem">
+                        <IconTitle variant="barChart" title="Principais Vias Usadas" size='light'/>
+                        <BarChart
+                            items={["Via Aquífera" , "Via Rodoviária" , "Via Aérea"]}
+                            values={[512, 485, 271]}
+                            colorPalette={["#D92B66"]}
+                        />
+                    </div>
                     {/* Item 2 */}
-                    <BarChart
-                    items={["Porto 123" , "Rodovia 123" , "Aeroporto 123"]}
-                    values={[52, 45, 21]}
-                    chartTitle="Principais URF's"
-                    colorPalette={["#D92B66"]}
-                    />
+                    <div className="gridItem">
+                        <IconTitle variant="barChart" title="Principais Vias Usadas" size='light'/>
+                        <BarChart
+                            items={["Porto 123" , "Rodovia 123" , "Aeroporto 123"]}
+                            values={[52, 45, 21]}
+                            colorPalette={["#D92B66"]}
+                        />
+                    </div>
                 </section>
             </section>
 
                 {/* Molde de Grid Horizontal Reutilizável */}
-                <section className={styles.infoGridHorizontal}>
+                <section className="infoGridHorizontal">
                     {/* Parte da Esquerda */}
-                    <section className={styles.leftArea}>
-                        <LineChart
-                        period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                        values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
-                        chartTitle="Valor Agregado"
-                        dataName="Balança Comercial"
-                        colorPalette={["#D92B66"]}
-                        id="bottomInfo11"
-                        group="bottomInfo1"
-                        />
+                    <section className="leftArea">
+                        <div className="gridItem">
+                            <IconTitle title="Valor Agregado" variant="lineChart" size='medium'/>
+                            <LineChart
+                                period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
+                                chartTitle="Valor Agregado"
+                                dataName="Balança Comercial"
+                                colorPalette={["#D92B66"]}
+                                id="bottomInfo11"
+                                group="bottomInfo1"
+                            />
+                        </div>
                     </section>
                     {/* Parte da Direita */}
-                    <section className={styles.rightArea}>
+                    <section className="rightArea">
                         {/* Item 1 */}
-                        <LineChart
-                        period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                        values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
-                        chartTitle="Kl_liquido"
-                        dataName="Balança Comercial"
-                        colorPalette={["#D92B66"]}
-                        id="bottomInfo12"
-                        group="bottomInfo1"
-                        />
+                        <div className="gridItem">
+                            <IconTitle title="Quilograma Líquido" variant="lineChart" size='light'/>
+                            <LineChart
+                                period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
+                                dataName="kg_liquido"
+                                colorPalette={["#D92B66"]}
+                                id="bottomInfo12"
+                                group="bottomInfo1" 
+                            />
+                        </div>
                         {/* Item 2 */}
-                        <LineChart
-                        period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                        values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
-                        chartTitle="Vl_fob"
-                        dataName="Balança Comercial"
-                        colorPalette={["#D92B66"]}
-                        id="bottomInfo13"
-                        group="bottomInfo1"
-                        />
+                        <div className="gridItem">
+                            <IconTitle title="Valor FOB" variant="lineChart" size="light"/>
+                            <LineChart
+                                period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
+                                dataName="vl_fob"
+                                colorPalette={["#D92B66"]}
+                                id="bottomInfo13"
+                                group="bottomInfo1"
+                            />
+                        </div>
                     </section>
                 </section>
 

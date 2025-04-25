@@ -1,16 +1,24 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChartLine } from "@fortawesome/free-solid-svg-icons"
 import { faChartBar } from "@fortawesome/free-solid-svg-icons"
-import { faMap } from "@fortawesome/free-solid-svg-icons"
+import { faMap } from "@fortawesome/free-regular-svg-icons"
 import styles from './IconTitle.module.css'
 
-const IconTitle = ({icon , title , variant , size = "large"}) => {
+// Ícones pre definidos
+const presetIcons = {
+    lineChart : faChartLine,
+    barChart : faChartBar,
+    map : faMap,
+}
+
+const IconTitle = ({icon , title , variant , size = "medium"}) => {
+    // Define o ícone selecionado (um ícone específico ou uma das variantes) 
+    const selectedIcon = icon || presetIcons[variant]
+
     return(
-        <div className={`${styles.container} ${size}`}>
-            {variant === "lineChart" && <FontAwesomeIcon icon={faChartLine} className={`${styles.icon}`}/>}
-            {variant === "barChart" && <FontAwesomeIcon icon={faChartBar} className={`${styles.icon}`}/>}
-            {variant === "map" && <FontAwesomeIcon icon={faMap} className={`${styles.icon}`}/>}
-            {icon && <FontAwesomeIcon icon={icon} className={`${styles.icon}`}/>}
+        <div className={`${styles.container} ${styles[size]}`}>
+            {/* Aplica o ícone selecionado */}
+            <FontAwesomeIcon icon={selectedIcon} className={`${styles.icon}`}/>
 
             <h2 className={styles.title}>
                 {title}

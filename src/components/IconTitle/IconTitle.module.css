@@ -1,15 +1,21 @@
 .container{
+    padding-left: 0.625rem;
+
     display: flex;
     align-items: center;
-    gap: 10px;    
+    gap: 0.625rem;
 }
 
-.container.regular > *{
+.light > *{
     font: var(--text-light);
 }
 
-.container.large > *{
-    font: var(--title-medium);
+.medium > *{
+    font: var(--text-medium);
+}
+
+.large > *{
+    font: var(--text-large);
 }
 
 

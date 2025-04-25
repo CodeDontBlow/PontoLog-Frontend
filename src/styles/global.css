@@ -1,0 +1,98 @@
+/* Estilização que poderá se repetir em diversas páginas ficarão aqui */
+*{
+    box-sizing: border-box;
+  }
+  
+  body{
+    background-color: var(--white-500);
+    min-height: 100vh;
+  }
+  
+  #root {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+
+/* -- PAGINAS DE DADOS -- */
+
+  /* Engloba componentes de exibição de dados */
+  div.componentWrapper{
+    background-color: var(--white-300);
+    height: 100%;
+    padding: 10px 10px 5px 5px;
+  
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  
+    border: 3px solid var(--white-700);
+    border-radius: 10px;
+  }
+  
+
+
+
+
+
+
+
+
+/* -- LAYOUTS -- */
+
+    /* Tempalte Reutilizável de Grid Vertical */
+    section.infoGridVertical{
+        display: grid;
+        grid-template-rows: 1fr max-content;
+        gap: 15px;
+    }
+
+        /* Item 1 do grid */
+        section.infoGridVertical section.topArea{
+            height: 100%;
+        }
+
+        /* Item 2 do grid */
+        section.infoGridVertical section.midArea{
+            height: 100%;
+        }
+
+        /* Item 3 do grid (recebe 2 elementos filho) */
+        section.infoGridVertical section.bottomArea{
+            height: 100%;
+
+            display: grid;
+            grid-template-columns: repeat(2 , 1fr);
+            gap: 10px;
+        }
+
+    /* Tempalte Reutilizável de Grid Horizontal */
+    section.infoGridHorizontal{
+        height: 100%;
+        display: grid;
+        height: 450px;
+        grid-template-columns: 5fr 3fr;
+        gap: 25px;
+    }
+
+        /* Item 1 do grid */
+        section.infoGridHorizontal section.leftArea{
+            height: 100%;
+        }
+        
+        /* Item 2 do grid (recebe 2 elementos filho) */
+        section.infoGridHorizontal section.rightArea{
+            height: 100%;
+
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            gap: 10px
+        }
+
+    div.gridItem{
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }

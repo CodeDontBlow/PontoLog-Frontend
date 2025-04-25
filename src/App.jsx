@@ -1,5 +1,4 @@
 import './App.css'
-import Input from './components/Input/Input.jsx'
 
 import RoutesApp from './routes'
 

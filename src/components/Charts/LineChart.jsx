@@ -2,7 +2,7 @@ import Chart from "react-apexcharts"
 import React , {useState , useEffect} from 'react'
 
 //GRÁFICO DE LINHA
-const LineChart = ({period , values , dataName , chartTitle , colorPalette , id , group}) => {
+const LineChart = ({period , values , dataName , chartDescription , colorPalette , id , group}) => {
 
     //PROPS
     //period: Periodo de tempo (eixo x) [lista]
@@ -33,14 +33,17 @@ const LineChart = ({period , values , dataName , chartTitle , colorPalette , id 
                     speed: 500,
                 },
                 zoom : {
-                    enabled: false
-                }
+                    enabled: false,
+                },
+                toolbar : {
+                    show: false,
+                },
             },
             xaxis: {
                 categories: period
             },
             title: {
-                text: chartTitle,                
+                text: chartDescription,                
                 style: {
                     fontSize: "16px",
                     fontWeight: "regular",

@@ -2,7 +2,7 @@ import Chart from "react-apexcharts"
 import { useState } from "react";
 
 //GRÁFICO DE BARRA
-function BarChart({items , values , chartTitle , colorPalette}){
+function BarChart({items , values , chartDescription , colorPalette}){
 
     //PROPS
     //items: Itens que estão sendo exibidos (eixo y, ex.: nomes de vias) [lista]
@@ -16,21 +16,24 @@ function BarChart({items , values , chartTitle , colorPalette}){
         {
             chart: {
                 type: 'bar',
+                toolbar: {
+                    show: false
+                }
             },
             xaxis: {
-                categories: items
+                categories: items,
             },
             yaxis: {
-                show: false
+                show: false,
             },
             title: {
-                text: chartTitle,                
+                text: chartDescription,                
                 style: {
                     fontSize: "16px",
                     fontWeight: "regular",
                     fontFamily: "'Roboto', sans-serif",
                     color: "var(--black-500)",
-                }
+                },
             },
             colors: colorPalette,
 

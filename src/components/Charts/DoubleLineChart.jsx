@@ -2,7 +2,7 @@ import Chart from "react-apexcharts"
 import React , {useState} from 'react'
 
 //GRÁFICO DE DUAS LINHAS
-const DoubleLineChart = ({period , values , dataName, chartTitle , colorPalette}) => {
+const DoubleLineChart = ({period , values , dataName, chartDescription , colorPalette}) => {
 
     //PROPS
     //period: Periodo de tempo (eixo x) [lista]
@@ -21,11 +21,14 @@ const DoubleLineChart = ({period , values , dataName, chartTitle , colorPalette}
             chart:{
                 type: "line",
                 zoom : {
-                    enabled: false
-                }
+                    enabled: false,
+                },
+                toolbar: {
+                    show: false,
+                },
             },
             title: {
-                text: {chartTitle},
+                text: {chartDescription},
                 align: "left",
                 style: {
                     fontSize: "20px",
