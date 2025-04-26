@@ -1,9 +1,7 @@
-/* Cor de fundo do mapa do Brasil */
-.leaflet-container {
-    background: transparent !important;
-}
-
-/* Logo do leaflet (biblioteca usada para o mapa do brasil) */
-.leaflet-bottom{
-    display: none;
+.teste {
+  margin-left: 20%;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 20rem;
 }
