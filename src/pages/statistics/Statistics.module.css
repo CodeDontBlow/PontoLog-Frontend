@@ -10,101 +10,101 @@
     border-radius: 0.313rem;
 } */
 
-.componentTitle{
+.componentTitle {
     color: var(--black-500);
     font: var(--text-medium);
     text-align: start;
 }
 
-.leaflet-container{
+.leaflet-container {
     background-color: transparent;
 }
 
 /* Elemento que engloba todos os demais  */
-#statisticsPage{
+#statisticsPage {
     display: flex;
     flex-direction: column;
     gap: 1.875rem;
 }
 
-    /* Área de Input */
-    section#inputArea{
-        display: grid;
-        grid-template-columns: 4fr 2fr;
-        gap: 1.25rem;
-    }
+/* Área de Input */
+section#inputArea {
+    display: grid;
+    grid-template-columns: 4fr 2fr;
+    gap: 1.25rem;
+}
 
-        section#inputArea > div{
-            justify-items: start;
-            display: flex;
-            flex-direction: column;
-            gap: 0.313rem;
-        }
+section#inputArea>div {
+    justify-items: start;
+    display: flex;
+    flex-direction: column;
+    gap: 0.313rem;
+}
 
-            .periodInputs{
-                width: 100%;
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.625rem;
-            }
+.periodInputs {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.625rem;
+}
 
-            /* Opções de Input (botões e checkbox) */
-            .inputOptions{
-                display: flex;
-                gap: 0.625rem;
-            }
+/* Opções de Input (botões e checkbox) */
+.inputOptions {
+    display: flex;
+    gap: 0.625rem;
+}
 
-                /* Botões SH4 e SH6 */
-                .inputOptions > input[type="radio"]{
-                    display: none;
-                }
+/* Botões SH4 e SH6 */
+.inputOptions>input[type="radio"] {
+    display: none;
+}
 
-                .inputOptions > label{
-                    background-color: var(--white-700);
-                    padding: 0.313rem 1.25rem;
-                    
-                    color: var(--black-500);
-                    font: var(--text-light);
+.inputOptions>label {
+    background-color: var(--white-700);
+    padding: 0.313rem 1.25rem;
 
-                    border: none;
-                    border-radius: 0.438rem;
+    color: var(--black-500);
+    font: var(--text-light);
 
-                    transition: all 200ms ease-out;
-                    user-select: none;
-                }
+    border: none;
+    border-radius: 0.438rem;
 
-                    .inputOptions > label:hover{
-                        font-weight: 500;
-                        cursor: pointer;
-                        transform: scale(1.05);
-                    }
+    transition: all 200ms ease-out;
+    user-select: none;
+}
 
-                    .inputOptions > input[type="radio"]:checked + label{
-                        background-color: var(--base-pink);
-                        
-                        color: var(--white-500);
-                        font-weight: 500;
-                    }
+.inputOptions>label:hover {
+    font-weight: 500;
+    cursor: pointer;
+    transform: scale(1.05);
+}
+
+.inputOptions>input[type="radio"]:checked+label {
+    background-color: var(--base-pink);
+
+    color: var(--white-500);
+    font-weight: 500;
+}
 
 
-    /* Dados iniciais */
-    section#primaryInfos{
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 2.5rem;
-    }
+/* Dados iniciais */
+section#primaryInfos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+}
 
-        /* Mapa do brasil */
-        section#primaryInfos .navMap{
-            width: 100%;
-            height: 100%;
-        }
+/* Mapa do brasil */
+section#primaryInfos .navMap {
+    width: 100%;
+    height: 100%;
+}
 
-    
-    /* Dados de Exportação / Importação */
-    section#ExpImpInfos{
-        padding: 0.625rem 6.25rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1.875rem;
-    }
+
+/* Dados de Exportação / Importação */
+section#ExpImpInfos {
+    padding: 0.625rem 6.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.875rem;
+}
