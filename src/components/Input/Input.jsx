@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons"
 
 import styles from "./Input.module.css"
 
@@ -10,7 +11,7 @@ const Input = ({ label, className, showIcon = false, icon, placeholder, type, id
         <div className={`${styles.inputContainer} ${className} ${focused ? styles.focused : ""}`}>
             <input className={styles.input}  type={type} id={id} placeholder={placeholder} value={value} onChange={onChange} onFocus={onFocus} />
             {showIcon && icon && (
-                <FontAwesomeIcon icon={icon} className={styles.icon} onClick={onClick} />
+                <FontAwesomeIcon icon={faMagnifyingGlass} className={styles.icon} onClick={onClick} />
             )}
         </div>
     </>
