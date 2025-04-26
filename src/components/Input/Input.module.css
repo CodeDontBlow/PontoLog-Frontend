@@ -31,12 +31,11 @@
     width: 100%
 }
 
-.input {
-    appearance: none;
-    border: none;
-    outline: none;
-}
-
 .icon {
     cursor: pointer;
+}
+
+.focused {
+    box-shadow: 0 0 0.125rem var(--black-500);
+    outline: 1px solid var(--black-300);
 }

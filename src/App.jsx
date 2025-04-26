@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import './App.css'
 import { Dropdown } from './components/Dropdown/Dropdown';
+import Sidebar from './components/Sidebar/Sidebar'
+import Footer from './components/Footer/Footer'
 
 import RoutesApp from './routes'
 
@@ -52,14 +54,15 @@ function App() {
 
 
   return (
-    <>
-      <RoutesApp />
-
+    <div>
+      <Sidebar />
       <div className="teste">
         <Dropdown search={true} options={options} onSelect={(option) => setSelectedOption(option)} />
         <Dropdown search={false} options={options} onSelect={(option) => setSelectedOption(option)} />
       </div >
-    </>
+      <RoutesApp />
+      <Footer />
+    </div>
   )
 }
 

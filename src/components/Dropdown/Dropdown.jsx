@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
 import Input from "../Input/Input";
 import styles from './Dropdown.module.css';
@@ -9,7 +9,8 @@ export const Dropdown = ({ label, options = [], classname, search = false, onSel
     const [isOpen, setIsOpen] = useState(false);
     const [filter, setFilter] = useState('');
     const [selectedOption, setSelectedOption] = useState(null);
-    const dropdownRef = useRef(null); // 🔸 Passo 1
+    const [focused, setFocused] = useState(false);
+    const dropdownRef = useRef(null);
 
     const filteredOptions = options.filter(option =>
         option.toLowerCase().includes(filter.toLowerCase())
@@ -26,6 +27,7 @@ export const Dropdown = ({ label, options = [], classname, search = false, onSel
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setIsOpen(false);
+                setFocused(false);
             }
         };
 
@@ -45,9 +47,9 @@ export const Dropdown = ({ label, options = [], classname, search = false, onSel
                         placeholder={placeholder}
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
-                        onFocus={() => setIsOpen(true)}
+                        onFocus={() => {setIsOpen(true); setFocused(true)}}
+                        focused={focused}
                         showIcon={true}
-                        icon={faMagnifyingGlass}
                         classname={styles.input}
                     />
                 </div>
@@ -59,7 +61,7 @@ export const Dropdown = ({ label, options = [], classname, search = false, onSel
             )}
 
             {isOpen && (
-                <ul className={`${styles.options} ${isOpen ? styles.open : ''}`}>
+                <ul className={`${styles.options} ${search ? styles.optionsSearch : ''}  ${isOpen ? styles.open : ''}`}>
                     {(search ? filteredOptions : options).map((option, index) => (
                         <li
                             key={index}
