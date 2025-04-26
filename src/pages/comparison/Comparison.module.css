@@ -1,0 +1,23 @@
+h1.titleMedium { 
+    color: var(--black-500); 
+    font: var(--title-medium); 
+} 
+
+h1.titleRegular {
+    color: var(--black-500); 
+    font: var(--title-regular); 
+}
+
+p.textMedium  { 
+    color: var(--black-500); 
+    font: var(--text-medium); 
+} 
+
+p.labelMedium  { 
+    color: var(--black-500); 
+    font: var(--label-medium); 
+} 
+ 
+FontAwesomeIcon.icon { 
+    color: var(--base-pink); 
+} 
