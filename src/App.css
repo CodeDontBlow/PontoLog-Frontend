@@ -1,7 +1,28 @@
-.teste {
-  margin-left: 20%;
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  gap: 20rem;
+/* Cor de fundo do mapa do Brasil */
+.leaflet-container {
+  background: transparent !important;
+}
+
+/* Logo do leaflet (biblioteca usada para o mapa do brasil) */
+.leaflet-bottom{
+  display: none;
+}
+
+/* Organiza sidebar, footer e o conteúdo da página em um grid layout */
+section#pageGridLayout{
+  height: 100vh;
+
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  grid-template-rows: 1fr min-content;
+  grid-template-areas: 
+  'sidebar content'
+  'sidebar footer';
+}
+
+/* <section> que abriga o conteúdo da página (ue será passado pela rota) */
+section#contentSection{
+  grid-area: content;
+  padding: 35px;
+  padding-top: 20px;
 }

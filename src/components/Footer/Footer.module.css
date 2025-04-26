@@ -3,10 +3,10 @@
   color: var(--white-300);
   font-family: 'Roboto', sans-serif;
   padding: 1.875rem 0;
-  position: absolute;
   width: 100%;
   display: flex;
   bottom: 0;
+  grid-area: footer;
 }
 
 .container {
