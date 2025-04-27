@@ -14,10 +14,23 @@ body{
     text-align: center;
 }
 
-.logo {
-    width: 300px; 
-}
-
+.imagesContainer {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    gap: 0;
+  }
+  
+.logoOne {
+    width: 180px;
+    height: auto;
+  }
+  
+.logoTwo {
+    width: 300px;
+    height: auto;
+  }
+  
 .section {
     margin-bottom: 4rem;
 }
@@ -30,7 +43,7 @@ body{
 }
 
 .title {
-    font-size: 2rem;
+    font: var(--title-regular);
     margin-bottom: 1rem;
     color: var(--navy-700);
 }
@@ -43,16 +56,17 @@ body{
     margin-right: 2rem;
 }
 
-.imageRight {
+.imageRight, .imageLeft {
     max-width: 300px; 
     height: auto;
+    margin-right: 2rem;
+    transition: transform 0.3s ease; 
 }
 
-.imageLeft {
-    max-width: 300px; 
-    height: auto;
-    margin-right: 2rem; 
+.imageRight:hover, .imageLeft:hover {
+    transform: scale(1.05) rotate(2deg);
 }
+
 
 .link {
     color: var(--navy-500);
