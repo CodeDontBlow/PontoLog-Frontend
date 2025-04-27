@@ -1,0 +1,72 @@
+.dropdown {
+    font: var(--label-medium);
+    color: var(--black-500);
+    width: 100%;
+    position: relative;
+}
+
+.options {
+    position: absolute;
+    max-height: 200px;
+    width: 100%;
+    overflow-y: auto;
+    list-style: none;
+    z-index: 100;
+    background-color: var(--white-300);
+    margin-top: 0.063rem;
+    border-radius: 0 0 0.50rem 0.50rem;
+}
+
+.optionsSearch {
+    background-color: var(--white-300);
+}
+
+.button {
+    background-color: var(--white-700);
+    width: 100%;
+    padding:0.313rem 1rem;
+    border-radius: 0.375rem;
+    border: none;
+    font: var(--text-light);
+    color: var(--black-500);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.icon {
+    transition: transform 0.2s ease-in-out;
+}
+
+.icon.open{
+    transform: rotate(-180deg);
+}
+
+.option {
+    font: var(--text-light);
+    padding: 0.875rem;
+    /* border-bottom: 0.063rem solid var(--white-500); */
+}
+
+.option:last-child {
+    border-bottom: none;
+}
+
+.options::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+.options::-webkit-scrollbar-track {
+    background: transparent;
+    padding: 0.313rem;
+}
+
+.options::-webkit-scrollbar-thumb {
+    background-color: var(--black-500);
+    border-radius: 03.125rem;
+}
+
+.options::-webkit-scrollbar-thumb:hover {
+    background-color: var(--black-700);
+}

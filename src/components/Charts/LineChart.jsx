@@ -1,19 +1,24 @@
 import Chart from "react-apexcharts"
-import React , {useState} from 'react'
+import React , {useState , useEffect} from 'react'
 
 //GRÁFICO DE LINHA
-const LineChart = ({period , values , dataName , chartTitle , colorPalette , id , group}) => {
+const LineChart = ({period , values , dataName , chartDescription , colorPalette , id , group}) => {
 
     //PROPS
     //period: Periodo de tempo (eixo x) [lista]
     //values: Valores (eixo y) [lista]
     //dataName: Nome dos dados (ex.: Valor Agregado, Balança Comercial, etc) [string]
-    //chartTitle: Título do Gráfico [string]
     //colorPalette: Cores das linhas do gráfico [lista || string]
     //id: identificador do gráfico, usado para agrupamento
     //group: grupo que o gráfico pertence (gráficos do mesmo grupo são visualmente melhor relacionados)
 
-    //Ex.: <LineChart values={[20,10,20,10,-10]} period={[2014,2015,2016,2017,2018]} dataName={"Valor Agregado"} chartTitle="Valor Agregado" colorPalette="#ff0011" id="id" group="grupo"/>
+    //Ex.: <LineChart values={[20,10,20,10,-10]} period={[2014,2015,2016,2017,2018]} dataName={"Valor Agregado"} colorPalette="#ff0011" id="id" group="grupo"/>
+
+    useEffect(() => {
+        setTimeout(() => {
+            window.dispatchEvent(new Event('resize'));
+        },100);
+    }, []);
 
     //Opções de customização do gráfico
     const [options] = useState(
@@ -23,19 +28,40 @@ const LineChart = ({period , values , dataName , chartTitle , colorPalette , id 
                 id: id,
                 group: group,
                 type: "line",
+                animations: {
+                    enabled: true,
+                    speed: 500,
+                },
                 zoom : {
-                    enabled: false
-                }
-            },
-            title:{
-                text: chartTitle
+                    enabled: false,
+                },
+                toolbar : {
+                    show: false,
+                },
             },
             xaxis: {
                 categories: period
             },
+            title: {
+                text: chartDescription,                
+                style: {
+                    fontSize: "1rem",
+                    fontWeight: "regular",
+                    fontFamily: "'Roboto', sans-serif",
+                    color: "var(--black-500)",
+                }
+            },
+            grid: {
+                show: true,
+                borderColor: "var(--white-700)",
+                row: {
+                    colors: ["#ffffff25" , "transparent"]
+                },
+                padding: { left: 15 , right: 0, top: 0, bottom: 0 },
+            },
             stroke : {
                 curve: "smooth",
-                width: "3"
+                width: "3",
             }
         }
     )
@@ -50,11 +76,15 @@ const LineChart = ({period , values , dataName , chartTitle , colorPalette , id 
 
     //Componente de gráfico do ApexCharts recebendo os valores definidos acima
     return(
-        <Chart
-            options = {options}
-            series = {series}
-            type = "line"
-        />
+        <div className="componentWrapper">
+            <Chart
+                options = {options}
+                series = {series}
+                width="100%"
+                height="100%"
+                type = "line"
+            />
+        </div>
     )
 }
 

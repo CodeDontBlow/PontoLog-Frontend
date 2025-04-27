@@ -1,0 +1,29 @@
+.container{
+    padding-left: 0.625rem;
+
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+}
+
+.light > *{
+    font: var(--text-light);
+}
+
+.medium > *{
+    font: var(--text-medium);
+}
+
+.large > *{
+    font: var(--text-large);
+}
+
+
+
+.icon{
+    color: var(--base-pink);
+}
+
+.title{
+    color: var(--black-500);
+}
