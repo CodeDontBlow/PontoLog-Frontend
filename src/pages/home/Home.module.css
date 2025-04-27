@@ -1,0 +1,107 @@
+body {
+    background-color: var(--white-500);
+}
+
+.pageContainer {
+    display: flex;
+    flex-direction: column; 
+    min-height: 100vh; 
+    overflow: hidden;
+}
+
+.header {
+    width: 100%;
+    height: 70vh; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background-color); 
+    overflow: hidden;
+    position: relative; 
+    z-index: 1;
+}
+
+.headerImagem {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+}
+
+.homeContainer {
+    flex: 1; 
+    margin-left: 9.375rem; 
+    padding: 2rem;
+    background-color: var(--background-color); 
+    overflow-y: auto; 
+}
+
+.section {
+    margin-bottom: 4rem;
+}
+
+.sectionContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.titleContainer {
+    margin-bottom: 1rem;
+}
+
+.title {
+    font: var(--title-medium); 
+    color: var(--navy-700);
+}
+
+.icon {
+    font-size: 1.5rem;
+}
+
+.text {
+    font: var(--text-medium); 
+    color: var(--black-500);
+}
+
+.textContainer {
+    flex: 2;
+    text-align: justify;
+}
+
+.imageContainer {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    gap: 0.625rem; 
+}
+
+.image {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem; 
+}
+
+.imagemLado {
+    flex: 1;
+    max-width: 18.75rem; 
+    margin-left: 1.25rem; 
+}
+
+.sectionButton {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.ctaButton {
+    display: inline-block;
+    margin-top: 1rem;
+}
+
+.conteudoLinha {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.25rem; 
+}
