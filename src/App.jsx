@@ -6,16 +6,6 @@ import Footer from './components/Footer/Footer'
 import RoutesApp from './routes'
 
 function App() {
-
-  const [selectedOption, setSelectedOption] = useState(null)
-
-  useEffect(() => {
-    if (selectedOption) {
-      console.log('Opção selecionada:', selectedOption);
-    }
-  }
-    , [selectedOption])
-
   return (
     
     <section id='pageGridLayout'>
