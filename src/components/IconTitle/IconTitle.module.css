@@ -6,16 +6,30 @@
     gap: 0.625rem;
 }
 
-.light > *{
+
+
+.textLight > *{
     font: var(--text-light);
 }
 
-.medium > *{
+.textMedium > *{
     font: var(--text-medium);
 }
 
-.large > *{
+.textLarge > *{
     font: var(--text-large);
+}
+
+.titleRegular > *{
+    font: var(--title-regular);
+}
+
+.titleMedium > *{
+    font: var(--title-medium);
+}
+
+.titleLarge > *{
+    font: var(--title-large);
 }
 
 

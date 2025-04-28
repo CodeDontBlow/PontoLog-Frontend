@@ -17,7 +17,21 @@ p.labelMedium  {
     color: var(--black-500); 
     font: var(--label-medium); 
 } 
- 
-FontAwesomeIcon.icon { 
-    color: var(--base-pink); 
-} 
+
+.redirectArea{
+    display: flex;
+}
+
+.contentArea{
+    padding: 50px;
+}
+
+img.header{
+    width: calc(100% + 70px);
+    margin: -35px;
+    margin-bottom: 0px;
+}
+
+img.example{
+    max-width: 400px;
+}

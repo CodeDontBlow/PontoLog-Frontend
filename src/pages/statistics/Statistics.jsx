@@ -226,7 +226,7 @@ const Statistics = () => {
                 {/* Parte de Cima */}
                 <section className="topArea">
                     <div className="gridItem">
-                        <IconTitle title="Balança Comercial" variant="lineChart" size='medium'/>
+                        <IconTitle title="Balança Comercial" variant="lineChart"/>
                         <LineChart
                             period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                             values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
@@ -259,7 +259,7 @@ const Statistics = () => {
                 {/* Parte da Esquerda (Mapa do Mundo) */}
                 <section className="leftArea">
                     <div className="gridItem">
-                        <IconTitle variant="map" title="Principais Países" size='medium'/>
+                        <IconTitle variant="map" title="Principais Países"/>
                         <WorldMap
                             selectedRegion="Norte"
                             tradeType="exportacao"
@@ -272,7 +272,7 @@ const Statistics = () => {
                 <section className="rightArea">
                     {/* Item 1 */}
                     <div className="gridItem">
-                        <IconTitle variant="barChart" title="Principais Vias Usadas" size='light'/>
+                        <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight'/>
                         <BarChart
                             items={["Via Aquífera" , "Via Rodoviária" , "Via Aérea"]}
                             values={[512, 485, 271]}
@@ -281,7 +281,7 @@ const Statistics = () => {
                     </div>
                     {/* Item 2 */}
                     <div className="gridItem">
-                        <IconTitle variant="barChart" title="Principais Vias Usadas" size='light'/>
+                        <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight'/>
                         <BarChart
                             items={["Porto 123" , "Rodovia 123" , "Aeroporto 123"]}
                             values={[52, 45, 21]}
@@ -296,7 +296,7 @@ const Statistics = () => {
                     {/* Parte da Esquerda */}
                     <section className="leftArea">
                         <div className="gridItem">
-                            <IconTitle title="Valor Agregado" variant="lineChart" size='medium'/>
+                            <IconTitle title="Valor Agregado" variant="lineChart"/>
                             <LineChart
                                 period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                 values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
@@ -312,7 +312,7 @@ const Statistics = () => {
                     <section className="rightArea">
                         {/* Item 1 */}
                         <div className="gridItem">
-                            <IconTitle title="Quilograma Líquido" variant="lineChart" size='light'/>
+                            <IconTitle title="Quilograma Líquido" variant="lineChart" size='textLight'/>
                             <LineChart
                                 period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                 values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
@@ -324,7 +324,7 @@ const Statistics = () => {
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
-                            <IconTitle title="Valor FOB" variant="lineChart" size="light"/>
+                            <IconTitle title="Valor FOB" variant="lineChart" size="textLight"/>
                             <LineChart
                                 period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                 values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
