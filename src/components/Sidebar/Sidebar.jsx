@@ -20,19 +20,19 @@ const Sidebar = () => {
 
   return (
     <div className={styles.sidebar}>
-      <div className={styles.logo}>
-        <Link to={'/'}>
-          <img src={logoIcon} alt="" />
-        </Link>
+      {/*  O conteúdo da sidebar foi colocado em um elemento filho de '.sidebar' para que possa grudar na parte de cima da tela enquanto ocupa 100vh  */}
+      <div className={styles.sidebarContent}>
+        <div className={styles.logo}>
+          <Link to={'/'}>
+            <img src={logoIcon} alt="" />
+          </Link>
+        </div>
+        <div className={styles.mainButtons}>
+          <Button variant={'Btn-icon'} icon={faChartLine} iconClassname={styles.navButtonIcon} className={`${styles.navButton} ${location.pathname === '/statistics' ? styles.active : ''}`} onClick={() => handleClick('/statistics')} />
+          <Button variant={'Btn-icon'} icon={faBalanceScale} iconClassname={styles.navButtonIcon} className={`${styles.navButton} ${location.pathname === '/comparison' ? styles.active : ''}`} onClick={() => handleClick('/comparison')} active={location.pathname === '/comparison'} />
+        </div>
+        <Button variant={'Btn-icon'} icon={faInfo} iconClassname={styles.infoIcon} className={`${styles.infoButton} ${location.pathname === '/about' ? styles.active : ''}`} onClick={() => handleClick('/about')} />
       </div>
-
-      <div className={styles.mainButtons}>
-        <Button variant={'Btn-icon'} icon={faChartLine} iconClassname={styles.navButtonIcon} className={`${styles.navButton} ${location.pathname === '/statistics' ? styles.active : ''}`} onClick={() => handleClick('/statistics')} />
-
-        <Button variant={'Btn-icon'} icon={faBalanceScale} iconClassname={styles.navButtonIcon} className={`${styles.navButton} ${location.pathname === '/comparison' ? styles.active : ''}`} onClick={() => handleClick('/comparison')} active={location.pathname === '/comparison'} />
-      </div>
-
-      <Button variant={'Btn-icon'} icon={faInfo} iconClassname={styles.infoIcon} className={`${styles.infoButton} ${location.pathname === '/about' ? styles.active : ''}`} onClick={() => handleClick('/about')} />
     </div>
   );
 };
