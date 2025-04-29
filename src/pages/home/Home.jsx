@@ -6,7 +6,6 @@ import styles from './Home.module.css';
 const Home = () => {
     return (
         <section id="pageGridLayout">
-            <Sidebar />
             <section id="contentSection">
                 <div className={styles.pageContainer}>
                     <div className={styles.header}>
@@ -94,7 +93,6 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-            <Footer />
         </section>
     );
 };
