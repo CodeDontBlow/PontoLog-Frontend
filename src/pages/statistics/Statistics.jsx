@@ -19,19 +19,32 @@ import TabNavigation from '../../components/Tab/TabNavigation'
 import styles from './Statistics.module.css'
 
 const Statistics = () => {
-    const [sh, setSh] = useState('sh4')
-    const [product, setProduct] = useState('')
-    const [estado, setEstado] = useState('')
-    const [opcoesDeProduto, setOpcoesDeProduto] = useState([])
 
-    const [region, setRegion] = useState('')
+    // states dos filtros
+    const [sh, setSh] = useState('sh4');
+    const [product, setProduct] = useState('');
+    const [estado, setEstado] = useState('');
+    const [tradeType, setTradeType] = useState('exportacao');
+    const [region, setRegion] = useState('');
+    const [initYear, setInitYear] = useState(2014);
+    const [finalYear, setFinalYear] = useState(2024);
+    const [periodoUnico, setPeriodoUnico] = useState(false);
+    const [period, setPeriod] = useState([initYear, finalYear]);
+    
+    // state de opções dos inputs
+    const [opcoesDeProduto, setOpcoesDeProduto] = useState([]);
+    const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
 
-    const [initYear, setInitYear] = useState(2014)
-    const [finalYear, setFinalYear] = useState(2024)
-    const [periodoUnico, setPeriodoUnico] = useState(false)
-    const [period, setPeriod] = useState([initYear, finalYear])
-    const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
-
+    // states para valores retornados pelo back
+    const [fatAgregado, setFatAgregado] = useState()
+    const [produtoPopular, setProdutoPopular] = useState()
+    const [vias, setVias] = useState()
+    const [urfs, setUrfs] = useState()
+    const [vlAgregado, setVlAgregado] = useState()
+    const [kgLiq, setKgLiq] = useState()
+    const [vlFob, setVlFob] = useState()
+    const [countries, setCountries] = useState()
+    
     const getProductByLetter = async () => {
         if (product.length > 0) {
             try {
@@ -52,14 +65,16 @@ const Statistics = () => {
             let response;
 
             if (periodoUnico) {
-                response = await api.get(`/exportacao/fat/${initYear}`)
+                response = await api.get(`/${tradeType}/fat/${initYear}`)
             }
             else {
-                response = await api.get(`/exportacao/fat/${initYear}?endYear=${finalYear}`)
+                response = await api.get(`/${tradeType}/fat/${initYear}?endYear=${finalYear}`)
             }
 
             const responseData = response.data
             const data = responseData.data
+
+            setFatAgregado(data)
         } catch (error) {
             console.error("Error fetching data:", error)
 
@@ -71,14 +86,16 @@ const Statistics = () => {
             let response;
 
             if (periodoUnico) {
-                response = await api.get(`/exportacao/product/no_${sh}_por/${initYear}`)
+                response = await api.get(`/${tradeType}/product/no_${sh}_por/${initYear}`)
             }
             else {
-                response = await api.get(`/exportacao/product/no_${sh}_por/${initYear}?endYear=${finalYear}`)
+                response = await api.get(`/${tradeType}/product/no_${sh}_por/${initYear}?endYear=${finalYear}`)
             }
 
             const responseData = response.data
             const data = responseData.data
+
+            setProdutoPopular(data)
         } catch (error) {
             console.error("Error fetching data:", error)
 
@@ -90,14 +107,16 @@ const Statistics = () => {
             let response;
 
             if (periodoUnico) {
-                response = await api.get(`/exportacao/via/${initYear}`)
+                response = await api.get(`/${tradeType}/via/${initYear}`)
             }
             else {
-                response = await api.get(`/exportacao/via/${initYear}?endYear=${finalYear}`)
+                response = await api.get(`/${tradeType}/via/${initYear}?endYear=${finalYear}`)
             }
 
             const responseData = response.data
             const data = responseData.data
+
+            setVias(data)
         } catch (error) {
             console.error("Error fetching data:", error)
         }
@@ -109,14 +128,16 @@ const Statistics = () => {
             let response;
 
             if (periodoUnico) {
-                response = await api.get(`/exportacao/urf/${initYear}`)
+                response = await api.get(`/${tradeType}/urf/${initYear}`)
             }
             else {
-                response = await api.get(`/exportacao/urf/${initYear}?endYear=${finalYear}`)
+                response = await api.get(`/${tradeType}/urf/${initYear}?endYear=${finalYear}`)
             }
 
             const responseData = response.data
             const data = responseData.data
+
+            setUrfs(data)
         } catch (error) {
             console.error("Error fetching data:", error)
 
@@ -130,37 +151,38 @@ const Statistics = () => {
             if (periodoUnico) {
                 switch (true) {
                     case (region && product):
-                        response = await api.get(`/exportacao/vl_agregado/${initYear}?region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}?region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
                         break;
                     case (region):
-                        response = await api.get(`/exportacao/vl_agregado/${initYear}?region=REGIAO SUDESTE`);
+                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}?region=REGIAO SUDESTE`);
                         break;
                     case (product):
-                        response = await api.get(`/exportacao/vl_agregado/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
                         break;
                     default:
-                        response = await api.get(`/exportacao/vl_agregado/${initYear}`);
+                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}`);
                         break;
                 }
             } else {
                 switch (true) {
                     case (estado && region && product):
-                        response = await api.get(`/exportacao/vl_agregado/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
                         break;
                     case (estado && region):
-                        response = await api.get(`/exportacao/vl_agregado/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE`);
+                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE`);
                         break;
                     case (product):
-                        response = await api.get(`/exportacao/vl_agregado/${initYear}?endYear=${finalYear}&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}?endYear=${finalYear}&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
                         break;
                     default:
-                        response = await api.get(`/exportacao/vl_agregado/${initYear}?endYear=${finalYear}`);
+                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}?endYear=${finalYear}`);
                         break;
                 }
             }
 
             const responseData = response.data
             const data = responseData.data
+            setVlAgregado(data)
         } catch (error) {
             console.error("Error fetching data:", error)
 
@@ -175,37 +197,39 @@ const Statistics = () => {
             if (periodoUnico) {
                 switch (true) {
                     case (region && product):
-                        response = await api.get(`/exportacao/vl_fob/${initYear}?region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        response = await api.get(`/${tradeType}/vl_fob/${initYear}?region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
                         break;
                     case (region):
-                        response = await api.get(`/exportacao/vl_fob/${initYear}?region=REGIAO SUDESTE`);
+                        response = await api.get(`/${tradeType}/vl_fob/${initYear}?region=REGIAO SUDESTE`);
                         break;
                     case (product):
-                        response = await api.get(`/exportacao/vl_fob/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        response = await api.get(`/${tradeType}/vl_fob/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
                         break;
                     default:
-                        response = await api.get(`/exportacao/vl_fob/${initYear}`);
+                        response = await api.get(`/${tradeType}/vl_fob/${initYear}`);
                         break;
                 }
             } else {
                 switch (true) {
                     case (region && product):
-                        response = await api.get(`/exportacao/vl_fob/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        response = await api.get(`/${tradeType}/vl_fob/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
                         break;
                     case (region):
-                        response = await api.get(`/exportacao/vl_fob/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE`);
+                        response = await api.get(`/${tradeType}/vl_fob/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE`);
                         break;
                     case (product):
-                        response = await api.get(`/exportacao/vl_fob/${initYear}?endYear=${finalYear}&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        response = await api.get(`/${tradeType}/vl_fob/${initYear}?endYear=${finalYear}&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
                         break;
                     default:
-                        response = await api.get(`/exportacao/vl_fob/${initYear}?endYear=${finalYear}`);
+                        response = await api.get(`/${tradeType}/vl_fob/${initYear}?endYear=${finalYear}`);
                         break;
                 }
             }
 
             const responseData = response.data
             const data = responseData.data
+
+            setVlFob(data)
         } catch (error) {
             console.error("Error fetching data:", error)
 
@@ -219,37 +243,38 @@ const Statistics = () => {
             if (periodoUnico) {
                 switch (true) {
                     case (region && product):
-                        response = await api.get(`/exportacao/kg_liquido/${initYear}?region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}?region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
                         break;
                     case (region):
-                        response = await api.get(`/exportacao/kg_liquido/${initYear}?region=REGIAO SUDESTE`);
+                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}?region=REGIAO SUDESTE`);
                         break;
                     case (product):
-                        response = await api.get(`/exportacao/kg_liquido/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
                         break;
                     default:
-                        response = await api.get(`/exportacao/kg_liquido/${initYear}`);
+                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}`);
                         break;
                 }
             } else {
                 switch (true) {
                     case (region && product):
-                        response = await api.get(`/exportacao/kg_liquido/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
                         break;
                     case (region):
-                        response = await api.get(`/exportacao/kg_liquido/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE`);
+                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE`);
                         break;
                     case (product):
-                        response = await api.get(`/exportacao/kg_liquido/${initYear}?endYear=${finalYear}&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}?endYear=${finalYear}&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
                         break;
                     default:
-                        response = await api.get(`/exportacao/kg_liquido/${initYear}?endYear=${finalYear}`);
+                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}?endYear=${finalYear}`);
                         break;
                 }
             }
 
             const responseData = response.data
             const data = responseData.data
+            setKgLiq(data)
         } catch (error) {
             console.error("Error fetching data:", error);
         }
@@ -262,38 +287,40 @@ const Statistics = () => {
             if (periodoUnico) {
                 switch (true) {
                     case (region && product):
-                        response = await api.get(`/exportacao/countries/${initYear}?region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        response = await api.get(`/${tradeType}/countries/${initYear}?region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
                         break;
                     case (region):
-                        response = await api.get(`/exportacao/countries/${initYear}?region=REGIAO SUDESTE`);
+                        response = await api.get(`/${tradeType}/countries/${initYear}?region=REGIAO SUDESTE`);
                         break;
                     case (product):
-                        response = await api.get(`/exportacao/countries/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        response = await api.get(`/${tradeType}/countries/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
                         break;
                     default:
-                        response = await api.get(`/exportacao/countries/${initYear}`);
+                        response = await api.get(`/${tradeType}/countries/${initYear}`);
                         break;
                 }
 
             } else {
                 switch (true) {
                     case (region && product):
-                        response = await api.get(`/exportacao/countries/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        response = await api.get(`/${tradeType}/countries/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
                         break;
                     case (region):
-                        response = await api.get(`/exportacao/countries/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE`);
+                        response = await api.get(`/${tradeType}/countries/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE`);
                         break;
                     case (product):
-                        response = await api.get(`/exportacao/countries/${initYear}?endYear=${finalYear}&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        response = await api.get(`/${tradeType}/countries/${initYear}?endYear=${finalYear}&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
                         break;
                     default:
-                        response = await api.get(`/exportacao/countries/${initYear}?endYear=${finalYear}`);
+                        response = await api.get(`/${tradeType}/countries/${initYear}?endYear=${finalYear}`);
                         break;
                 }
             }
 
             const responseData = response.data
             const data = responseData.data
+            
+            setCountries(data)
         } catch (error) {
             console.error(error);
         }
@@ -309,18 +336,6 @@ const Statistics = () => {
         }
 
     }, [product])
-
-    // useEffect(() => {
-    //     console.log(initYear, finalYear)
-    //     // getUrf()
-    //     getOverallCountries()
-    // }, [initYear, finalYear, periodoUnico])
-
-    // useEffect(() => {
-    //     console.log(initYear)
-    // }, [initYear])
-
-    // TESTE ATUALIZAÇÃO DO ESTADO YEAR
 
     const dadosTeste = {
         exportacao: [
