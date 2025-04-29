@@ -10,7 +10,7 @@ const Footer = () => {
           <div className={styles.column}>
             <h4 className={styles.title}>Projeto</h4>
             <ul className={styles.list}>
-              <li><a href="https://www.gov.br/mdic/pt-br/assuntos/comercio-exterior/estatisticas/base-de-dados-bruta">Dados utilizados</a></li>
+              <li><a href="https://www.gov.br/mdic/pt-br/assuntos/comercio-exterior/estatisticas/base-de-dados-bruta#ncms">Dados utilizados</a></li>
               <li><a href="#">Tratamento de Dados</a></li>
               <li><a href="https://github.com/CodeDontBlow/PontoLog">Github do Projeto</a></li>
             </ul>

@@ -2,11 +2,11 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 import Footer from '../../components/Footer/Footer';
 import Button from '../../components/Buttons/Button/Button'; 
 import styles from './Home.module.css';
+import IconTitle from '../../components/IconTitle/IconTitle';
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 const Home = () => {
     return (
-        <section id="pageGridLayout">
-            <section id="contentSection">
                 <div className={styles.pageContainer}>
                     <div className={styles.header}>
                         <img src="src/assets/images/home/HEADER.svg" alt="Header" className={styles.headerImagem} />
@@ -17,12 +17,18 @@ const Home = () => {
                         <section className={styles.section}>
                             <div className={styles.titleContainer}>
                                 <h2 className={styles.title}>
-                                    <span className={styles.icon}>📌</span> Sobre a PontoLog
+                                    {/* ícone SVG PontoLog */}
+                                    <img
+                                        src="src/assets/logos/LOGOSVG.svg"
+                                        alt="Logo PontoLog"
+                                        className={styles.customIcon}
+                                    />
+                                    Sobre a PontoLog
                                 </h2>
                             </div>
                             <div className={styles.conteudoLinha}>
                                 <p className={styles.text}>
-                                    No cenário globalizado de hoje, a logística internacional é a chave para expandir mercados e impulsionar negócios. 
+                                    No cenário globalizado de hoje, a logística internacional é a chave para expandir mercados e impulsionar negócios.
                                 </p>
                                 <p className={styles.text}>
                                     Por isso, use a <strong>PontoLog</strong> e faça análises melhores e mais rápidas!
@@ -37,12 +43,16 @@ const Home = () => {
                         <section className={styles.section}>
                             <div className={styles.titleContainer}>
                                 <h2 className={styles.title}>
-                                    <span className={styles.icon}>🔍</span> Filtros
+                                    <IconTitle
+                                        icon={faMagnifyingGlass}
+                                        size="large"
+                                    />
+                                    Filtros
                                 </h2>
                             </div>
                             <div className={styles.conteudoLinha}>
                                 <div className={styles.imagemLado}>
-                                    <img src="src/assets/images/home/FILTROS.svg" alt="Filtros" className={styles.image} />
+                                    <img src="src\assets\GIF\home1filtro.gif" alt="Filtros" className={styles.image} />
                                 </div>
                                 <div className={styles.textContainer}>
                                     <p className={styles.text}>
@@ -58,9 +68,13 @@ const Home = () => {
 
                         {/* seção "Funcionalidades" */}
                         <section className={styles.section}>
-                            <div className={styles.titleContainer}>
+                        <div className={styles.titleContainer}>
                                 <h2 className={styles.title}>
-                                    <span className={styles.icon}>✨</span> Funcionalidades
+                                    <IconTitle
+                                        variant="lineChart"
+                                        size="large"
+                                    />
+                                    Funcionalidades
                                 </h2>
                             </div>
                             <div className={styles.conteudoLinha}>
@@ -72,7 +86,7 @@ const Home = () => {
                                     </p>
                                 </div>
                                 <div className={styles.imagemLado}>
-                                    <img src="src/assets/images/home/FUNCIONALIDADES.svg" alt="Funcionalidades" className={styles.image} />
+                                    <img src="src\assets\GIF\home2funcionalidades.gif" alt="Funcionalidades" className={styles.image} />
                                 </div>
                             </div>
                         </section>
@@ -92,8 +106,6 @@ const Home = () => {
                         </section>
                     </div>
                 </div>
-            </section>
-        </section>
     );
 };
 

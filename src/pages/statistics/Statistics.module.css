@@ -1,145 +1,110 @@
 /* Elemento temporário para simular componentes */
-div.component{
+/* div.component{
     background-color: var(--white-700);
     width: 100%;
-    height: 100%;
-    padding: 10px 20px;
+    padding: 0.625rem 1.25rem;
     
     font: var(--text-light);
     text-align: left;
     
-    border-radius: 5px;
+    border-radius: 0.313rem;
+} */
+
+.componentTitle {
+    color: var(--black-500);
+    font: var(--text-medium);
+    text-align: start;
+}
+
+.leaflet-container {
+    background-color: transparent;
 }
 
 /* Elemento que engloba todos os demais  */
-#statisticsPage{
+#statisticsPage {
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 1.875rem;
 }
 
-    /* Área de Input */
-    section#inputArea{
-        display: grid;
-        grid-template-columns: 4fr 2fr;
-        gap: 20px;
-    }
+/* Área de Input */
+section#inputArea {
+    display: grid;
+    grid-template-columns: 4fr 2fr;
+    gap: 1.25rem;
+}
 
-        section#inputArea > div{
-            justify-items: start;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
+section#inputArea>div {
+    justify-items: start;
+    display: flex;
+    flex-direction: column;
+    gap: 0.313rem;
+}
 
-            .periodInputs{
-                width: 100%;
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-            }
+.periodInputs {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.625rem;
+}
 
-            /* Opções de Input (botões e checkbox) */
-            .inputOptions{
-                display: flex;
-                gap: 10px;
-            }
+/* Opções de Input (botões e checkbox) */
+.inputOptions {
+    display: flex;
+    gap: 0.625rem;
+}
 
-                /* Botões SH4 e SH6 */
-                .inputOptions > input[type="radio"]{
-                    display: none;
-                }
+/* Botões SH4 e SH6 */
+.inputOptions>input[type="radio"] {
+    display: none;
+}
 
-                .inputOptions > label{
-                    background-color: var(--white-700);
-                    padding: 5px 20px;
-                    
-                    color: var(--black-500);
-                    font: var(--text-light);
+.inputOptions>label {
+    background-color: var(--white-700);
+    padding: 0.313rem 1.25rem;
 
-                    border: none;
-                    border-radius: 7px;
+    color: var(--black-500);
+    font: var(--text-light);
 
-                    transition: all 200ms ease-out;
-                    user-select: none;
-                }
+    border: none;
+    border-radius: 0.438rem;
 
-                    .inputOptions > label:hover{
-                        font-weight: 500;
-                        cursor: pointer;
-                        transform: scale(1.05);
-                    }
+    transition: all 200ms ease-out;
+    user-select: none;
+}
 
-                    .inputOptions > input[type="radio"]:checked + label{
-                        background-color: var(--base-pink);
-                        
-                        color: var(--white-500);
-                        font-weight: 500;
-                    }
+.inputOptions>label:hover {
+    font-weight: 500;
+    cursor: pointer;
+    transform: scale(1.05);
+}
 
+.inputOptions>input[type="radio"]:checked+label {
+    background-color: var(--base-pink);
 
-    /* Dados iniciais */
-    section#primaryInfos{
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 25px;
-    }
-
-        /* Mapa do brasil */
-        section#primaryInfos .navMap{
-
-        }
-
-    
-    /* Dados de Exportação / Importação */
-    section#ExpImpInfos{
-        padding: 10px 25px;
-        display: flex;
-        flex-direction: column;
-        gap: 30px;
-    }
+    color: var(--white-500);
+    font-weight: 500;
+}
 
 
+/* Dados iniciais */
+section#primaryInfos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+}
 
-    /* Tempalte Reutilizável de Grid Vertical */
-    section.infoGridVertical{
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
+/* Mapa do brasil */
+section#primaryInfos .navMap {
+    width: 100%;
+    height: 100%;
+}
 
-        /* Item 1 do grid */
-        section.infoGridVertical section.topArea{
 
-        }
-
-        /* Item 2 do grid */
-        section.infoGridVertical section.midArea{
-
-        }
-
-        /* Item 3 do grid (recebe 2 elementos filho) */
-        section.infoGridVertical section.bottomArea{
-            display: grid;
-            grid-template-columns: repeat(2 , 1fr);
-            gap: 10px;
-        }
-
-    /* Tempalte Reutilizável de Grid Horizontal */
-    section.infoGridHorizontal{
-        display: grid;
-        grid-template-columns: 5fr 3fr;
-        gap: 25px;
-    }
-
-        /* Item 1 do grid */
-        section.infoGridHorizontal section.leftArea{
-            
-        }
-
-        /* Item 2 do grid (recebe 2 elementos filho) */
-        section.infoGridHorizontal section.rightArea{
-            display: grid;
-            grid-template-rows: 1fr 1fr;
-            gap: 15px;
-        }
+/* Dados de Exportação / Importação */
+section#ExpImpInfos {
+    padding: 0.625rem 6.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.875rem;
+}
