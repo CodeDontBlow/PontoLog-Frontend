@@ -19,7 +19,7 @@ const Home = () => {
                                 <h2 className={styles.title}>
                                     {/* ícone SVG PontoLog */}
                                     <img
-                                        src="src/assets/logos/LOGOSVG.svg"
+                                        src="src/assets/logos/LOGOSVG_BASEPINK.svg"
                                         alt="Logo PontoLog"
                                         className={styles.customIcon}
                                     />
