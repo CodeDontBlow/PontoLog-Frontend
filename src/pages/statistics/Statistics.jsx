@@ -19,7 +19,6 @@ import TabNavigation from '../../components/Tab/TabNavigation'
 import styles from './Statistics.module.css'
 
 const Statistics = () => {
-
     // states dos filtros
     const [sh, setSh] = useState('sh4');
     const [product, setProduct] = useState('');
@@ -28,23 +27,23 @@ const Statistics = () => {
     const [region, setRegion] = useState('');
     const [initYear, setInitYear] = useState(2014);
     const [finalYear, setFinalYear] = useState(2024);
-    const [periodoUnico, setPeriodoUnico] = useState(false);
+    const [periodoUnico, setPeriodoUnico] = useState(true);
     const [period, setPeriod] = useState([initYear, finalYear]);
-    
+
     // state de opções dos inputs
     const [opcoesDeProduto, setOpcoesDeProduto] = useState([]);
     const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
 
     // states para valores retornados pelo back
-    const [fatAgregado, setFatAgregado] = useState()
-    const [produtoPopular, setProdutoPopular] = useState()
-    const [vias, setVias] = useState()
-    const [urfs, setUrfs] = useState()
-    const [vlAgregado, setVlAgregado] = useState()
-    const [kgLiq, setKgLiq] = useState()
-    const [vlFob, setVlFob] = useState()
-    const [countries, setCountries] = useState()
-    
+    const [fatAgregado, setFatAgregado] = useState(null)
+    const [produtoPopular, setProdutoPopular] = useState('')
+    const [vias, setVias] = useState([])
+    const [urfs, setUrfs] = useState([])
+    const [vlAgregado, setVlAgregado] = useState([])
+    const [kgLiq, setKgLiq] = useState([])
+    const [vlFob, setVlFob] = useState([])
+    const [countries, setCountries] = useState([])
+
     const getProductByLetter = async () => {
         if (product.length > 0) {
             try {
@@ -77,7 +76,6 @@ const Statistics = () => {
             setFatAgregado(data)
         } catch (error) {
             console.error("Error fetching data:", error)
-
         }
     }
 
@@ -319,12 +317,63 @@ const Statistics = () => {
 
             const responseData = response.data
             const data = responseData.data
-            
+
             setCountries(data)
         } catch (error) {
             console.error(error);
         }
     }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            console.time("fetchData");
+            try {
+                await Promise.all([
+                    getFat(),
+                    getProduct(),
+                    getVia(),
+                    getUrf(),
+                    getVlAgregado(),
+                    getVlFob(),
+                    getKgLiq(),
+                    // getOverallCountries(),
+                ]);
+            } catch (error) {
+                console.error("Erro ao buscar dados", error);
+            } finally {
+                console.timeEnd("fetchData");
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    // useEffect(() => {
+    //     const logStates = () => {
+    //         console.group("Depuração de Estados");
+    //         console.log("fatAgregado:", fatAgregado);
+    //         console.log("produtoPopular:", produtoPopular);
+    //         console.log("vias:", vias);
+    //         console.log("urfs:", urfs);
+    //         console.log("vlAgregado:", vlAgregado);
+    //         console.log("kgLiq:", kgLiq);
+    //         console.log("vlFob:", vlFob);
+    //         console.log("countries:", countries);
+    //         console.groupEnd();
+    //     };
+
+    //     logStates();
+    // }, [fatAgregado, produtoPopular, vias, urfs, vlAgregado, kgLiq, vlFob, countries]);
+
+    useEffect(() => {
+        console.log(kgLiq)
+        console.log(typeof (kgLiq))
+
+        // console.log("infos:", urfs.map(urf => urf.NO_URF))
+        console.log("values:", kgLiq.map(value => Number(value.total)))
+
+
+    }, [kgLiq])
 
     useEffect(() => {
         setProduct(product ? product[0].toUpperCase() + product.slice(1).toLowerCase() : product)
@@ -470,7 +519,7 @@ const Statistics = () => {
                 {/* Input do Nome do Produto */}
                 <div className={styles.productArea}>
                     {/* <Input label="Nome do Produto" type="text" placeholder="Produto" id="product"/> */}
-                    <Dropdown label={"Produtos"} search={true} placeholder={"Pesquisar..."} options={opcoesDeProduto} value={product} onChange={(e) => setProduct(e.target.value)} onSelect={(produto) => setProduct(produto)}/>
+                    <Dropdown label={"Produtos"} search={true} placeholder={"Pesquisar..."} options={opcoesDeProduto} value={product} onChange={(e) => setProduct(e.target.value)} onSelect={(produto) => setProduct(produto)} />
                     {/* Botões SH4 e SH6 */}
                     <div className={styles.inputOptions}>
                         {/* SH4 */}
@@ -541,7 +590,7 @@ const Statistics = () => {
                     {/* Parte de Baixo */}
                     <section className="bottomArea">
                         {/* Item 1 */}
-                        <InfoCard title="Exportação" fatorAgregado="Muito manufaturado" produto="Grãos de Soja" />
+                        <InfoCard title="Exportação" fatorAgregado={fatAgregado} produto={produtoPopular} />
                         {/* Item 2 */}
                         <InfoCard title="Importação" fatorAgregado="Pouco manufaturado" produto="Grãos de Arroz" />
                     </section>
@@ -575,20 +624,25 @@ const Statistics = () => {
                         {/* Item 1 */}
                         <div className="gridItem">
                             <IconTitle variant="barChart" title="Principais Vias Usadas" size='light' />
-                            <BarChart
-                                items={["Via Aquífera", "Via Rodoviária", "Via Aérea"]}
-                                values={[512, 485, 271]}
-                                colorPalette={["#D92B66"]}
-                            />
+
+                            {vias.length > 0 && (
+                                <BarChart
+                                    items={vias.map(via => via.NO_VIA)}
+                                    values={vias.map(via => Number(via.total))}
+                                    colorPalette={["#D92B66"]}
+                                />
+                            )}
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
-                            <IconTitle variant="barChart" title="Principais Vias Usadas" size='light' />
-                            <BarChart
-                                items={["Porto 123", "Rodovia 123", "Aeroporto 123"]}
-                                values={[52, 45, 21]}
-                                colorPalette={["#D92B66"]}
-                            />
+                            <IconTitle variant="barChart" title="Principais URFs" size='light' />
+                            {urfs.length > 0 && (
+                                <BarChart
+                                    items={urfs.map(urf => urf.NO_URF)}
+                                    values={vias.map(urf => Number(urf.total))}
+                                    colorPalette={["#D92B66"]}
+                                />
+                            )}
                         </div>
                     </section>
                 </section>
@@ -599,15 +653,17 @@ const Statistics = () => {
                     <section className="leftArea">
                         <div className="gridItem">
                             <IconTitle title="Valor Agregado" variant="lineChart" size='medium' />
-                            <LineChart
-                                period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
-                                chartTitle="Valor Agregado"
-                                dataName="Balança Comercial"
-                                colorPalette={["#D92B66"]}
-                                id="bottomInfo11"
-                                group="bottomInfo1"
-                            />
+                            {vlAgregado.length > 0 && (
+                                <LineChart
+                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                    values={vlAgregado.map(value => Number(value.total))}
+                                    dataName="Balança Comercial"
+                                    colorPalette={["#D92B66"]}
+                                    id="bottomInfo11"
+                                    group="bottomInfo1"
+                                />
+                            )
+                            }
                         </div>
                     </section>
                     {/* Parte da Direita */}
@@ -615,26 +671,33 @@ const Statistics = () => {
                         {/* Item 1 */}
                         <div className="gridItem">
                             <IconTitle title="Quilograma Líquido" variant="lineChart" size='light' />
-                            <LineChart
-                                period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
-                                dataName="kg_liquido"
-                                colorPalette={["#D92B66"]}
-                                id="bottomInfo12"
-                                group="bottomInfo1"
-                            />
+                            {kgLiq.length > 0 && (
+                                <LineChart
+                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                    values={kgLiq.map(value => Number(value.total))}
+                                    dataName="kg_liquido"
+                                    colorPalette={["#D92B66"]}
+                                    id="bottomInfo12"
+                                    group="bottomInfo1"
+                                />
+                            )
+                            }
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
                             <IconTitle title="Valor FOB" variant="lineChart" size="light" />
-                            <LineChart
-                                period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
-                                dataName="vl_fob"
-                                colorPalette={["#D92B66"]}
-                                id="bottomInfo13"
-                                group="bottomInfo1"
-                            />
+
+                            {vlFob.length > 0 && (
+                                <LineChart
+                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                    values={vlFob.map(value => Number(value.total))}
+                                    dataName="vl_fob"
+                                    colorPalette={["#D92B66"]}
+                                    id="bottomInfo13"
+                                    group="bottomInfo1"
+                                />
+                            )
+                            }
                         </div>
                     </section>
                 </section>
