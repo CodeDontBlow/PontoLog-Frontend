@@ -336,7 +336,7 @@ const Statistics = () => {
                     getVlAgregado(),
                     getVlFob(),
                     getKgLiq(),
-                    // getOverallCountries(),
+                    getOverallCountries(),
                 ]);
             } catch (error) {
                 console.error("Erro ao buscar dados", error);
@@ -347,33 +347,6 @@ const Statistics = () => {
 
         fetchData();
     }, []);
-
-    // useEffect(() => {
-    //     const logStates = () => {
-    //         console.group("Depuração de Estados");
-    //         console.log("fatAgregado:", fatAgregado);
-    //         console.log("produtoPopular:", produtoPopular);
-    //         console.log("vias:", vias);
-    //         console.log("urfs:", urfs);
-    //         console.log("vlAgregado:", vlAgregado);
-    //         console.log("kgLiq:", kgLiq);
-    //         console.log("vlFob:", vlFob);
-    //         console.log("countries:", countries);
-    //         console.groupEnd();
-    //     };
-
-    //     logStates();
-    // }, [fatAgregado, produtoPopular, vias, urfs, vlAgregado, kgLiq, vlFob, countries]);
-
-    useEffect(() => {
-        console.log(kgLiq)
-        console.log(typeof (kgLiq))
-
-        // console.log("infos:", urfs.map(urf => urf.NO_URF))
-        console.log("values:", kgLiq.map(value => Number(value.total)))
-
-
-    }, [kgLiq])
 
     useEffect(() => {
         setProduct(product ? product[0].toUpperCase() + product.slice(1).toLowerCase() : product)
