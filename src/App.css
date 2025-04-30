@@ -23,6 +23,6 @@ section#pageGridLayout{
 /* <section> que abriga o conteúdo da página (ue será passado pela rota) */
 section#contentSection{
   grid-area: content;
-  padding: 35px;
-  padding-top: 20px;
+  padding: 2.1rem;
+  padding-top: 1.25rem;
 }
