@@ -84,7 +84,7 @@ const Statistics = () => {
 
     const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 50), [sh]);
 
-    const fetchData = async (endpoint, setter, num) => {
+    const fetchData = async (endpoint, setter) => {
         try {
             const params = buildQueryParams()
             const response = await api.get(`/${tradeType}/${endpoint}/${initYear}?${params}`)
@@ -102,13 +102,13 @@ const Statistics = () => {
         const fetchAllData = async () => {
             try {
                 await Promise.all([
-                    fetchData('fat', setFatAgregado, 1),
-                    fetchData(`product/no_${sh}_por`, setProdutoPopular, 2),
-                    fetchData('via', setVias, 3),
-                    fetchData('urf', setUrfs, 4),
-                    fetchData('vl_agregado', setVlAgregado, 5),
-                    fetchData('vl_fob', setVlFob, 6),
-                    fetchData('kg_liquido', setKgLiq, 7),
+                    fetchData('fat', setFatAgregado),
+                    fetchData(`product/no_${sh}_por`, setProdutoPopular),
+                    fetchData('via', setVias),
+                    fetchData('urf', setUrfs),
+                    fetchData('vl_agregado', setVlAgregado),
+                    fetchData('vl_fob', setVlFob),
+                    fetchData('kg_liquido', setKgLiq),
                     // fetchData('countries', setCountries),
                 ]);
             } catch (error) {
