@@ -22,9 +22,9 @@ const Statistics = () => {
     // states dos filtros
     const [sh, setSh] = useState('sh4');
     const [product, setProduct] = useState('');
-    const [estado, setEstado] = useState('');
+    // const [estado, setEstado] = useState('');
     const [tradeType, setTradeType] = useState('exportacao');
-    const [region, setRegion] = useState('');
+    // const [region, setRegion] = useState('');
     const [initYear, setInitYear] = useState(2014);
     const [finalYear, setFinalYear] = useState(2024);
     const [periodoUnico, setPeriodoUnico] = useState(true);
@@ -42,17 +42,15 @@ const Statistics = () => {
     const [vlAgregado, setVlAgregado] = useState([])
     const [kgLiq, setKgLiq] = useState([])
     const [vlFob, setVlFob] = useState([])
-    const [countries, setCountries] = useState([])
+    // const [countries, setCountries] = useState([])
 
     const buildQueryParams = () => {
         const params = new URLSearchParams()
 
-        if (region) params.append('region', region);
+        // if (region) params.append('region', region);
         if (product) params.append('productName', product);
         if (sh) params.append('sh', `no_${sh}_por`);
         if (!periodoUnico) params.append('endYear', finalYear);
-
-        console.log("params", params.toString())
 
         return params.toString();
     }
@@ -61,6 +59,7 @@ const Statistics = () => {
         if (searchTerm.length > 0) {
             const formattedTerm = searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1).toLowerCase();
             try {
+                console.log(`/product/no_${sh}_por/${formattedTerm}`)
                 const response = await api.get(`/product/no_${sh}_por/${formattedTerm}`);
 
                 const responseData = response.data;
@@ -83,9 +82,9 @@ const Statistics = () => {
         };
     };
 
-    const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 150), [sh]);
+    const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 50), [sh]);
 
-    const fetchData = async (endpoint, setter) => {
+    const fetchData = async (endpoint, setter, num) => {
         try {
             const params = buildQueryParams()
             const response = await api.get(`/${tradeType}/${endpoint}/${initYear}?${params}`)
@@ -101,34 +100,30 @@ const Statistics = () => {
 
     useEffect(() => {
         const fetchAllData = async () => {
-            console.time("fetchData");
             try {
                 await Promise.all([
-                    fetchData('fat', setFatAgregado),
-                    fetchData(`product/no_${sh}_por`, setProdutoPopular),
-                    fetchData('via', setVias),
-                    fetchData('urf', setUrfs),
-                    fetchData('vl_agregado', setVlAgregado),
-                    fetchData('vl_fob', setVlFob),
-                    fetchData('kg_liquido', setKgLiq),
-                    fetchData('countries', setCountries),
+                    fetchData('fat', setFatAgregado, 1),
+                    fetchData(`product/no_${sh}_por`, setProdutoPopular, 2),
+                    fetchData('via', setVias, 3),
+                    fetchData('urf', setUrfs, 4),
+                    fetchData('vl_agregado', setVlAgregado, 5),
+                    fetchData('vl_fob', setVlFob, 6),
+                    fetchData('kg_liquido', setKgLiq, 7),
+                    // fetchData('countries', setCountries),
                 ]);
             } catch (error) {
                 console.error("Erro ao buscar dados", error);
-            }   finally {
-                console.timeEnd("fetchData")
             }
-
         };
 
         fetchAllData()
-    }, [product, initYear, finalYear, tradeType, region, periodoUnico, sh]);
+    }, [product, initYear, finalYear, tradeType, periodoUnico, sh]);
 
     useEffect(() => {
-    if (product.length > 0) {
-        getProductByLetter(product);
-    }
-}, [product, sh]);
+        if (product.length > 0) {
+            getProductByLetter(product);
+        }
+    }, [product, sh]);
 
     const dadosTeste = {
         exportacao: [
@@ -263,7 +258,7 @@ const Statistics = () => {
                 {/* Input do Nome do Produto */}
                 <div className={styles.productArea}>
                     {/* <Input label="Nome do Produto" type="text" placeholder="Produto" id="product"/> */}
-                    <Dropdown label={"Produtos"} search={true} placeholder={"Pesquisar..."} options={opcoesDeProduto} value={product} onChange={(e) => {
+                    <Dropdown label={"Produtos"} search={true} placeholder={"Pesquisar..."} options={opcoesDeProduto.length > 0 ? opcoesDeProduto : ['...']} value={product} onChange={(e) => {
                         const value = e.target.value;
                         setProduct(value);
                         debouncedGetProductByLetter(value);
@@ -273,12 +268,20 @@ const Statistics = () => {
                     {/* Botões SH4 e SH6 */}
                     <div className={styles.inputOptions}>
                         {/* SH4 */}
-                        <input type="radio" name="sh-selection" id="sh4" defaultChecked onClick={() => setSh('sh4')} />
+                        <input type="radio" name="sh-selection" id="sh4" defaultChecked onClick={() => {
+                            setSh('sh4');
+                            setProduct('');
+                            setOpcoesDeProduto([])
+                        }} />
                         <label htmlFor="sh4"> SH4 </label>
 
                         {/* SH6 */}
 
-                        <input type="radio" name="sh-selection" id="sh6" onClick={() => setSh('sh6')} />
+                        <input type="radio" name="sh-selection" id="sh6" onClick={() => {
+                            setSh('sh6');
+                            setProduct('');
+                            setOpcoesDeProduto('');
+                        }} />
                         <label htmlFor="sh6"> SH6 </label>
                     </div>
                 </div>
@@ -286,8 +289,8 @@ const Statistics = () => {
                 {/* Input de Periodo de Tempo */}
                 <div className={styles.periodArea}>
                     {/* Inputs */}
+                    <label className={styles.label} > Período de tempo</label>
                     <div className={styles.periodInputs}>
-                        <label className={styles.label} > Período de tempo</label>
                         {/* Primeiro Ano do Período */}
                         <div className={styles.firstYear}>
                             {/* <Input label="Período de Tempo" placeholder="Ano de Início" type="number" id="firstYear" /> */}
@@ -297,7 +300,8 @@ const Statistics = () => {
                         {/* Último Ano do Período */}
                         <div className={styles.lastYear}>
                             {/* <Input label="..." placeholder="Ano de Término" type="Number" id="lastYear" / */}
-                            {!periodoUnico && <Dropdown label={"Ano de Início"} options={years} placeholder={"Ano de Início"} value={finalYear} onSelect={(year) => setFinalYear(year)} />}
+
+                  <Dropdown label={"Ano de Início"} options={years} placeholder={"Ano de Início"} value={finalYear} onSelect={(year) => setFinalYear(year)} disable={periodoUnico}/>
                         </div>
                     </div>
 
