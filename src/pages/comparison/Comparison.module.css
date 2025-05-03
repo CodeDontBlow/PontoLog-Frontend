@@ -5,25 +5,33 @@ h1.titleMedium {
 
 h1.titleRegular {
     color: var(--black-500); 
-    font: var(--title-regular); 
+    font: var(--title-regular);
+    margin: 20px -5px; 
 }
 
 p.textMedium  { 
     color: var(--black-500); 
     font: var(--text-medium); 
+    margin: 20px 20px;
 } 
 
 p.labelMedium  { 
     color: var(--black-500); 
-    font: var(--label-medium); 
+    font: var(--label-medium);
+    margin: 10px 0px; 
 } 
+Button.comparar {
+    margin: 10px 0px; 
+}
 
 .redirectArea{
     display: flex;
+    margin: 50px 50px;
+    gap: 100px;
 }
 
 .contentArea{
-    padding: 50px;
+    margin: 50px;
 }
 
 img.header{
