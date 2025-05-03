@@ -5,22 +5,16 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import Input from "../Input/Input";
 import styles from './Dropdown.module.css';
 
-export const Dropdown = ({ label, options = [], classname, search = false, onSelect, placeholder }) => {
+const Dropdown = ({ label, options = [], value, classname = '', search = false, onSelect, placeholder, onChange }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [filter, setFilter] = useState('');
     const [selectedOption, setSelectedOption] = useState(null);
     const [focused, setFocused] = useState(false);
     const dropdownRef = useRef(null);
 
-    const filteredOptions = options.filter(option =>
-        option.toLowerCase().includes(filter.toLowerCase())
-    );
-
     const handleSelectOption = (option) => {
         setIsOpen(false);
         setSelectedOption(option);
-        onSelect(option);
-        setFilter(option);
+        onSelect && onSelect(option);
     };
 
     useEffect(() => {
@@ -45,9 +39,9 @@ export const Dropdown = ({ label, options = [], classname, search = false, onSel
                         type="text"
                         label={label}
                         placeholder={placeholder}
-                        value={filter}
-                        onChange={(e) => setFilter(e.target.value)}
-                        onFocus={() => {setIsOpen(true); setFocused(true)}}
+                        value={value}
+                        onChange={onChange}
+                        onFocus={() => { setIsOpen(true); setFocused(true); }}
                         focused={focused}
                         showIcon={true}
                         classname={styles.input}
@@ -61,8 +55,8 @@ export const Dropdown = ({ label, options = [], classname, search = false, onSel
             )}
 
             {isOpen && (
-                <ul className={`${styles.options} ${search ? styles.optionsSearch : ''}  ${isOpen ? styles.open : ''}`}>
-                    {(search ? filteredOptions : options).map((option, index) => (
+                <ul className={`${styles.options} ${search ? styles.optionsSearch : ''} ${isOpen ? styles.open : ''}`}>
+                    {options.map((option, index) => (
                         <li
                             key={index}
                             className={styles.option}
@@ -76,3 +70,5 @@ export const Dropdown = ({ label, options = [], classname, search = false, onSel
         </div>
     );
 };
+
+export default Dropdown;
