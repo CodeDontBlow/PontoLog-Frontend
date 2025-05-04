@@ -1,5 +1,5 @@
 // Importando biblioteca de terceiros
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 
 // Importando componentes e api
@@ -22,9 +22,9 @@ const Statistics = () => {
     // states dos filtros
     const [sh, setSh] = useState('sh4');
     const [product, setProduct] = useState('');
-    const [estado, setEstado] = useState('');
+    // const [estado, setEstado] = useState('');
     const [tradeType, setTradeType] = useState('exportacao');
-    const [region, setRegion] = useState('');
+    // const [region, setRegion] = useState('');
     const [initYear, setInitYear] = useState(2014);
     const [finalYear, setFinalYear] = useState(2024);
     const [periodoUnico, setPeriodoUnico] = useState(true);
@@ -42,322 +42,88 @@ const Statistics = () => {
     const [vlAgregado, setVlAgregado] = useState([])
     const [kgLiq, setKgLiq] = useState([])
     const [vlFob, setVlFob] = useState([])
-    const [countries, setCountries] = useState([])
+    // const [countries, setCountries] = useState([])
 
-    const getProductByLetter = async () => {
-        if (product.length > 0) {
+    const buildQueryParams = () => {
+        const params = new URLSearchParams()
+
+        // if (region) params.append('region', region);
+        if (product) params.append('productName', product);
+        if (sh) params.append('sh', `no_${sh}_por`);
+        if (!periodoUnico) params.append('endYear', finalYear);
+
+        return params.toString();
+    }
+
+    const getProductByLetter = async (searchTerm) => {
+        if (searchTerm.length > 0) {
+            const formattedTerm = searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1).toLowerCase();
             try {
-                const response = await api.get(`/product/no_${sh}_por/${product}`)
+                console.log(`/product/no_${sh}_por/${formattedTerm}`)
+                const response = await api.get(`/product/no_${sh}_por/${formattedTerm}`);
 
-                const responseData = response.data
-                const data = responseData.data
+                const responseData = response.data;
+                const data = responseData.data;
 
-                setOpcoesDeProduto(data)
+                setOpcoesDeProduto(data);
             } catch (error) {
-                console.error("Error fetching data:", error)
+                console.error("Error fetching data:", error);
             }
+        } else {
+            setOpcoesDeProduto([])
         }
     }
 
-    const getFat = async () => {
-        try {
-            let response;
+    const debounce = (func, delay) => {
+        let timer;
+        return (...args) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => func(...args), delay);
+        };
+    };
 
-            if (periodoUnico) {
-                response = await api.get(`/${tradeType}/fat/${initYear}`)
-            }
-            else {
-                response = await api.get(`/${tradeType}/fat/${initYear}?endYear=${finalYear}`)
-            }
+    const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 50), [sh]);
+
+    const fetchData = async (endpoint, setter) => {
+        try {
+            const params = buildQueryParams()
+            const response = await api.get(`/${tradeType}/${endpoint}/${initYear}?${params}`)
 
             const responseData = response.data
             const data = responseData.data
 
-            setFatAgregado(data)
+            setter(data)
         } catch (error) {
-            console.error("Error fetching data:", error)
-        }
-    }
-
-    const getProduct = async () => {
-        try {
-            let response;
-
-            if (periodoUnico) {
-                response = await api.get(`/${tradeType}/product/no_${sh}_por/${initYear}`)
-            }
-            else {
-                response = await api.get(`/${tradeType}/product/no_${sh}_por/${initYear}?endYear=${finalYear}`)
-            }
-
-            const responseData = response.data
-            const data = responseData.data
-
-            setProdutoPopular(data)
-        } catch (error) {
-            console.error("Error fetching data:", error)
-
-        }
-    }
-
-    const getVia = async () => {
-        try {
-            let response;
-
-            if (periodoUnico) {
-                response = await api.get(`/${tradeType}/via/${initYear}`)
-            }
-            else {
-                response = await api.get(`/${tradeType}/via/${initYear}?endYear=${finalYear}`)
-            }
-
-            const responseData = response.data
-            const data = responseData.data
-
-            setVias(data)
-        } catch (error) {
-            console.error("Error fetching data:", error)
-        }
-    }
-
-
-    const getUrf = async () => {
-        try {
-            let response;
-
-            if (periodoUnico) {
-                response = await api.get(`/${tradeType}/urf/${initYear}`)
-            }
-            else {
-                response = await api.get(`/${tradeType}/urf/${initYear}?endYear=${finalYear}`)
-            }
-
-            const responseData = response.data
-            const data = responseData.data
-
-            setUrfs(data)
-        } catch (error) {
-            console.error("Error fetching data:", error)
-
-        }
-    }
-
-    const getVlAgregado = async () => {
-        try {
-            let response;
-
-            if (periodoUnico) {
-                switch (true) {
-                    case (region && product):
-                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}?region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
-                        break;
-                    case (region):
-                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}?region=REGIAO SUDESTE`);
-                        break;
-                    case (product):
-                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
-                        break;
-                    default:
-                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}`);
-                        break;
-                }
-            } else {
-                switch (true) {
-                    case (estado && region && product):
-                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
-                        break;
-                    case (estado && region):
-                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE`);
-                        break;
-                    case (product):
-                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}?endYear=${finalYear}&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
-                        break;
-                    default:
-                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}?endYear=${finalYear}`);
-                        break;
-                }
-            }
-
-            const responseData = response.data
-            const data = responseData.data
-            setVlAgregado(data)
-        } catch (error) {
-            console.error("Error fetching data:", error)
-
-        }
-    }
-
-
-    const getVlFob = async () => {
-        try {
-            let response;
-
-            if (periodoUnico) {
-                switch (true) {
-                    case (region && product):
-                        response = await api.get(`/${tradeType}/vl_fob/${initYear}?region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
-                        break;
-                    case (region):
-                        response = await api.get(`/${tradeType}/vl_fob/${initYear}?region=REGIAO SUDESTE`);
-                        break;
-                    case (product):
-                        response = await api.get(`/${tradeType}/vl_fob/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
-                        break;
-                    default:
-                        response = await api.get(`/${tradeType}/vl_fob/${initYear}`);
-                        break;
-                }
-            } else {
-                switch (true) {
-                    case (region && product):
-                        response = await api.get(`/${tradeType}/vl_fob/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
-                        break;
-                    case (region):
-                        response = await api.get(`/${tradeType}/vl_fob/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE`);
-                        break;
-                    case (product):
-                        response = await api.get(`/${tradeType}/vl_fob/${initYear}?endYear=${finalYear}&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
-                        break;
-                    default:
-                        response = await api.get(`/${tradeType}/vl_fob/${initYear}?endYear=${finalYear}`);
-                        break;
-                }
-            }
-
-            const responseData = response.data
-            const data = responseData.data
-
-            setVlFob(data)
-        } catch (error) {
-            console.error("Error fetching data:", error)
-
-        }
-    }
-
-    const getKgLiq = async () => {
-        try {
-            let response;
-
-            if (periodoUnico) {
-                switch (true) {
-                    case (region && product):
-                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}?region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
-                        break;
-                    case (region):
-                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}?region=REGIAO SUDESTE`);
-                        break;
-                    case (product):
-                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
-                        break;
-                    default:
-                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}`);
-                        break;
-                }
-            } else {
-                switch (true) {
-                    case (region && product):
-                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
-                        break;
-                    case (region):
-                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE`);
-                        break;
-                    case (product):
-                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}?endYear=${finalYear}&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
-                        break;
-                    default:
-                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}?endYear=${finalYear}`);
-                        break;
-                }
-            }
-
-            const responseData = response.data
-            const data = responseData.data
-            setKgLiq(data)
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    }
-
-    const getOverallCountries = async () => {
-        try {
-            let response;
-
-            if (periodoUnico) {
-                switch (true) {
-                    case (region && product):
-                        response = await api.get(`/${tradeType}/countries/${initYear}?region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
-                        break;
-                    case (region):
-                        response = await api.get(`/${tradeType}/countries/${initYear}?region=REGIAO SUDESTE`);
-                        break;
-                    case (product):
-                        response = await api.get(`/${tradeType}/countries/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
-                        break;
-                    default:
-                        response = await api.get(`/${tradeType}/countries/${initYear}`);
-                        break;
-                }
-
-            } else {
-                switch (true) {
-                    case (region && product):
-                        response = await api.get(`/${tradeType}/countries/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
-                        break;
-                    case (region):
-                        response = await api.get(`/${tradeType}/countries/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE`);
-                        break;
-                    case (product):
-                        response = await api.get(`/${tradeType}/countries/${initYear}?endYear=${finalYear}&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
-                        break;
-                    default:
-                        response = await api.get(`/${tradeType}/countries/${initYear}?endYear=${finalYear}`);
-                        break;
-                }
-            }
-
-            const responseData = response.data
-            const data = responseData.data
-
-            setCountries(data)
-        } catch (error) {
-            console.error(error);
+            console.error(`Erro fetching ${endpoint}:`, error)
         }
     }
 
     useEffect(() => {
-        const fetchData = async () => {
-            console.time("fetchData");
+        const fetchAllData = async () => {
             try {
                 await Promise.all([
-                    getFat(),
-                    getProduct(),
-                    getVia(),
-                    getUrf(),
-                    getVlAgregado(),
-                    getVlFob(),
-                    getKgLiq(),
-                    getOverallCountries(),
+                    fetchData('fat', setFatAgregado),
+                    fetchData(`product/no_${sh}_por`, setProdutoPopular),
+                    fetchData('via', setVias),
+                    fetchData('urf', setUrfs),
+                    fetchData('vl_agregado', setVlAgregado),
+                    fetchData('vl_fob', setVlFob),
+                    fetchData('kg_liquido', setKgLiq),
+                    // fetchData('countries', setCountries),
                 ]);
             } catch (error) {
                 console.error("Erro ao buscar dados", error);
-            } finally {
-                console.timeEnd("fetchData");
             }
         };
 
-        fetchData();
-    }, []);
+        fetchAllData()
+    }, [product, initYear, finalYear, tradeType, periodoUnico, sh]);
 
     useEffect(() => {
-        setProduct(product ? product[0].toUpperCase() + product.slice(1).toLowerCase() : product)
-
-        console.log(product)
-
         if (product.length > 0) {
-            getProductByLetter()
+            getProductByLetter(product);
         }
-
-    }, [product])
+    }, [product, sh]);
 
     const dadosTeste = {
         exportacao: [
@@ -492,16 +258,30 @@ const Statistics = () => {
                 {/* Input do Nome do Produto */}
                 <div className={styles.productArea}>
                     {/* <Input label="Nome do Produto" type="text" placeholder="Produto" id="product"/> */}
-                    <Dropdown label={"Produtos"} search={true} placeholder={"Pesquisar..."} options={opcoesDeProduto} value={product} onChange={(e) => setProduct(e.target.value)} onSelect={(produto) => setProduct(produto)} />
+                    <Dropdown label={"Produtos"} search={true} placeholder={"Pesquisar..."} options={opcoesDeProduto.length > 0 ? opcoesDeProduto : ['...']} value={product} onChange={(e) => {
+                        const value = e.target.value;
+                        setProduct(value);
+                        debouncedGetProductByLetter(value);
+                    }
+                    }
+                        onSelect={(produto) => setProduct(produto)} />
                     {/* Botões SH4 e SH6 */}
                     <div className={styles.inputOptions}>
                         {/* SH4 */}
-                        <input type="radio" name="sh-selection" id="sh4" defaultChecked onClick={() => setSh('sh4')} />
+                        <input type="radio" name="sh-selection" id="sh4" defaultChecked onClick={() => {
+                            setSh('sh4');
+                            setProduct('');
+                            setOpcoesDeProduto([])
+                        }} />
                         <label htmlFor="sh4"> SH4 </label>
 
                         {/* SH6 */}
 
-                        <input type="radio" name="sh-selection" id="sh6" onClick={() => setSh('sh6')} />
+                        <input type="radio" name="sh-selection" id="sh6" onClick={() => {
+                            setSh('sh6');
+                            setProduct('');
+                            setOpcoesDeProduto('');
+                        }} />
                         <label htmlFor="sh6"> SH6 </label>
                     </div>
                 </div>
@@ -509,8 +289,8 @@ const Statistics = () => {
                 {/* Input de Periodo de Tempo */}
                 <div className={styles.periodArea}>
                     {/* Inputs */}
+                    <label className={styles.label} > Período de tempo</label>
                     <div className={styles.periodInputs}>
-                        <label className={styles.label} > Período de tempo</label>
                         {/* Primeiro Ano do Período */}
                         <div className={styles.firstYear}>
                             {/* <Input label="Período de Tempo" placeholder="Ano de Início" type="number" id="firstYear" /> */}
@@ -520,7 +300,8 @@ const Statistics = () => {
                         {/* Último Ano do Período */}
                         <div className={styles.lastYear}>
                             {/* <Input label="..." placeholder="Ano de Término" type="Number" id="lastYear" / */}
-                            {!periodoUnico && <Dropdown label={"Ano de Início"} options={years} placeholder={"Ano de Início"} value={finalYear} onSelect={(year) => setFinalYear(year)} />}
+
+                  <Dropdown label={"Ano de Início"} options={years} placeholder={"Ano de Início"} value={finalYear} onSelect={(year) => setFinalYear(year)} disable={periodoUnico}/>
                         </div>
                     </div>
 
