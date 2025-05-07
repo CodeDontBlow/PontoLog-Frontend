@@ -1,9 +1,6 @@
 import Button from '../../components/Buttons/Button/Button' 
 import styles from './Comparison.module.css' 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
 import { faBalanceScale } from '@fortawesome/free-solid-svg-icons'; 
-import Footer from '../../components/Footer/Footer';
-import Sidebar from '../../components/Sidebar/Sidebar';
 import IconTitle from '../../components/IconTitle/IconTitle';
  
  
@@ -30,7 +27,7 @@ const Comparison = () => {
             
             <p className={styles.labelMedium}>Selecione e compare dois estados entre si.</p>
             
-            <Button label={"Comparar"} ></Button>
+            <Button label={"Comparar"} onClick={() => {window.location = "/comparison/statistics"}} ></Button>
           </div>
 
         </div>
