@@ -1,0 +1,37 @@
+.card{
+    background-color: var(--white-300);
+    padding: 15px;
+    height: fit-content;
+
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+
+    border: 3px solid var(--white-700);
+    border-radius: 10px;
+}
+
+.colorArea{
+    background-color: currentColor;
+    
+    border-radius: 10px;
+    
+    aspect-ratio: 1 / 1;
+}
+
+.contentArea{
+    max-height: 100%;
+    overflow: hidden;
+}
+
+    .title{
+        color: currentColor;
+        font: var(--text-large);
+        font-weight: 600;
+    }
+
+    .text{
+        color: var(--black-500);
+        font: var(--footer-medium);
+        line-height: 13px;
+    }

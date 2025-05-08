@@ -534,7 +534,7 @@ const Statistics = () => {
 
 
             {/* Alerta de quais Informações estão sendo exibidas */}
-            <AlertCard icon={faCircleInfo} product="Todos os Produtos" region="Brasil" period={period} />
+            <AlertCard variant="allInfo" icon={faCircleInfo} product="Todos os Produtos" region="Brasil" period={period} />
 
 
 
