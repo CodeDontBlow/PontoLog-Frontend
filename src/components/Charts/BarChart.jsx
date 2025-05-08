@@ -1,8 +1,14 @@
 import Chart from "react-apexcharts"
-import { useState } from "react";
+import { useState , useEffect } from "react";
 
 //GRÁFICO DE BARRA
 function BarChart({items , values , chartDescription , colorPalette}){
+
+    useEffect(() => {
+        setTimeout(() => {
+            window.dispatchEvent(new Event('resize'));
+        },100);
+    }, []);
 
     //PROPS
     //items: Itens que estão sendo exibidos (eixo y, ex.: nomes de vias) [lista]

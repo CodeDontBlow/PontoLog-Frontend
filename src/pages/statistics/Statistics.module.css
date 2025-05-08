@@ -103,7 +103,7 @@ section#primaryInfos .navMap {
 
 /* Dados de Exportação / Importação */
 section#ExpImpInfos {
-    padding: 0.625rem 6.25rem;
+    padding: 0.625rem 1.563em;
     display: flex;
     flex-direction: column;
     gap: 1.875rem;

@@ -1,6 +1,6 @@
 import styles from "./ColorCard.module.css"
 
-const ColorCard = ({title , color , content}) => {
+const ColorCard = ({title , color , region , content}) => {
     return(
         <div className={styles.card} style={{color: color}}>
             <div className={styles.colorArea}>
@@ -11,9 +11,19 @@ const ColorCard = ({title , color , content}) => {
                     {title}
                 </h4>
 
-                <p className={styles.text}>
-                    {content}
-                </p>
+                {(region) &&
+                    <p className={styles.text}>
+                        {"Dados de "}
+                        <span style={{color: color}} className={styles.highlightText}>{region}</span> 
+                        {" serão exibidos por essa cor"}.
+                    </p>
+                }
+                {(content) &&
+                    <p className={styles.text}>
+                        {content}
+                    </p>
+                }
+
             </div>
         </div>
     )

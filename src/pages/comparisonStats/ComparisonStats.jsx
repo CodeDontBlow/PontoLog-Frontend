@@ -1,10 +1,3 @@
-// Importando biblioteca de terceiros
-import { useState } from 'react'
-
-// Importando componentes e api
-import api from '../../api/api'
-import Button from '../../components/Buttons/Button/Button'
-
 // Importando CSS e Componentes
 import styles from './ComparisonStats.module.css'
 import LineChart from '../../components/Charts/LineChart'
@@ -12,7 +5,6 @@ import DoubleLineChart from '../../components/Charts/DoubleLineChart'
 import ColorCard from '../../components/Cards/ColorCard/ColorCard'
 
 import BarChart from '../../components/Charts/BarChart'
-import InfoCard from '../../components/Cards/InfoCard/Card'
 import AlertCard from '../../components/Cards/AlertCard/AlertCard'
 import BrazilMap from '../../components/Maps/BrazilMap'
 import WorldMap from '../../components/Maps/WorldMap'
@@ -207,7 +199,7 @@ const ComparisonStats = () => {
             </div>
             
             {/* Molde de Grid Vertical Reutilizável */}
-            <section className="infoGridVertical">
+            <section className={`${styles.infoGridVertical} infoGridVertical`}>
                 {/* Parte de Cima */}
                 <section className="topArea">
                     <div className="gridItem">
@@ -228,9 +220,9 @@ const ComparisonStats = () => {
                 {/* Parte de Baixo */}
                 <section className="bottomArea">
                     {/* Item 1 */}
-                    <ColorCard color="#D92B66" title="BR" content="Dados do Brasil serão representados por essa cor"/>
+                    <ColorCard color="#D92B66" title="BR" region="Brasil"/>
                     {/* Item 2 */}
-                    <ColorCard color="#028391" title="SP" content="Dados de São Paulo serão representados por essa cor"/>
+                    <ColorCard color="#028391" title="SP" region="São Paulo"/>
                 </section>
             </section>
         </section>
@@ -243,42 +235,94 @@ const ComparisonStats = () => {
 
         {/* Informação completas de Exportação ou Importação */}
         <section id={styles.ExpImpInfos}>
-            {/* Molde de Grid Horizontal Reutilizável */}
-            <section className="infoGridVertical">
-                {/* Parte da Esquerda (Mapa do Mundo) */}
-                <section className="topArea">
-                    <div className="gridItem">
-                        <IconTitle variant="map" title="Principais Países"/>
-                        <WorldMap
-                            selectedRegion="Norte"
-                            tradeType="exportacao"
-                            countryDatas={dadosTeste}
-                        />
-                    </div>
+
+            {/* Dados sobre os principais (principais países, vias e URFs) */}
+            <section id={styles.mainInfosArea}>
+                {/*Estado 1 */}
+                <section className="infoGridVertical">
+                    {/* Parte de Cima (Mapa) */}
+                    <section className="topArea">
+                        <div className="gridItem">
+                            <IconTitle variant="map" title="Principais Países"/>
+                            <WorldMap
+                                selectedRegion="Norte"
+                                tradeType="exportacao"
+                                countryDatas={dadosTeste}
+                            />
+                        </div>
+                    </section>
+
+                    {/* Parte de Baixo (Gráficos de Barra) */}
+                    <section className="bottomArea">
+                        {/* Item 1 (Principais Vias)*/}
+                            <div className="gridItem">
+                                <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight'/>
+                                <BarChart
+                                    items={["Via Aquífera" , "Via Rodoviária" , "Via Aérea"]}
+                                    values={[512, 485, 271]}
+                                    colorPalette={["#D92B66"]}
+                                />
+                            </div>
+                        {/* Item 2 (Principais URFs) */}
+                            <div className="gridItem">
+                                <IconTitle variant="barChart" title="Principais URF's Usadas" size='textLight'/>
+                                <BarChart
+                                    items={["Porto 123" , "Rodovia 123" , "Aeroporto 123"]}
+                                    values={[52, 45, 21]}
+                                    colorPalette={["#D92B66"]}
+                                />
+                            </div>
+                    </section>
                 </section>
-                
-                {/* Parte da Direita */}
-                <section className="bottomArea">
-                    {/* Item 1 */}
-                    <div className="gridItem">
-                        <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight'/>
-                        <BarChart
-                            items={["Via Aquífera" , "Via Rodoviária" , "Via Aérea"]}
-                            values={[512, 485, 271]}
-                            colorPalette={["#D92B66"]}
-                        />
-                    </div>
-                    {/* Item 2 */}
-                    <div className="gridItem">
-                        <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight'/>
-                        <BarChart
-                            items={["Porto 123" , "Rodovia 123" , "Aeroporto 123"]}
-                            values={[52, 45, 21]}
-                            colorPalette={["#D92B66"]}
-                        />
-                    </div>
+
+                {/* Estado 2 */}
+                <section className="infoGridVertical">
+                    {/* Parte de Cima (Mapa) */}
+                    <section className="topArea">
+                        <div className="gridItem">
+                            <IconTitle variant="map" title="Principais Países"/>
+                            <WorldMap
+                                selectedRegion="Norte"
+                                tradeType="exportacao"
+                                countryDatas={dadosTeste}
+                            />
+                        </div>
+                    </section>
+
+                    {/* Parte de Baixo (Gráficos de Barra) */}
+                    <section className="bottomArea">
+                        {/* Item 1 (Principais Vias)*/}
+                            <div className="gridItem">
+                                <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight'/>
+                                <BarChart
+                                    items={["Via Aquífera" , "Via Rodoviária" , "Via Aérea"]}
+                                    values={[512, 485, 271]}
+                                    colorPalette={["#D92B66"]}
+                                />
+                            </div>
+                        {/* Item 2 (Principais URFs) */}
+                            <div className="gridItem">
+                                <IconTitle variant="barChart" title="Principais URF's Usadas" size='textLight'/>
+                                <BarChart
+                                    items={["Porto 123" , "Rodovia 123" , "Aeroporto 123"]}
+                                    values={[52, 45, 21]}
+                                    colorPalette={["#D92B66"]}
+                                />
+                            </div>
+                    </section>
                 </section>
             </section>
+
+
+
+
+
+
+
+
+
+
+
 
                 {/* Molde de Grid Horizontal Reutilizável */}
                 <section className="infoGridHorizontal">
