@@ -90,6 +90,7 @@ function BarChart({items , values , chartDescription , colorPalette}){
                 series = {series}
                 type = "bar"
                 height="100%"
+                width="100%"
             />
         </div>
     )

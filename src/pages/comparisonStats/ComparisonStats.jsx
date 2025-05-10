@@ -275,42 +275,6 @@ const ComparisonStats = () => {
                     </section>
                 </section>
 
-                {/* Estado 2 */}
-                <section className="infoGridVertical">
-                    {/* Parte de Cima (Mapa) */}
-                    <section className="topArea">
-                        <div className="gridItem">
-                            <IconTitle variant="map" title="Principais Países"/>
-                            <WorldMap
-                                selectedRegion="Norte"
-                                tradeType="exportacao"
-                                countryDatas={dadosTeste}
-                            />
-                        </div>
-                    </section>
-
-                    {/* Parte de Baixo (Gráficos de Barra) */}
-                    <section className="bottomArea">
-                        {/* Item 1 (Principais Vias)*/}
-                            <div className="gridItem">
-                                <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight'/>
-                                <BarChart
-                                    items={["Via Aquífera" , "Via Rodoviária" , "Via Aérea"]}
-                                    values={[512, 485, 271]}
-                                    colorPalette={["#D92B66"]}
-                                />
-                            </div>
-                        {/* Item 2 (Principais URFs) */}
-                            <div className="gridItem">
-                                <IconTitle variant="barChart" title="Principais URF's Usadas" size='textLight'/>
-                                <BarChart
-                                    items={["Porto 123" , "Rodovia 123" , "Aeroporto 123"]}
-                                    values={[52, 45, 21]}
-                                    colorPalette={["#D92B66"]}
-                                />
-                            </div>
-                    </section>
-                </section>
             </section>
 
 
@@ -325,19 +289,16 @@ const ComparisonStats = () => {
 
 
                 {/* Molde de Grid Horizontal Reutilizável */}
-                <section className="infoGridHorizontal">
+                <section className="infoGridHorizontal lineChartsArea" id={styles.halfGrid}>
                     {/* Parte da Esquerda */}
                     <section className="leftArea">
                         <div className="gridItem">
                             <IconTitle title="Valor Agregado" variant="lineChart"/>
-                            <LineChart
+                            <DoubleLineChart
                                 period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
-                                chartTitle="Valor Agregado"
-                                dataName="Balança Comercial"
-                                colorPalette={["#D92B66"]}
-                                id="bottomInfo11"
-                                group="bottomInfo1"
+                                values={[[12, 8, 5, 37, -82, 29, 45, 13, 45, 45, 73 , -3] , [35, -12, 48, 5, -27, 100, 22, -40, 10, 55, 28, 30]]}
+                                dataName={["Estado 1" , "Estado 2"]}
+                                colorPalette={["#D92B66" , "#028391"]}
                             />
                         </div>
                     </section>
@@ -346,25 +307,23 @@ const ComparisonStats = () => {
                         {/* Item 1 */}
                         <div className="gridItem">
                             <IconTitle title="Quilograma Líquido" variant="lineChart" size='textLight'/>
-                            <LineChart
+                            <DoubleLineChart
                                 period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
-                                dataName="kg_liquido"
-                                colorPalette={["#D92B66"]}
-                                id="bottomInfo12"
-                                group="bottomInfo1" 
+                                values={[[12, 8, 5, 37, -82, 29, 45, 13, 45, 45, 73 , -3] , [35, -12, 48, 5, -27, 100, 22, -40, 10, 55, 28, 30]]}
+                                dataName={["Estado 1" , "Estado 2"]}
+                                colorPalette={["#D92B66" , "#028391"]}
+                                legends="false"
                             />
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
                             <IconTitle title="Valor FOB" variant="lineChart" size="textLight"/>
-                            <LineChart
+                            <DoubleLineChart
                                 period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
-                                dataName="vl_fob"
-                                colorPalette={["#D92B66"]}
-                                id="bottomInfo13"
-                                group="bottomInfo1"
+                                values={[[12, 8, 5, 37, -82, 29, 45, 13, 45, 45, 73 , -3] , [35, -12, 48, 5, -27, 100, 22, -40, 10, 55, 28, 30]]}
+                                dataName={["Estado 1" , "Estado 2"]}
+                                colorPalette={["#D92B66" , "#028391"]}
+                                legends="false"
                             />
                         </div>
                     </section>

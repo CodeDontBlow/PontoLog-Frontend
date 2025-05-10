@@ -20,6 +20,7 @@
   /* Engloba componentes de exibição de dados */
   div.componentWrapper{
     background-color: var(--white-300);
+    width: 100%;
     height: 100%;
     padding: 0.625rem 0.625rem 0.313rem 0.313rem;
   
@@ -60,6 +61,7 @@
 
         /* Item 3 do grid (recebe 2 elementos filho) */
         section.infoGridVertical section.bottomArea{
+            width: 100%;
             height: 100%;
 
             display: grid;
@@ -70,11 +72,21 @@
     /* Tempalte Reutilizável de Grid Horizontal */
     section.infoGridHorizontal{
         height: 100%;
+
         display: grid;
-        height: 28.125rem;
         grid-template-columns: 5fr 3fr;
         gap: 1.25rem;
     }
+
+        /* Para corrigir o problema de alguns gráficos de linha ficando muito pequenos */
+        section.infoGridHorizontal.lineChartsArea{
+            min-height: 450px;
+        }
+            
+            /* Diminuindo o padding para resolver o problema dito acima */
+            section.infoGridHorizontal.lineChartsArea .componentWrapper{
+                padding: 0rem .8rem .5rem 0rem;
+            }
 
         /* Item 1 do grid */
         section.infoGridHorizontal section.leftArea{
@@ -91,13 +103,11 @@
         }
 
     div.gridItem{
+        width: 100%;
+        max-width: 100%;
         height: 100%;
 
         display: flex;
         flex-direction: column;
         gap: 0.313rem;
     }
-
-        div.gridItem > *{
-            width: 100%;
-        }

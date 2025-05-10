@@ -2,7 +2,10 @@ import Chart from "react-apexcharts"
 import React , {useState} from 'react'
 
 //GRÁFICO DE DUAS LINHAS
-const DoubleLineChart = ({period , values , dataName, chartDescription , colorPalette}) => {
+const DoubleLineChart = ({period , values , dataName, chartDescription , colorPalette , legends=true}) => {
+
+    let showLegends
+    legends == "false" ? showLegends = false : showLegends = true
 
     //PROPS
     //period: Periodo de tempo (eixo x) [lista]
@@ -42,6 +45,31 @@ const DoubleLineChart = ({period , values , dataName, chartDescription , colorPa
             stroke : {
                 curve: "smooth",
                 width: "3"
+            },
+            markers: {
+                size: 3,
+                colors: colorPalette,
+                strokeColors: "var(--white-300)",
+                strokeWidth: 2,
+            },
+            legend: {
+                show: showLegends,
+                position: "bottom",
+                horizontalAlign: "left",
+                fontFamily: "'Roboto', sans-serif",
+                fontSize: "15px",
+                offsetX: 0,
+                markers: {
+                    size: 8.5,
+                    shape: "square",
+                },
+                labels: {
+                    colors: colorPalette
+                },
+                itemMargin: {
+                    horizontal: 10,
+                    vertical: 7,
+                },
             }
         }
     )
@@ -65,6 +93,7 @@ const DoubleLineChart = ({period , values , dataName, chartDescription , colorPa
                 options = {options}
                 series = {series}
                 type = "line"
+                height="100%"
             />
         </div>
     )

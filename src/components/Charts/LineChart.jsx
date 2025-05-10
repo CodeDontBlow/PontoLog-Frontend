@@ -62,6 +62,12 @@ const LineChart = ({period , values , dataName , chartDescription , colorPalette
             stroke : {
                 curve: "smooth",
                 width: "3",
+            },
+            markers: {
+                size: 3,
+                colors: colorPalette,
+                strokeColors: "var(--white-300)",
+                strokeWidth: 2,
             }
         }
     )
