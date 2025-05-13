@@ -550,13 +550,15 @@ const Statistics = () => {
                     {/* Parte de Cima */}
                     <section className="topArea">
                         <div className="gridItem">
-                            <IconTitle title="Balança Comercial" variant="lineChart" size='medium' />
-                            <LineChart
-                                period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
-                                dataName="Balança Comercial"
-                                colorPalette={["#D92B66"]}
-                            />
+                            <IconTitle title="Balança Comercial" variant="lineChart" size='textMedium' />
+                            <div className="componentWrapper">
+                                <LineChart
+                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                    values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
+                                    dataName="Balança Comercial"
+                                    colorPalette={["#D92B66"]}
+                                />
+                            </div>
                         </div>
                     </section>
 
@@ -583,12 +585,15 @@ const Statistics = () => {
                     {/* Parte da Esquerda (Mapa do Mundo) */}
                     <section className="leftArea">
                         <div className="gridItem">
-                            <IconTitle variant="map" title="Principais Países" size='medium' />
-                            <WorldMap
-                                selectedRegion="Norte"
-                                tradeType="exportacao"
-                                countryDatas={dadosTeste}
-                            />
+                            <IconTitle variant="map" title="Principais Países" size='textMedium' />
+                            <div className="componentWrapper">
+                                <WorldMap
+                                    selectedRegion="Norte"
+                                    tradeType="exportacao"
+                                    colorPalette={["#B81D4E","#D92B66" ,"#F5A4C3" , "#F1A1B5"]}
+                                    countryDatas={dadosTeste}
+                                />
+                            </div>
                         </div>
                     </section>
 
@@ -596,26 +601,30 @@ const Statistics = () => {
                     <section className="rightArea">
                         {/* Item 1 */}
                         <div className="gridItem">
-                            <IconTitle variant="barChart" title="Principais Vias Usadas" size='light' />
+                            <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight' />
 
-                            {vias.length > 0 && (
-                                <BarChart
-                                    items={vias.map(via => via.NO_VIA)}
-                                    values={vias.map(via => Number(via.total))}
-                                    colorPalette={["#D92B66"]}
-                                />
-                            )}
+                            <div className="componentWrapper">
+                                {vias.length > 0 && (
+                                    <BarChart
+                                        items={vias.map(via => via.NO_VIA)}
+                                        values={vias.map(via => Number(via.total))}
+                                        colorPalette={["#D92B66"]}
+                                    />
+                                )}
+                            </div>
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
-                            <IconTitle variant="barChart" title="Principais URFs" size='light' />
-                            {urfs.length > 0 && (
-                                <BarChart
-                                    items={urfs.map(urf => urf.NO_URF)}
-                                    values={vias.map(urf => Number(urf.total))}
-                                    colorPalette={["#D92B66"]}
-                                />
-                            )}
+                            <IconTitle variant="barChart" title="Principais URFs" size='textLight' />
+                            <div className="componentWrapper">
+                                {urfs.length > 0 && (
+                                    <BarChart
+                                        items={urfs.map(urf => urf.NO_URF)}
+                                        values={vias.map(urf => Number(urf.total))}
+                                        colorPalette={["#D92B66"]}
+                                    />
+                                )}
+                            </div>
                         </div>
                     </section>
                 </section>
@@ -625,7 +634,7 @@ const Statistics = () => {
                     {/* Parte da Esquerda */}
                     <section className="leftArea">
                         <div className="gridItem">
-                            <IconTitle title="Valor Agregado" variant="lineChart" size='medium' />
+                            <IconTitle title="Valor Agregado" variant="lineChart" size='textMedium' />
                             {vlAgregado.length > 0 && (
                                 <LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
@@ -643,34 +652,37 @@ const Statistics = () => {
                     <section className="rightArea">
                         {/* Item 1 */}
                         <div className="gridItem">
-                            <IconTitle title="Quilograma Líquido" variant="lineChart" size='light' />
-                            {kgLiq.length > 0 && (
-                                <LineChart
-                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={kgLiq.map(value => Number(value.total))}
-                                    dataName="kg_liquido"
-                                    colorPalette={["#D92B66"]}
-                                    id="bottomInfo12"
-                                    group="bottomInfo1"
-                                />
-                            )
-                            }
+                            <IconTitle title="Quilograma Líquido" variant="lineChart" size='textLight' />
+                            <div className="componentWrapper">
+                                {kgLiq.length > 0 && (
+                                    <LineChart
+                                        period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                        values={kgLiq.map(value => Number(value.total))}
+                                        dataName="kg_liquido"
+                                        colorPalette={["#D92B66"]}
+                                        id="bottomInfo12"
+                                        group="bottomInfo1"
+                                    />
+                                )
+                                }
+                            </div>
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
-                            <IconTitle title="Valor FOB" variant="lineChart" size="light" />
-
-                            {vlFob.length > 0 && (
-                                <LineChart
-                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={vlFob.map(value => Number(value.total))}
-                                    dataName="vl_fob"
-                                    colorPalette={["#D92B66"]}
-                                    id="bottomInfo13"
-                                    group="bottomInfo1"
-                                />
-                            )
-                            }
+                            <IconTitle title="Valor FOB" variant="lineChart" size='textLight' />
+                            <div className="componentWrapper">
+                                {vlFob.length > 0 && (
+                                    <LineChart
+                                        period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                        values={vlFob.map(value => Number(value.total))}
+                                        dataName="vl_fob"
+                                        colorPalette={["#D92B66"]}
+                                        id="bottomInfo13"
+                                        group="bottomInfo1"
+                                    />
+                                )
+                                }
+                            </div>
                         </div>
                     </section>
                 </section>
