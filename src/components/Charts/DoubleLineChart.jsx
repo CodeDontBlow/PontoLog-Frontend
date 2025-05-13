@@ -29,6 +29,9 @@ const DoubleLineChart = ({period , values , dataName, chartDescription , colorPa
                 toolbar: {
                     show: false,
                 },
+                events: {
+                    animationEnd: () => {window.dispatchEvent(new Event('resize'))},
+                }
             },
             title: {
                 text: {chartDescription},
@@ -88,14 +91,12 @@ const DoubleLineChart = ({period , values , dataName, chartDescription , colorPa
 
     //Componente de gráfico do ApexCharts recebendo os valores definidos acima
     return(
-        <div className="componentWrapper">
-            <Chart
-                options = {options}
-                series = {series}
-                type = "line"
-                height="100%"
-            />
-        </div>
+        <Chart
+            options = {options}
+            series = {series}
+            type = "line"
+            height="100%"
+        />
     )
 }
 

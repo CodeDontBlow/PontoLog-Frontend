@@ -117,3 +117,8 @@ section#mainInfosArea{
     gap: 20px;
 }
 
+    section#mainInfosArea .stateTitle{
+        color: var(--base-pink);
+        font: var(--title-regular);
+        font-weight: 600;
+    }

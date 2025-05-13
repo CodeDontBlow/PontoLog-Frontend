@@ -140,142 +140,152 @@ const ComparisonStats = () => {
       ]
     };
     
-    return (
+        return (
         <div id={styles.statisticsPage}>
-
-            {/* TESTE DA REQUISIÇÃO */}
-            {/* <input type="text" onChange={(e) => setYear(e.target.value)} />
-            <Button label={'get'} onClick={() => getByYear(year)} /> */}
-
             {/* Área dos Inputs */}
             <section id={styles.inputArea}>
-                {/* Input do Nome do Produto */}
                 <div className={styles.productArea}>
                     <Input label="Nome do Produto" type="text" placeholder="Produto" id="product"/>
-                    {/* Botões SH4 e SH6 */}
                     <div className={styles.inputOptions}>
-                        {/* SH4 */}
                         <input type="radio" name="sh-selection" id="sh4" defaultChecked />
                         <label htmlFor="sh4"> SH4 </label>
-
-                        {/* SH6 */}
                         <input type="radio" name="sh-selection" id="sh6" />
                         <label htmlFor="sh6"> SH6 </label>
                     </div>
                 </div>
 
-                {/* Input de Periodo de Tempo */}
                 <div className={styles.periodArea}>
-                    {/* Inputs */}
                     <div className={styles.periodInputs}>
-                        {/* Primeiro Ano do Período */}
                         <div className={styles.firstYear}>
                             <Input label="Período de Tempo" placeholder="Ano de Início" type="number" id="firstYear"/>
                         </div>
-
-                        {/* Último Ano do Período */}
                         <div className={styles.lastYear}>
                             <Input label="..." placeholder="Ano de Término" type="Number" id="lastYear"/>
                         </div>
                     </div>
-
-                    {/* Checkbox (Decidir se iremos utilizar)*/}
-                    {/* <div className={styles.inputOptions}> </div> */}
                 </div>
             </section>
 
-
-
-            {/* Alerta de quais Informações estão sendo exibidas */}
             <AlertCard variant='allInfo' icon={faCircleInfo} product="Todos os Produtos" period={[2019 , 2020]}/>
 
+            <section id={styles.primaryInfos}>
+                <div className={styles.navMap}>
+                    <BrazilMap/>
+                </div>
 
-
-        {/* Primeiras Informações da Página + mapa do brasil */}
-        <section id={styles.primaryInfos}>
-            {/* Mapa do Brasil */}
-            <div className={styles.navMap}>
-                <BrazilMap/>
-            </div>
-            
-            {/* Molde de Grid Vertical Reutilizável */}
-            <section className={`${styles.infoGridVertical} infoGridVertical`}>
-                {/* Parte de Cima */}
-                <section className="topArea">
-                    <div className="gridItem">
-                        <IconTitle title="Balança Comercial" variant="lineChart"/>
-                        <DoubleLineChart
-                            period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                            values={[[12, 8, 5, 37, -82, 29, 45, 13, 45, 45, 73 , -3] , [35, -12, 48, 5, -27, 100, 22, -40, 10, 55, 28, 30]]}
-                            dataName={["Estado 1" , "Estado 2"]}
-                            colorPalette={["#D92B66" , "#028391"]}
-                        />
-                    </div>
-                </section>
-
-                <section className="midArea">
-                    <AlertCard variant='comparisonInfo' icon={faCircleInfo} region={["Brasil" , "São Paulo"]}/>
-                </section>
-
-                {/* Parte de Baixo */}
-                <section className="bottomArea">
-                    {/* Item 1 */}
-                    <ColorCard color="#D92B66" title="BR" region="Brasil"/>
-                    {/* Item 2 */}
-                    <ColorCard color="#028391" title="SP" region="São Paulo"/>
-                </section>
-            </section>
-        </section>
-
-
-        {/* Deve-se definir melhor o uso do tab navigation!!! */}
-        {/* <TabNavigation tab={tabs} contents={contents} /> */}
-
-
-
-        {/* Informação completas de Exportação ou Importação */}
-        <section id={styles.ExpImpInfos}>
-
-            {/* Dados sobre os principais (principais países, vias e URFs) */}
-            <section id={styles.mainInfosArea}>
-                {/*Estado 1 */}
-                <section className="infoGridVertical">
-                    {/* Parte de Cima (Mapa) */}
+                <section className={`${styles.infoGridVertical} infoGridVertical`}>
                     <section className="topArea">
                         <div className="gridItem">
-                            <IconTitle variant="map" title="Principais Países"/>
-                            <WorldMap
-                                selectedRegion="Norte"
-                                tradeType="exportacao"
-                                countryDatas={dadosTeste}
-                            />
+                            <IconTitle title="Balança Comercial" variant="lineChart"/>
+                            <div className="componentWrapper">
+                                <DoubleLineChart
+                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                    values={[[12, 8, 5, 37, -82, 29, 45, 13, 45, 45, 73 , -3], [35, -12, 48, 5, -27, 100, 22, -40, 10, 55, 28, 30]]}
+                                    dataName={["Estado 1", "Estado 2"]}
+                                    colorPalette={["#D92B66", "#028391"]}
+                                />
+                            </div>
                         </div>
                     </section>
 
-                    {/* Parte de Baixo (Gráficos de Barra) */}
+                    <section className="midArea">
+                        <AlertCard variant='comparisonInfo' icon={faCircleInfo} region={["Brasil" , "São Paulo"]}/>
+                    </section>
+
                     <section className="bottomArea">
-                        {/* Item 1 (Principais Vias)*/}
+                        <ColorCard color="#D92B66" title="BR" region="Brasil"/>
+                        <ColorCard color="#028391" title="SP" region="São Paulo"/>
+                    </section>
+                </section>
+            </section>
+
+            <section id={styles.ExpImpInfos}>
+                <section id={styles.mainInfosArea}>
+                    {/* Estado 1 */}
+                    <section className="infoGridVertical">
+                        <section className="topArea">
+                            <h3 className={styles.stateTitle}>Brasil</h3>
+                        </section>
+                        <section className="midArea">
+                            <div className="gridItem">
+                                <IconTitle variant="map" title="Principais Países"/>
+                                <div className="componentWrapper">
+                                    <WorldMap
+                                        selectedRegion="Norte"
+                                        tradeType="exportacao"
+                                        colorPalette={["#B81D4E","#D92B66" ,"#F5A4C3" , "#F1A1B5"]}
+                                        countryDatas={dadosTeste}
+                                    />
+                                </div>
+                            </div>
+                        </section>
+                        <section className="bottomArea">
                             <div className="gridItem">
                                 <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight'/>
-                                <BarChart
-                                    items={["Via Aquífera" , "Via Rodoviária" , "Via Aérea"]}
-                                    values={[512, 485, 271]}
-                                    colorPalette={["#D92B66"]}
-                                />
+                                <div className="componentWrapper" style={{padding:0}}>
+                                    <BarChart
+                                        items={["Via Aquífera", "Via Rodoviária", "Via Aérea"]}
+                                        values={[512, 485, 271]}
+                                        colorPalette={["#D92B66"]}
+                                    />
+                                </div>
                             </div>
-                        {/* Item 2 (Principais URFs) */}
                             <div className="gridItem">
                                 <IconTitle variant="barChart" title="Principais URF's Usadas" size='textLight'/>
-                                <BarChart
-                                    items={["Porto 123" , "Rodovia 123" , "Aeroporto 123"]}
-                                    values={[52, 45, 21]}
-                                    colorPalette={["#D92B66"]}
-                                />
+                                <div className="componentWrapper" style={{padding:0}}>
+                                    <BarChart
+                                        items={["Porto 123", "Rodovia 123", "Aeroporto 123"]}
+                                        values={[52, 45, 21]}
+                                        colorPalette={["#D92B66"]}
+                                    />
+                                </div>
                             </div>
+                        </section>
+                    </section>
+
+                    {/* Estado 2 */}
+                    <section className="infoGridVertical">
+                        <section className="topArea">
+                            <h3 className={styles.stateTitle}>São Paulo</h3>
+                        </section>
+                        <section className="midArea">
+                            <div className="gridItem">
+                                <IconTitle variant="map" title="Principais Países"/>
+                                <div className="componentWrapper">
+                                    <WorldMap
+                                        selectedRegion="Norte"
+                                        tradeType="exportacao"
+                                        colorPalette={["#16707A","#028391" ,"#80B8B8" , "#A0D0D0"]}
+                                        countryDatas={dadosTeste}
+                                    />
+                                </div>
+                            </div>
+                        </section>
+                        <section className="bottomArea">
+                            <div className="gridItem">
+                                <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight'/>
+                                <div className="componentWrapper" style={{padding:0}}>
+                                    <BarChart
+                                        items={["Via Aquífera", "Via Rodoviária", "Via Aérea"]}
+                                        values={[512, 485, 271]}
+                                        colorPalette={["#028391"]}
+                                    />
+                                </div>
+                            </div>
+                            <div className="gridItem">
+                                <IconTitle variant="barChart" title="Principais URF's Usadas" size='textLight'/>
+                                <div className="componentWrapper" style={{padding:0}}>
+                                    <BarChart
+                                        items={["Porto 123", "Rodovia 123", "Aeroporto 123"]}
+                                        values={[52, 45, 21]}
+                                        colorPalette={["#028391"]}
+                                    />
+                                </div>
+                            </div>
+                        </section>
                     </section>
                 </section>
 
-            </section>
 
 
 
@@ -284,55 +294,50 @@ const ComparisonStats = () => {
 
 
 
-
-
-
-
-                {/* Molde de Grid Horizontal Reutilizável */}
                 <section className="infoGridHorizontal lineChartsArea" id={styles.halfGrid}>
-                    {/* Parte da Esquerda */}
                     <section className="leftArea">
                         <div className="gridItem">
                             <IconTitle title="Valor Agregado" variant="lineChart"/>
-                            <DoubleLineChart
-                                period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                values={[[12, 8, 5, 37, -82, 29, 45, 13, 45, 45, 73 , -3] , [35, -12, 48, 5, -27, 100, 22, -40, 10, 55, 28, 30]]}
-                                dataName={["Estado 1" , "Estado 2"]}
-                                colorPalette={["#D92B66" , "#028391"]}
-                            />
+                            <div className="componentWrapper">
+                                <DoubleLineChart
+                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                    values={[[12, 8, 5, 37, -82, 29, 45, 13, 45, 45, 73 , -3], [35, -12, 48, 5, -27, 100, 22, -40, 10, 55, 28, 30]]}
+                                    dataName={["Estado 1", "Estado 2"]}
+                                    colorPalette={["#D92B66", "#028391"]}
+                                />
+                            </div>
                         </div>
                     </section>
-                    {/* Parte da Direita */}
                     <section className="rightArea">
-                        {/* Item 1 */}
                         <div className="gridItem">
                             <IconTitle title="Quilograma Líquido" variant="lineChart" size='textLight'/>
-                            <DoubleLineChart
-                                period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                values={[[12, 8, 5, 37, -82, 29, 45, 13, 45, 45, 73 , -3] , [35, -12, 48, 5, -27, 100, 22, -40, 10, 55, 28, 30]]}
-                                dataName={["Estado 1" , "Estado 2"]}
-                                colorPalette={["#D92B66" , "#028391"]}
-                                legends="false"
-                            />
+                            <div className="componentWrapper">
+                                <DoubleLineChart
+                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                    values={[[12, 8, 5, 37, -82, 29, 45, 13, 45, 45, 73 , -3], [35, -12, 48, 5, -27, 100, 22, -40, 10, 55, 28, 30]]}
+                                    dataName={["Estado 1", "Estado 2"]}
+                                    colorPalette={["#D92B66", "#028391"]}
+                                    legends="false"
+                                />
+                            </div>
                         </div>
-                        {/* Item 2 */}
                         <div className="gridItem">
                             <IconTitle title="Valor FOB" variant="lineChart" size="textLight"/>
-                            <DoubleLineChart
-                                period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun" , "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                values={[[12, 8, 5, 37, -82, 29, 45, 13, 45, 45, 73 , -3] , [35, -12, 48, 5, -27, 100, 22, -40, 10, 55, 28, 30]]}
-                                dataName={["Estado 1" , "Estado 2"]}
-                                colorPalette={["#D92B66" , "#028391"]}
-                                legends="false"
-                            />
+                            <div className="componentWrapper">
+                                <DoubleLineChart
+                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                    values={[[12, 8, 5, 37, -82, 29, 45, 13, 45, 45, 73 , -3], [35, -12, 48, 5, -27, 100, 22, -40, 10, 55, 28, 30]]}
+                                    dataName={["Estado 1", "Estado 2"]}
+                                    colorPalette={["#D92B66", "#028391"]}
+                                    legends="false"
+                                />
+                            </div>
                         </div>
                     </section>
                 </section>
-
-
             </section>
         </div>
-    )
-}
+    );
+};
 
-export default ComparisonStats
+export default ComparisonStats;

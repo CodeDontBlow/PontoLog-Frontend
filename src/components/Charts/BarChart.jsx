@@ -1,14 +1,9 @@
 import Chart from "react-apexcharts"
-import { useState , useEffect } from "react";
+import { useState } from "react";
 
 //GRÁFICO DE BARRA
 function BarChart({items , values , chartDescription , colorPalette}){
 
-    useEffect(() => {
-        setTimeout(() => {
-            window.dispatchEvent(new Event('resize'));
-        },100);
-    }, []);
 
     //PROPS
     //items: Itens que estão sendo exibidos (eixo y, ex.: nomes de vias) [lista]
@@ -24,7 +19,11 @@ function BarChart({items , values , chartDescription , colorPalette}){
                 type: 'bar',
                 toolbar: {
                     show: false
+                },
+                events: {
+                    animationEnd: () => {window.dispatchEvent(new Event('resize'))},
                 }
+
             },
             xaxis: {
                 categories: items,
@@ -66,11 +65,72 @@ function BarChart({items , values , chartDescription , colorPalette}){
                 textAnchor: 'start',
                 style: {
                     colors: ["var(--white-500)"],
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
                 },
                 formatter: function (val, opt) {
-                  return "\u00A0 \u00A0" + opt.w.globals.labels[opt.dataPointIndex] + ":  " + val
+                  return "\u00A0 \u00A0" + opt.w.globals.labels[opt.dataPointIndex]
                 },
             },
+            responsive: [{
+                breakpoint: 1300,
+                options: {
+                    chart : {
+                        width: "250px",
+                    }
+                }},
+                {
+                breakpoint: 1250,
+                options : {
+                    chart: {
+                        width: "230px"
+                    }
+                }},
+                {
+                breakpoint: 1200,
+                options : {
+                    chart: {
+                        width: "225px"
+                    }
+                }},
+                {
+                breakpoint: 1155,
+                options : {
+                    chart: {
+                        width: "220px"
+                    }
+                }},
+                {
+                breakpoint: 1135,
+                options : {
+                    chart: {
+                        width: "215px"
+                    }
+                }},
+                {
+                breakpoint: 1115,
+                options : {
+                    chart: {
+                        width: "205px"
+                    }
+                }},
+                {
+                breakpoint: 1075,
+                options : {
+                    chart: {
+                        width: "200px"
+                    }
+                }},
+                {
+                breakpoint: 1065,
+                options : {
+                    chart: {
+                        width: "195px",
+                        height: "150px"
+                    }
+                }},
+            
+        ]
         }
     )
 
@@ -79,20 +139,17 @@ function BarChart({items , values , chartDescription , colorPalette}){
         {
             name: "Ocorrências",
             data: values
-        }
+        },
     ])
 
     //Componente de gráfico do ApexCharts recebendo os valores definidos acima
     return(
-        <div className="componentWrapper">
-            <Chart
-                options = {options}
-                series = {series}
-                type = "bar"
-                height="100%"
-                width="100%"
-            />
-        </div>
+        <Chart
+            options = {options}
+            series = {series}
+            type = "bar"
+            height="100%"
+        />
     )
 }
 
