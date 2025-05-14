@@ -59,7 +59,6 @@ const Statistics = () => {
         if (searchTerm.length > 0) {
             const formattedTerm = searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1).toLowerCase();
             try {
-                console.log(`/product/no_${sh}_por/${formattedTerm}`)
                 const response = await api.get(`/product/no_${sh}_por/${formattedTerm}`);
 
                 const responseData = response.data;
