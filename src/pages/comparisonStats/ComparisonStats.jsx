@@ -1,15 +1,17 @@
+import { useState , useEffect } from 'react'
+import api from '../../api/api'
+
 // Importando CSS e Componentes
 import styles from './ComparisonStats.module.css'
-import LineChart from '../../components/Charts/LineChart'
 import DoubleLineChart from '../../components/Charts/DoubleLineChart'
 import ColorCard from '../../components/Cards/ColorCard/ColorCard'
-
 import BarChart from '../../components/Charts/BarChart'
 import AlertCard from '../../components/Cards/AlertCard/AlertCard'
 import BrazilMap from '../../components/Maps/BrazilMap'
 import WorldMap from '../../components/Maps/WorldMap'
-import Input from '../../components/Input/Input'
+import Checkbox from '../../components/Buttons/Checkbox/Checkbox'
 import IconTitle from '../../components/IconTitle/IconTitle'
+import Dropdown from '../../components/Dropdown/Dropdown'
 
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 
@@ -139,34 +141,112 @@ const ComparisonStats = () => {
         },
       ]
     };
+
     
-        return (
+    // Variáveis para os inputs
+    const [product , setProduct] = useState('')
+    const [sh, setSh] = useState('sh4');
+
+    const [periodoUnico, setPeriodoUnico] = useState(true);
+    const [initYear , setInitYear] = useState(2014)
+    const [finalYear , setFinalYear] = useState(2024)
+
+    const opcoesDeProduto = ["Abacaxi" , "Cenoura"];
+    const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
+    
+    const getProductByLetter = async () => {
+        if (product.length > 0) {
+            try {
+                const response = await api.get(`/product/no_${sh}_por/${product}`)
+
+                const responseData = response.data
+                const data = responseData.data
+
+                setOpcoesDeProduto(data)
+            } catch (error) {
+                console.error("Error fetching data:", error)
+            }
+        }
+    }
+
+    
+    useEffect(() => {
+        setProduct(product ? product[0].toUpperCase() + product.slice(1).toLowerCase() : product)
+
+        console.log(product)
+
+        if (product.length > 0) {
+            getProductByLetter()
+        }
+
+    }, [product])
+    
+    
+    
+    return (
         <div id={styles.statisticsPage}>
-            {/* Área dos Inputs */}
+
+
+        {/* Área dos Inputs */}
+            {/* Labels */}
             <section id={styles.inputArea}>
-                <div className={styles.productArea}>
-                    <Input label="Nome do Produto" type="text" placeholder="Produto" id="product"/>
-                    <div className={styles.inputOptions}>
-                        <input type="radio" name="sh-selection" id="sh4" defaultChecked />
-                        <label htmlFor="sh4"> SH4 </label>
-                        <input type="radio" name="sh-selection" id="sh6" />
-                        <label htmlFor="sh6"> SH6 </label>
+                <div className={styles.labelsContainer}>
+                    <label className={styles.productLabel} htmlFor="">Produtos</label>
+
+                    <label className={styles.periodLabel} htmlFor="">Período de Tempo</label>
+                </div>
+
+                {/* Inputs */}
+                <div className={styles.inputsContainer}>
+
+                    {/* Input do Produto */}
+                    <div className={styles.productInput}>
+                    {/* <Input label="Nome do Produto" type="text" placeholder="Produto" id="product"/> */}
+                    <Dropdown search={true} placeholder={"Pesquisar..."} options={opcoesDeProduto} value={product} onChange={(e) => setProduct(e.target.value)} onSelect={(produto) => setProduct(produto)} />
+                    </div>
+
+                    {/* Input dos Anos */}
+                    <div className={styles.periodInputs}>
+                        <div className={styles.firstYear}>
+                            {/* <Input label="Período de Tempo" placeholder="Ano de Início" type="number" id="firstYear" /> */}
+                            <Dropdown label={"Ano de Início"} options={years} placeholder={"Ano de Início"} value={initYear} onSelect={(year) => setInitYear(year)} />
+                        </div>
+
+                        {/* Último Ano do Período */}
+                        {periodoUnico &&
+                            <div className={styles.lastYear}>
+                            {/* <Input label="..." placeholder="Ano de Término" type="Number" id="lastYear" / */}
+                                <Dropdown label={"Ano de Início"} options={years} placeholder={"Ano de Início"} value={finalYear} onSelect={(year) => setFinalYear(year)} />
+                            </div>
+                        }
                     </div>
                 </div>
 
-                <div className={styles.periodArea}>
-                    <div className={styles.periodInputs}>
-                        <div className={styles.firstYear}>
-                            <Input label="Período de Tempo" placeholder="Ano de Início" type="number" id="firstYear"/>
-                        </div>
-                        <div className={styles.lastYear}>
-                            <Input label="..." placeholder="Ano de Término" type="Number" id="lastYear"/>
-                        </div>
+                {/* Opções */}
+                <div className={styles.optionsContainer}>
+                    {/* Botões SH's */}
+                    <div className={styles.productOptions}>
+                        {/* SH4 */}
+                        <input type="radio" name="sh-selection" id="sh4" defaultChecked onClick={() => setSh('sh4')} />
+                        <label htmlFor="sh4"> SH4 </label>
+                        
+                        {/* SH6 */}
+                        <input type="radio" name="sh-selection" id="sh6" onClick={() => setSh('sh6')} />
+                        <label htmlFor="sh6"> SH6 </label>
+                    </div>
+
+                    {/* Checkbox Período de Tempo */}
+                    <div className={styles.periodOptions}>
+                        <Checkbox label="Ativar busca somente para um ano" value={periodoUnico} checked={periodoUnico} onChange={() => { setPeriodoUnico(!periodoUnico) }} />
                     </div>
                 </div>
             </section>
 
+
+
             <AlertCard variant='allInfo' icon={faCircleInfo} product="Todos os Produtos" period={[2019 , 2020]}/>
+
+
 
             <section id={styles.primaryInfos}>
                 <div className={styles.navMap}>

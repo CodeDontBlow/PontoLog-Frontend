@@ -4,7 +4,6 @@ import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 
 // Importando componentes e api
 import api from '../../api/api'
-import Button from '../../components/Buttons/Button/Button'
 import Checkbox from '../../components/Buttons/Checkbox/Checkbox'
 import LineChart from '../../components/Charts/LineChart'
 import BarChart from '../../components/Charts/BarChart'
@@ -14,7 +13,6 @@ import BrazilMap from '../../components/Maps/BrazilMap'
 import WorldMap from '../../components/Maps/WorldMap'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import IconTitle from '../../components/IconTitle/IconTitle'
-import TabNavigation from '../../components/Tab/TabNavigation'
 
 import styles from './Statistics.module.css'
 
