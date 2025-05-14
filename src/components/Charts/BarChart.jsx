@@ -1,8 +1,8 @@
 import Chart from "react-apexcharts"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 //GRÁFICO DE BARRA
-function BarChart({items , values , chartDescription , colorPalette}){
+function BarChart({ items, values, chartDescription, colorPalette }) {
 
     //PROPS
     //items: Itens que estão sendo exibidos (eixo y, ex.: nomes de vias) [lista]
@@ -12,7 +12,7 @@ function BarChart({items , values , chartDescription , colorPalette}){
     //Ex.: <BarChart items={["Rodoviária" , "Aquífera" , "Aérea"]} values={[412,213,123]} Vias" colorPalette="#ff0011"/>
 
     //Opções de customização do gráfico
-    const [options] = useState (
+    const [options, setOptions] = useState(
         {
             chart: {
                 type: 'bar',
@@ -27,7 +27,7 @@ function BarChart({items , values , chartDescription , colorPalette}){
                 show: false,
             },
             title: {
-                text: chartDescription,                
+                text: chartDescription,
                 style: {
                     fontSize: "1rem",
                     fontWeight: "regular",
@@ -62,27 +62,41 @@ function BarChart({items , values , chartDescription , colorPalette}){
                     colors: ["var(--white-500)"],
                 },
                 formatter: function (val, opt) {
-                  return "\u00A0 \u00A0" + opt.w.globals.labels[opt.dataPointIndex] + ":  " + val
+                    return "\u00A0 \u00A0" + opt.w.globals.labels[opt.dataPointIndex] + ":  " + val
                 },
             },
         }
     )
 
     //Valores do gráfico
-    const [series] = useState([
+    const [series, setSeries] = useState([
         {
             name: "Ocorrências",
             data: values
         }
     ])
 
+    useEffect(() => {
+        setOptions({
+            ...options,
+            xaxis: {
+                categories: items,
+            },
+        })
+
+        setSeries([{
+            name: "Ocorrências",
+            data: values
+        }])
+    }, [values, items])
+
     //Componente de gráfico do ApexCharts recebendo os valores definidos acima
-    return(
+    return (
         <div className="componentWrapper">
             <Chart
-                options = {options}
-                series = {series}
-                type = "bar"
+                options={options}
+                series={series}
+                type="bar"
                 height="100%"
             />
         </div>
