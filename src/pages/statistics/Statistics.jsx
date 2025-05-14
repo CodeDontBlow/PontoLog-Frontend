@@ -392,7 +392,7 @@ const Statistics = () => {
                             {urfs.length > 0 && (
                                 <BarChart
                                     items={urfs.map(urf => urf.NO_URF)}
-                                    values={vias.map(urf => Number(urf.total))}
+                                    values={urfs.map(urf => Number(urf.total))}
                                     colorPalette={["#D92B66"]}
                                 />
                             )}
