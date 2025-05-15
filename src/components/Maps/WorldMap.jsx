@@ -23,13 +23,9 @@ export default function WorldMap({ selectedRegion, countryDatas, tradeType, setT
         ...dadosSelecionados.map((item) => {
           const tooltip = `
             <div>
-              <h5>${
-                tradeType === "exportacao" ? "Exportação" : "Importação"
-              }:</h5>
-              <br/>
               <b>Quantidade: </b> ${item.quantidade}<br/>
               <b>Valor Agregado: </b> R$ ${item.vl.toLocaleString()}<br/>
-              <b>Quilograma Líquido: </b>${item.kg.toLocaleString()} kg
+              <b>Quilograma Líquido: </b>${item.kg.toLocaleString()}
             </div>
           `;
           return [item.country, item.quantidade, tooltip];

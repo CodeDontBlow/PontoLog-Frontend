@@ -32,7 +32,7 @@ const Statistics = () => {
 
     // state de opções dos inputs
     const [opcoesDeProduto, setOpcoesDeProduto] = useState([]);
-    const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
+    const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
 
     // states para valores retornados pelo back
     const [fatAgregado, setFatAgregado] = useState(null)
@@ -42,7 +42,8 @@ const Statistics = () => {
     const [vlAgregado, setVlAgregado] = useState([])
     const [kgLiq, setKgLiq] = useState([])
     const [vlFob, setVlFob] = useState([])
-    // const [countries, setCountries] = useState([])
+    const [countries, setCountries] = useState([])
+    const [balanca, setBalanca] = useState([])
 
     const buildQueryParams = () => {
         const params = new URLSearchParams()
@@ -96,6 +97,19 @@ const Statistics = () => {
             console.error(`Erro fetching ${endpoint}:`, error)
         }
     }
+    const fetchBalanca = async (endpoint, setter) => {
+        try {
+            const params = buildQueryParams()
+            const response = await api.get(`/${endpoint}/${initYear}?${params}`)
+
+            const responseData = response.data
+            const data = responseData.data
+
+            setter(data)
+        } catch (error) {
+            console.error(`Erro fetching ${endpoint}:`, error)
+        }
+    }
 
     useEffect(() => {
         const fetchAllData = async () => {
@@ -108,7 +122,8 @@ const Statistics = () => {
                     fetchData('vl_agregado', setVlAgregado),
                     fetchData('vl_fob', setVlFob),
                     fetchData('kg_liquido', setKgLiq),
-                    // fetchData('countries', setCountries),
+                    fetchBalanca('balanco', setBalanca),
+                    fetchData('countries', setCountries),
                 ]);
             } catch (error) {
                 console.error("Erro ao buscar dados", error);
@@ -131,121 +146,8 @@ const Statistics = () => {
                 quantidade: 8000,
                 vl: 5000000,
                 kg: 1500000,
-            },
-            {
-                country: "China",
-                quantidade: 6500,
-                vl: 4800000,
-                kg: 1400000,
-            },
-            {
-                country: "Germany",
-                quantidade: 4500,
-                vl: 3000000,
-                kg: 900000,
-            },
-            {
-                country: "Spain",
-                quantidade: 3000,
-                vl: 2000000,
-                kg: 800000,
-            },
-            {
-                country: "Japan",
-                quantidade: 4000,
-                vl: 3500000,
-                kg: 950000,
-            },
-            {
-                country: "Brazil",
-                quantidade: 3500,
-                vl: 1800000,
-                kg: 700000,
-            },
-            {
-                country: "India",
-                quantidade: 5000,
-                vl: 2200000,
-                kg: 850000,
-            },
-            {
-                country: "France",
-                quantidade: 3800,
-                vl: 2800000,
-                kg: 750000,
-            },
-            {
-                country: "United Kingdom",
-                quantidade: 4200,
-                vl: 3200000,
-                kg: 880000,
-            },
-            {
-                country: "Italy",
-                quantidade: 3200,
-                vl: 2100000,
-                kg: 650000,
-            },
-            {
-                country: "Canada",
-                quantidade: 2900,
-                vl: 1900000,
-                kg: 600000,
-            },
-            {
-                country: "South Korea",
-                quantidade: 3600,
-                vl: 2400000,
-                kg: 720000,
-            },
-            {
-                country: "Mexico",
-                quantidade: 2800,
-                vl: 1500000,
-                kg: 550000,
-            },
-            {
-                country: "Australia",
-                quantidade: 2500,
-                vl: 1700000,
-                kg: 500000,
-            },
-            {
-                country: "Netherlands",
-                quantidade: 2200,
-                vl: 1600000,
-                kg: 480000,
-            },
-            {
-                country: "Russia",
-                quantidade: 3000,
-                vl: 2000000,
-                kg: 750000,
-            },
-            {
-                country: "Switzerland",
-                quantidade: 1800,
-                vl: 1400000,
-                kg: 400000,
-            },
-            {
-                country: "Turkey",
-                quantidade: 2700,
-                vl: 1300000,
-                kg: 520000,
-            },
-            {
-                country: "Saudi Arabia",
-                quantidade: 2300,
-                vl: 1200000,
-                kg: 450000,
-            },
-            {
-                country: "Argentina",
-                quantidade: 2000,
-                vl: 900000,
-                kg: 380000,
-            },
+            }
+
         ]
     };
 
@@ -300,7 +202,7 @@ const Statistics = () => {
                         <div className={styles.lastYear}>
                             {/* <Input label="..." placeholder="Ano de Término" type="Number" id="lastYear" / */}
 
-                  <Dropdown label={"Ano de Início"} options={years} placeholder={"Ano de Início"} value={finalYear} onSelect={(year) => setFinalYear(year)} disable={periodoUnico}/>
+                            <Dropdown label={"Ano de Término"} options={years} placeholder={"Ano de Término"} value={finalYear} onSelect={(year) => setFinalYear(year)} disable={periodoUnico} />
                         </div>
                     </div>
 
@@ -331,12 +233,14 @@ const Statistics = () => {
                     <section className="topArea">
                         <div className="gridItem">
                             <IconTitle title="Balança Comercial" variant="lineChart" size='medium' />
-                            <LineChart
-                                period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
-                                dataName="Balança Comercial"
-                                colorPalette={["#D92B66"]}
-                            />
+                            {balanca.length > 0 && (
+                                <LineChart
+                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                    values={balanca.map(bal => Number(bal.total))}
+                                    dataName="Balança Comercial"
+                                    colorPalette={["#D92B66"]}
+                                />
+                            )}
                         </div>
                     </section>
 
@@ -367,7 +271,15 @@ const Statistics = () => {
                             <WorldMap
                                 selectedRegion="Norte"
                                 tradeType="exportacao"
-                                countryDatas={dadosTeste}
+                                countryDatas={{
+                                    exportacao: countries.map(c => ({
+                                        country: c.NO_PAIS,
+                                        quantidade: Number(c.TOTAL_REGISTROS),
+                                        vl: Number(c.TOTAL_VL_AGREGADO),
+                                        kg: Number(c.TOTAL_KG_LIQUIDO),
+                                    })),
+                                    importacao: [], // não tiver dados
+                                }}
                             />
                         </div>
                     </section>
