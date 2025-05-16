@@ -1,8 +1,8 @@
 import Chart from "react-apexcharts"
 import React , {useState} from 'react'
 
-//GRÁFICO DE DUAS LINHAS
-const DoubleLineChart = ({period , values , dataName, chartDescription , colorPalette , legends=true}) => {
+//GRÁFICO DE DUAS LINHAS'
+const DoubleLineChart = ({period , values , dataName, chartDescription , colorPalette , legends=true , legendsPosition = "bottom"}) => {
 
     let showLegends
     legends == "false" ? showLegends = false : showLegends = true
@@ -57,8 +57,8 @@ const DoubleLineChart = ({period , values , dataName, chartDescription , colorPa
             },
             legend: {
                 show: showLegends,
-                position: "bottom",
-                horizontalAlign: "left",
+                position: legendsPosition,
+                horizontalAlign: "center",
                 fontFamily: "'Roboto', sans-serif",
                 fontSize: "15px",
                 offsetX: 0,

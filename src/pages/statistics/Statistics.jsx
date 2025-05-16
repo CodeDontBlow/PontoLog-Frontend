@@ -1,11 +1,14 @@
 // Importando biblioteca de terceiros
 import { useState, useEffect } from 'react'
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
+import { faChartLine } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 // Importando componentes e api
 import api from '../../api/api'
 import Checkbox from '../../components/Buttons/Checkbox/Checkbox'
 import LineChart from '../../components/Charts/LineChart'
+import DoubleLineChart from '../../components/Charts/DoubleLineChart'
 import BarChart from '../../components/Charts/BarChart'
 import InfoCard from '../../components/Cards/InfoCard/Card'
 import AlertCard from '../../components/Cards/AlertCard/AlertCard'
@@ -578,6 +581,8 @@ const Statistics = () => {
 
             {/* Informação completas de Exportação ou Importação */}
             <section id={styles.ExpImpInfos}>
+
+                {/* GRÁFICOS DOS PRINCIPAIS */}
                 {/* Molde de Grid Horizontal Reutilizável */}
                 <section className="infoGridHorizontal">
                     {/* Parte da Esquerda (Mapa do Mundo) */}
@@ -627,23 +632,26 @@ const Statistics = () => {
                     </section>
                 </section>
 
+                {/* GRÁFICOS DE LINHA */}
                 {/* Molde de Grid Horizontal Reutilizável */}
                 <section className="infoGridHorizontal">
                     {/* Parte da Esquerda */}
                     <section className="leftArea">
                         <div className="gridItem">
                             <IconTitle title="Valor Agregado" variant="lineChart" size='textMedium' />
-                            {vlAgregado.length > 0 && (
-                                <LineChart
-                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={vlAgregado.map(value => Number(value.total))}
-                                    dataName="Balança Comercial"
-                                    colorPalette={["#D92B66"]}
-                                    id="bottomInfo11"
-                                    group="bottomInfo1"
-                                />
-                            )
+                            <div className="componentWrapper">
+                                {vlAgregado.length > 0 && (
+                                    <LineChart
+                                        period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                        values={vlAgregado.map(value => Number(value.total))}
+                                        dataName="Valor Agregado"
+                                        colorPalette={["#D92B66"]}
+                                        id="bottomInfo11"
+                                        group="bottomInfo1"
+                                    />
+                                )
                             }
+                            </div>
                         </div>
                     </section>
                     {/* Parte da Direita */}
@@ -684,6 +692,79 @@ const Statistics = () => {
                         </div>
                     </section>
                 </section>
+
+
+
+                {/* COMPARAÇÃO REGIONAL */}
+                <section id={styles.regionalCompArea}>
+
+                    {/* Texto Introdutório */}
+                    <div className={styles.textContent}>
+                        <h3 className={styles.title}>
+                            Comparação Regional
+                        </h3>
+                        <p className={styles.text}>
+                            Comparação do <span className={styles.highlightText}>EstadoDoSul</span> com a soma dos demais estados da <span className={styles.highlightText}>Região Sul</span>.
+                        </p>
+                    </div>
+
+                    {/* Molde de Grid Horizontal Reutilizável */}
+                    <section className="infoGridHorizontal">
+
+                        {/* Parte da Esquerda */}
+                        <section className="leftArea">
+                            <div className="gridItem">
+                                <IconTitle title="Valor Agregado das Exportações" variant="lineChart" size='textMedium' />
+                                <div className="componentWrapper">
+                                    {/* Gráfico */}
+                                    {/* {region && ( */}
+                                    <DoubleLineChart
+                                        period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                        values={[[35, 27, 48, 37, 27, 34, 13, 31, 45, 45, 35 , 30], 
+                                                [-32, 12, 5, 5, 4, 9, 2, -4, 10, 25, 23, -3]]}
+                                        legends="false"
+                                        dataName={["Estado 1", "Estado 2"]}
+                                        colorPalette={["#B81D4E" , "#D92B66"]}
+                                    />
+                                    {/* )
+                                } */}
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* BOTÕES com opção para mudar o gráfico */}
+                        <section className="rightArea" id={styles.chartSelectArea}>
+                            {/* Item 1 */}
+                            <div className="gridItem">
+                                <p className={styles.text}>Selecione uma das opções de comparação abaixo:</p>
+
+                                <input type='radio' id='showRegionVA' name='chartSelect' defaultChecked/>
+                                    <label htmlFor="showRegionVA" className={styles.chartTypeOption} >
+                                        <FontAwesomeIcon icon={faChartLine} className={styles.icon}/> <p className={styles.label}> Valor Agregado </p>
+                                    </label>
+
+                                <input type='radio' id='showRegionQL' name='chartSelect'/>
+                                    <label htmlFor="showRegionQL" className={styles.chartTypeOption}>
+                                        <FontAwesomeIcon icon={faChartLine} className={styles.icon}/> <p className={styles.label}> Quilograma Líquido  </p>
+                                    </label>
+
+                                <input type='radio' id='showRegionFOB' name='chartSelect'/>
+                                    <label htmlFor="showRegionFOB" className={styles.chartTypeOption}>
+                                        <FontAwesomeIcon icon={faChartLine} className={styles.icon}/> <p className={styles.label}> Valor FOB  </p>
+                                    </label>
+
+                            </div>
+                        
+                        </section>
+                    </section>
+
+                    {/* Link para a página de comparação */}
+                    <p className={styles.redirectText}>
+                        Para ver comparações mais detalhadas entre estados específicos, veja a <a href="/comparison" className={styles.link}>Página de Comparação</a>.
+                    </p>
+                </section>
+                
+
 
 
             </section>
