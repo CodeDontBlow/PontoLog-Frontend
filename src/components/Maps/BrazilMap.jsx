@@ -167,6 +167,15 @@ const BrazilMap = ({ onRegionChange }) => {
     }
   };
 
+  useEffect(() => {
+    if (selectedState && selectedRegion){
+      let regionFilter = {
+        region: selectedRegion,
+        state: selectedState,
+      }
+    }
+  }, [selectedState]  )
+
   return (
     <div className="brazil-map-container">
       <p className={styles.mapDescription}>{getDescriptionText()}</p>

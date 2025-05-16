@@ -22,7 +22,7 @@ const Statistics = () => {
     // states dos filtros
     const [sh, setSh] = useState('sh4');
     const [product, setProduct] = useState('');
-    const [estado, setEstado] = useState('');
+    const [state, setState] = useState('');
     const [tradeType, setTradeType] = useState('exportacao');
     const [region, setRegion] = useState('');
     const [initYear, setInitYear] = useState(2014);
@@ -43,6 +43,19 @@ const Statistics = () => {
     const [kgLiq, setKgLiq] = useState([])
     const [vlFob, setVlFob] = useState([])
     const [countries, setCountries] = useState([])
+
+    // Pegando região e estado selecionados no componente BrazilMap
+    const getRegionChange = ({regiao , estado}) => {
+        let filter = {
+            region: regiao ?? undefined,
+            state: estado ?? undefined
+        }
+        console.log(filter) //Exibindo os dados extrai´dos
+
+        setRegion(filter.region) //Setando valor da região
+        setState(filter.state) //setando valor do estado
+
+    }
 
     const getProductByLetter = async () => {
         if (product.length > 0) {
@@ -163,10 +176,10 @@ const Statistics = () => {
                 }
             } else {
                 switch (true) {
-                    case (estado && region && product):
+                    case (state && region && product):
                         response = await api.get(`/${tradeType}/vl_agregado/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
                         break;
-                    case (estado && region):
+                    case (state && region):
                         response = await api.get(`/${tradeType}/vl_agregado/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE`);
                         break;
                     case (product):
@@ -542,7 +555,7 @@ const Statistics = () => {
             <section id={styles.primaryInfos}>
                 {/* Mapa do Brasil */}
                 <div className={styles.navMap}>
-                    <BrazilMap />
+                    <BrazilMap onRegionChange={getRegionChange} />
                 </div>
 
                 {/* Molde de Grid Vertical Reutilizável */}
