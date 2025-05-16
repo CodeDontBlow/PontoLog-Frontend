@@ -92,8 +92,6 @@ const Statistics = () => {
             ? `/${endpoint}/${initYear}?${params}`
             : `/${tradeType}/${endpoint}/${initYear}?${params}`
 
-        console.log("Requisição para URL:", url)
-
         const response = await api.get(url)
         const responseData = response.data
         const data = responseData.data
@@ -130,18 +128,6 @@ const Statistics = () => {
             getProductByLetter(product);
         }
     }, [product, sh]);
-
-    const dadosTeste = {
-        exportacao: [
-            {
-                country: "United States",
-                quantidade: 8000,
-                vl: 5000000,
-                kg: 1500000,
-            }
-
-        ]
-    };
 
     return (
         <div id={styles.statisticsPage}>
