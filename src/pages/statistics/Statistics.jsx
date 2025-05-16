@@ -85,32 +85,24 @@ const Statistics = () => {
     const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 50), [sh]);
 
     const fetchData = async (endpoint, setter) => {
-        try {
-            const params = buildQueryParams()
-            const response = await api.get(`/${tradeType}/${endpoint}/${initYear}?${params}`)
+    try {
+        const params = buildQueryParams()
 
-            const responseData = response.data
-            const data = responseData.data
+        const url = endpoint === "balanco"
+            ? `/${endpoint}/${initYear}?${params}`
+            : `/${tradeType}/${endpoint}/${initYear}?${params}`
 
-            setter(data)
-        } catch (error) {
-            console.error(`Erro fetching ${endpoint}:`, error)
-        }
+        console.log("Requisição para URL:", url)
+
+        const response = await api.get(url)
+        const responseData = response.data
+        const data = responseData.data
+
+        setter(data)
+    } catch (error) {
+        console.error(`Erro fetching ${endpoint}:`, error.response?.data || error.message)
     }
-    const fetchBalanca = async (endpoint, setter) => {
-        try {
-            const params = buildQueryParams()
-            const response = await api.get(`/${endpoint}/${initYear}?${params}`)
-
-            const responseData = response.data
-            const data = responseData.data
-
-            setter(data)
-        } catch (error) {
-            console.error(`Erro fetching ${endpoint}:`, error)
-        }
-    }
-
+}
     useEffect(() => {
         const fetchAllData = async () => {
             try {
@@ -122,7 +114,7 @@ const Statistics = () => {
                     fetchData('vl_agregado', setVlAgregado),
                     fetchData('vl_fob', setVlFob),
                     fetchData('kg_liquido', setKgLiq),
-                    fetchBalanca('balanco', setBalanca),
+                    fetchData('balanco', setBalanca),
                     fetchData('countries', setCountries),
                 ]);
             } catch (error) {
