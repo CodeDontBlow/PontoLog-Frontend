@@ -32,12 +32,6 @@
     font: var(--title-large);
 }
 
-
-
-.icon{
-    color: var(--base-pink);
-}
-
 .title{
     color: var(--black-500);
 }

@@ -483,7 +483,7 @@ const Statistics = () => {
     };
 
     return (
-        <div id={styles.statisticsPage}>
+        <div id={styles.statisticsPage} style={{color:"var(--base-highlight)"}}>
 
             {/* Área dos Inputs */}
             <section id={styles.inputArea}>

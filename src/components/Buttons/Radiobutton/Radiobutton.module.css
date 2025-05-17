@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    color: var(--base-pink);
-    accent-color: var(--base-pink);
+    color: var(--base-highlight);
+    accent-color: var(--base-highlight);
     font: var(--label-medium);
 }

@@ -11,14 +11,14 @@ const presetIcons = {
     map : faMap,
 }
 
-const IconTitle = ({icon , title , variant , size = "textMedium"}) => {
+const IconTitle = ({icon , title , variant , size = "textMedium" , color="currentColor"}) => {
     // Define o ícone selecionado (um ícone específico ou uma das variantes) 
     const selectedIcon = icon || presetIcons[variant]
 
     return(
         <div className={`${styles.container} ${styles[size]}`}>
             {/* Aplica o ícone selecionado */}
-            <FontAwesomeIcon icon={selectedIcon} className={`${styles.icon}`}/>
+            <FontAwesomeIcon icon={selectedIcon} className={`${styles.icon}`} style={{color:color}}/>
 
             <h2 className={styles.title}>
                 {title}

@@ -1,4 +1,10 @@
 :root {
+    /* Destaque */
+    --base-highlight: var(--base-pink);
+    --highlight-700: var(--pink-700);
+    --highlight-500: var(--pink-500);
+    --highlight-300: var(--pink-300);
+
     /* White */
     --base-white: #FFFFFF;
     --white-700: #D3D8DF;

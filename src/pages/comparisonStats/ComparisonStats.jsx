@@ -184,12 +184,12 @@ const ComparisonStats = () => {
     
     
     return (
-        <div id={styles.statisticsPage}>
+        <div id={styles.statisticsPage} style={{color:"var(--base-highlight)"}}>
 
 
         {/* Área dos Inputs */}
-            {/* Labels */}
             <section id={styles.inputArea}>
+                {/* Labels */}
                 <div className={styles.labelsContainer}>
                     <label className={styles.productLabel} htmlFor="">Produtos</label>
 
@@ -324,13 +324,13 @@ const ComparisonStats = () => {
                     </section>
 
                     {/* Estado 2 */}
-                    <section className="infoGridVertical">
+                    <section className="infoGridVertical" style={{color:"var(--base-teal)"}}>
                         <section className="topArea">
                             <h3 className={styles.stateTitle}>São Paulo</h3>
                         </section>
                         <section className="midArea">
                             <div className="gridItem">
-                                <IconTitle variant="map" title="Principais Países"/>
+                                <IconTitle variant="map" title="Principais Países" color="currentColor"/>
                                 <div className="componentWrapper">
                                     <WorldMap
                                         selectedRegion="Norte"
@@ -374,9 +374,9 @@ const ComparisonStats = () => {
 
 
 
-                <section className="infoGridHorizontal lineChartsArea" id={styles.halfGrid}>
+                <section className="infoGridHorizontal lineChartsArea">
                     <section className="leftArea">
-                        <div className="gridItem">
+                        <div className="gridItem" style={{}}>
                             <IconTitle title="Valor Agregado" variant="lineChart"/>
                             <div className="componentWrapper">
                                 <DoubleLineChart
