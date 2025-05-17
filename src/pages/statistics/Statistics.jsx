@@ -44,19 +44,6 @@ const Statistics = () => {
     const [vlFob, setVlFob] = useState([])
     const [countries, setCountries] = useState([])
 
-    // Pegando região e estado selecionados no componente BrazilMap
-    const getRegionChange = ({regiao , estado}) => {
-        let filter = {
-            region: regiao ?? undefined,
-            state: estado ?? undefined
-        }
-        console.log(filter) //Exibindo os dados extrai´dos
-
-        setRegion(filter.region) //Setando valor da região
-        setState(filter.state) //setando valor do estado
-
-    }
-
     const getProductByLetter = async () => {
         if (product.length > 0) {
             try {
@@ -555,7 +542,7 @@ const Statistics = () => {
             <section id={styles.primaryInfos}>
                 {/* Mapa do Brasil */}
                 <div className={styles.navMap}>
-                    <BrazilMap onRegionChange={getRegionChange} />
+                    <BrazilMap onRegionChange={({ regiao, estado }) => { setRegion(regiao ?? undefined); setState(estado ?? undefined);}} />
                 </div>
 
                 {/* Molde de Grid Vertical Reutilizável */}
