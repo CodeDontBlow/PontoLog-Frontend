@@ -99,6 +99,7 @@ const Statistics = () => {
             console.error(`Erro fetching ${endpoint}:`, error.response?.data || error.message)
         }
     }
+
     useEffect(() => {
         const fetchAllData = async () => {
             try {
@@ -260,7 +261,7 @@ const Statistics = () => {
                                             vl: Number(c.TOTAL_VL_AGREGADO),
                                             kg: Number(c.TOTAL_KG_LIQUIDO),
                                         })),
-                                        importacao: [], // não tiver dados
+                                        importacao: [],
                                     }}
                                 />
                             </div>
@@ -276,7 +277,7 @@ const Statistics = () => {
                             <div className="componentWrapper">
                                 <BarChart
                                     items={vias.map(via => via.NO_VIA)}
-                                    values={[48, 35, 27]}
+                                    values={vias.map(via => Number(via.total))}
                                     colorPalette={["#D92B66"]}
                                 />
                             </div>
@@ -285,13 +286,13 @@ const Statistics = () => {
                         <div className="gridItem">
                             <IconTitle variant="barChart" title="Principais URFs" size='light' />
                             <div className="componentWrapper">
-                            {urfs.length > 0 && (
-                                <BarChart
-                                    items={urfs.map(urf => urf.NO_URF)}
-                                    values={urfs.map(urf => Number(urf.total))}
-                                    colorPalette={["#D92B66"]}
-                                />
-                            )}
+                                {urfs.length > 0 && (
+                                    <BarChart
+                                        items={urfs.map(urf => urf.NO_URF)}
+                                        values={urfs.map(urf => Number(urf.total))}
+                                        colorPalette={["#D92B66"]}
+                                    />
+                                )}
                             </div>
                         </div>
                     </section>
@@ -306,7 +307,7 @@ const Statistics = () => {
                             <div className="componentWrapper">
                                 <LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
+                                    values={vlAgregado.map(value => Number(value.total))}
                                     dataName="Balança Comercial"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo11"
@@ -323,7 +324,7 @@ const Statistics = () => {
                             <div className="componentWrapper">
                                 <LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
+                                    values={kgLiq.map(value => Number(value.total))}
                                     dataName="kg_liquido"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo12"
@@ -337,7 +338,7 @@ const Statistics = () => {
                             <div className="componentWrapper">
                                 <LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
+                                    values={vlFob.map(value => Number(value.total))}
                                     dataName="vl_fob"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo13"
