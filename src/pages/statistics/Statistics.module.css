@@ -109,11 +109,13 @@ section#ExpImpInfos {
     gap: 1.875rem;
 }
 
+
+
     /* COMPARAÇÃO REGIONAL */
     section#regionalCompArea{
         display: flex;
         flex-direction: column;
-        gap: 30px;
+        gap: 20px;
     }
 
     /* TEXTO */
@@ -126,14 +128,14 @@ section#ExpImpInfos {
         /* Título */
         section#regionalCompArea .title{
             color: var(--black-500);
-            font: var(--title-regular);
+            font: var(--text-large);
             font-weight: 600;
         }
 
         /* Texto */
         section#regionalCompArea p.text{
             color: var(--black-500);
-            font: var(--text-medium);
+            font: var(--text-light);
         }
 
             /* Texto Destaque */
@@ -145,21 +147,18 @@ section#ExpImpInfos {
 
         /* BOTÕES */
         section#chartSelectArea{
-            min-height: 450px;
-            margin-top: 30px;
+            min-height: 320px;
 
             grid-template-rows: 1fr;
         }
         
             section#chartSelectArea > div{
-                gap: 15px !important;
+                gap: 10px !important;
             }
         
             section#chartSelectArea p.text{
-                margin-bottom: 10px;
-
                 color: var(--black-500);
-                font: var(--text-medium);
+                font: var(--text-light);
                 line-height: 20px;
             }
 
@@ -176,7 +175,7 @@ section#ExpImpInfos {
                 /* Labels Inputs */
                 section#chartSelectArea label.chartTypeOption{
                     background-color: var(--white-700);
-                    padding: 15px 30px;
+                    padding: 12px 22px;
 
                     font: var(--text-light);
 
@@ -210,12 +209,13 @@ section#ExpImpInfos {
         /* Redirecionamento para a página de comparação */
         section#regionalCompArea p.redirectText {
             color: var(--black-500);
-            font: var(--text-medium);
+            font: var(--text-light);
 
         }
         
             section#regionalCompArea p.redirectText a.link{
                 color: var(--base-pink);
+                font-weight: 600;
                 transition: 200ms;
             }
             

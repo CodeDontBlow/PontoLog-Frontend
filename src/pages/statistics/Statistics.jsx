@@ -714,7 +714,7 @@ const Statistics = () => {
                         {/* Parte da Esquerda */}
                         <section className="leftArea">
                             <div className="gridItem">
-                                <IconTitle title="Valor Agregado das Exportações" variant="lineChart" size='textMedium' />
+                                <IconTitle title="Valor Agregado das Exportações" variant="lineChart" size='textLight' />
                                 <div className="componentWrapper">
                                     {/* Gráfico */}
                                     {/* {region && ( */}
