@@ -20,7 +20,7 @@ const Statistics = () => {
     // states dos filtros
     const [sh, setSh] = useState('sh4');
     const [product, setProduct] = useState('');
-    const [estado, setEstado] = useState('');
+    const [state, setState] = useState('');
     const [tradeType, setTradeType] = useState('exportacao');
     const [region, setRegion] = useState('');
     const [initYear, setInitYear] = useState(2014);
@@ -161,10 +161,10 @@ const Statistics = () => {
                 }
             } else {
                 switch (true) {
-                    case (estado && region && product):
+                    case (state && region && product):
                         response = await api.get(`/${tradeType}/vl_agregado/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
                         break;
-                    case (estado && region):
+                    case (state && region):
                         response = await api.get(`/${tradeType}/vl_agregado/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE`);
                         break;
                     case (product):
@@ -540,7 +540,7 @@ const Statistics = () => {
             <section id={styles.primaryInfos}>
                 {/* Mapa do Brasil */}
                 <div className={styles.navMap}>
-                    <BrazilMap />
+                    <BrazilMap onRegionChange={({ regiao, estado }) => { setRegion(regiao ?? undefined); setState(estado ?? undefined);}} />
                 </div>
 
                 {/* Molde de Grid Vertical Reutilizável */}
