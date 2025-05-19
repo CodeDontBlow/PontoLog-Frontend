@@ -42,6 +42,17 @@ const Statistics = () => {
     const [vlFob, setVlFob] = useState([])
     const [countries, setCountries] = useState([])
 
+    // Opções de descrição para o mapa do Brasil
+    const getDescriptionText = () => {
+        if (state) { //Selecionou um estado
+        return "Para desfazer a seleção de estado atual, clique no mapa abaixo.";
+        } else if (region) { //Selecionou uma região
+        return "Escolha um dos estados para analisar seus dados.";
+        } else { //Não selecionou nada
+        return "Para selecionar um estado, escolha uma das regiões do mapa abaixo.";
+        }
+    };
+
     const getProductByLetter = async () => {
         if (product.length > 0) {
             try {
@@ -540,6 +551,16 @@ const Statistics = () => {
             <section id={styles.primaryInfos}>
                 {/* Mapa do Brasil */}
                 <div className={styles.navMap}>
+
+                    {/* Legenda do mapa do brasil */}
+                    <p className={styles.mapDescription}>{getDescriptionText()}</p>
+
+                    {/* Região/Estado selecionado */}
+                    {state ? (
+                    <h2 className={styles.mapCurrentState}>{state}</h2>
+                    ) : region ? (
+                    <h2 className={styles.mapCurrentState}>Região {region}</h2>
+                    ) : null}
                     <BrazilMap onRegionChange={({ regiao, estado }) => { setRegion(regiao ?? undefined); setState(estado ?? undefined);}} />
                 </div>
 

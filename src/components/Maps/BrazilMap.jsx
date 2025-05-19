@@ -4,7 +4,6 @@ import statesData from "../../assets/geojson/brazil-states.json";
 import { useState, useEffect } from "react";
 import L from "leaflet";
 import "./../../App.css";
-import styles from "./Maps.module.css";
 
 const regionMap = {
   1: "Norte",
@@ -157,33 +156,8 @@ const BrazilMap = ({ onRegionChange }) => {
     ? regions[selectedRegion]
     : statesData.features;
 
-  const getDescriptionText = () => {
-    if (selectedState) {
-      return "Para desfazer a seleção de estado atual, clique no mapa abaixo.";
-    } else if (selectedRegion) {
-      return "Escolha um dos estados para analisar seus dados.";
-    } else {
-      return "Para selecionar um estado, escolha uma das regiões do mapa abaixo.";
-    }
-  };
-
-  useEffect(() => {
-    if (selectedState && selectedRegion){
-      let regionFilter = {
-        region: selectedRegion,
-        state: selectedState,
-      }
-    }
-  }, [selectedState]  )
-
   return (
     <div className="brazil-map-container">
-      <p className={styles.mapDescription}>{getDescriptionText()}</p>
-      {selectedState ? (
-        <h2 className={styles.mapCurrentState}>{selectedState}</h2>
-      ) : selectedRegion ? (
-        <h2 className={styles.mapCurrentState}>Região {selectedRegion}</h2>
-      ) : null}
 
       <MapContainer
         center={[-14.235, -51.9253]}
