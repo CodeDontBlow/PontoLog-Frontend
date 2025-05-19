@@ -307,6 +307,7 @@ const ComparisonStats = () => {
                                         items={["Via Aquífera", "Via Rodoviária", "Via Aérea"]}
                                         values={[512, 485, 271]}
                                         colorPalette={["#D92B66"]}
+                                        isQuarter={true}
                                     />
                                 </div>
                             </div>
@@ -317,6 +318,7 @@ const ComparisonStats = () => {
                                         items={["Porto 123", "Rodovia 123", "Aeroporto 123"]}
                                         values={[52, 45, 21]}
                                         colorPalette={["#D92B66"]}
+                                        isQuarter={true}
                                     />
                                 </div>
                             </div>
@@ -337,6 +339,7 @@ const ComparisonStats = () => {
                                         tradeType="exportacao"
                                         colorPalette={["#16707A","#028391" ,"#80B8B8" , "#A0D0D0"]}
                                         countryDatas={dadosTeste}
+                                        isQuarter={true}
                                     />
                                 </div>
                             </div>
@@ -349,6 +352,7 @@ const ComparisonStats = () => {
                                         items={["Via Aquífera", "Via Rodoviária", "Via Aérea"]}
                                         values={[512, 485, 271]}
                                         colorPalette={["#028391"]}
+                                        isQuarter={true}
                                     />
                                 </div>
                             </div>
@@ -359,6 +363,7 @@ const ComparisonStats = () => {
                                         items={["Porto 123", "Rodovia 123", "Aeroporto 123"]}
                                         values={[52, 45, 21]}
                                         colorPalette={["#028391"]}
+                                        isQuarter={true}
                                     />
                                 </div>
                             </div>
