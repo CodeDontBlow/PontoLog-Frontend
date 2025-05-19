@@ -4,7 +4,6 @@ import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 
 // Importando componentes e api
 import api from '../../api/api'
-import Button from '../../components/Buttons/Button/Button'
 import Checkbox from '../../components/Buttons/Checkbox/Checkbox'
 import LineChart from '../../components/Charts/LineChart'
 import BarChart from '../../components/Charts/BarChart'
@@ -14,7 +13,6 @@ import BrazilMap from '../../components/Maps/BrazilMap'
 import WorldMap from '../../components/Maps/WorldMap'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import IconTitle from '../../components/IconTitle/IconTitle'
-import TabNavigation from '../../components/Tab/TabNavigation'
 
 import styles from './Statistics.module.css'
 
@@ -85,22 +83,22 @@ const Statistics = () => {
     const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 50), [sh]);
 
     const fetchData = async (endpoint, setter) => {
-    try {
-        const params = buildQueryParams()
+        try {
+            const params = buildQueryParams()
 
-        const url = endpoint === "balanco"
-            ? `/${endpoint}/${initYear}?${params}`
-            : `/${tradeType}/${endpoint}/${initYear}?${params}`
+            const url = endpoint === "balanco"
+                ? `/${endpoint}/${initYear}?${params}`
+                : `/${tradeType}/${endpoint}/${initYear}?${params}`
 
-        const response = await api.get(url)
-        const responseData = response.data
-        const data = responseData.data
+            const response = await api.get(url)
+            const responseData = response.data
+            const data = responseData.data
 
-        setter(data)
-    } catch (error) {
-        console.error(`Erro fetching ${endpoint}:`, error.response?.data || error.message)
+            setter(data)
+        } catch (error) {
+            console.error(`Erro fetching ${endpoint}:`, error.response?.data || error.message)
+        }
     }
-}
     useEffect(() => {
         const fetchAllData = async () => {
             try {
@@ -196,7 +194,7 @@ const Statistics = () => {
 
 
             {/* Alerta de quais Informações estão sendo exibidas */}
-            <AlertCard icon={faCircleInfo} product="Todos os Produtos" region="Brasil" period={period} />
+            <AlertCard variant="allInfo" icon={faCircleInfo} product="Todos os Produtos" region="Brasil" period={period} />
 
 
 
@@ -212,15 +210,17 @@ const Statistics = () => {
                     {/* Parte de Cima */}
                     <section className="topArea">
                         <div className="gridItem">
-                            <IconTitle title="Balança Comercial" variant="lineChart" size='medium' />
-                            {balanca.length > 0 && (
-                                <LineChart
-                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={balanca.map(bal => Number(bal.total))}
-                                    dataName="Balança Comercial"
-                                    colorPalette={["#D92B66"]}
-                                />
-                            )}
+                            <IconTitle title="Balança Comercial" variant="lineChart" size='textMedium' />
+                            <div className="componentWrapper">
+                                {balanca.length > 0 && (
+                                    <LineChart
+                                        period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                        values={balanca.map(bal => Number(bal.total))}
+                                        dataName="Balança Comercial"
+                                        colorPalette={["#D92B66"]}
+                                    />
+                                )}
+                            </div>
                         </div>
                     </section>
 
@@ -247,20 +247,23 @@ const Statistics = () => {
                     {/* Parte da Esquerda (Mapa do Mundo) */}
                     <section className="leftArea">
                         <div className="gridItem">
-                            <IconTitle variant="map" title="Principais Países" size='medium' />
-                            <WorldMap
-                                selectedRegion="Norte"
-                                tradeType="exportacao"
-                                countryDatas={{
-                                    exportacao: countries.map(c => ({
-                                        country: c.NO_PAIS,
-                                        quantidade: Number(c.TOTAL_REGISTROS),
-                                        vl: Number(c.TOTAL_VL_AGREGADO),
-                                        kg: Number(c.TOTAL_KG_LIQUIDO),
-                                    })),
-                                    importacao: [], // não tiver dados
-                                }}
-                            />
+                            <IconTitle variant="map" title="Principais Países" size='textMedium' />
+                            <div className="componentWrapper">
+                                <WorldMap
+                                    selectedRegion="Norte"
+                                    tradeType="exportacao"
+                                    colorPalette={["#B81D4E", "#D92B66", "#F5A4C3", "#F1A1B5"]}
+                                    countryDatas={{
+                                        exportacao: countries.map(c => ({
+                                            country: c.NO_PAIS,
+                                            quantidade: Number(c.TOTAL_REGISTROS),
+                                            vl: Number(c.TOTAL_VL_AGREGADO),
+                                            kg: Number(c.TOTAL_KG_LIQUIDO),
+                                        })),
+                                        importacao: [], // não tiver dados
+                                    }}
+                                />
+                            </div>
                         </div>
                     </section>
 
@@ -268,19 +271,20 @@ const Statistics = () => {
                     <section className="rightArea">
                         {/* Item 1 */}
                         <div className="gridItem">
-                            <IconTitle variant="barChart" title="Principais Vias Usadas" size='light' />
+                            <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight' />
 
-                            {vias.length > 0 && (
+                            <div className="componentWrapper">
                                 <BarChart
                                     items={vias.map(via => via.NO_VIA)}
-                                    values={vias.map(via => Number(via.total))}
+                                    values={[48, 35, 27]}
                                     colorPalette={["#D92B66"]}
                                 />
-                            )}
+                            </div>
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
                             <IconTitle variant="barChart" title="Principais URFs" size='light' />
+                            <div className="componentWrapper">
                             {urfs.length > 0 && (
                                 <BarChart
                                     items={urfs.map(urf => urf.NO_URF)}
@@ -288,6 +292,7 @@ const Statistics = () => {
                                     colorPalette={["#D92B66"]}
                                 />
                             )}
+                            </div>
                         </div>
                     </section>
                 </section>
@@ -297,52 +302,48 @@ const Statistics = () => {
                     {/* Parte da Esquerda */}
                     <section className="leftArea">
                         <div className="gridItem">
-                            <IconTitle title="Valor Agregado" variant="lineChart" size='medium' />
-                            {vlAgregado.length > 0 && (
+                            <IconTitle title="Valor Agregado" variant="lineChart" size='textMedium' />
+                            <div className="componentWrapper">
                                 <LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={vlAgregado.map(value => Number(value.total))}
+                                    values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
                                     dataName="Balança Comercial"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo11"
                                     group="bottomInfo1"
                                 />
-                            )
-                            }
+                            </div>
                         </div>
                     </section>
                     {/* Parte da Direita */}
                     <section className="rightArea">
                         {/* Item 1 */}
                         <div className="gridItem">
-                            <IconTitle title="Quilograma Líquido" variant="lineChart" size='light' />
-                            {kgLiq.length > 0 && (
+                            <IconTitle title="Quilograma Líquido" variant="lineChart" size='textLight' />
+                            <div className="componentWrapper">
                                 <LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={kgLiq.map(value => Number(value.total))}
+                                    values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
                                     dataName="kg_liquido"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo12"
                                     group="bottomInfo1"
                                 />
-                            )
-                            }
+                            </div>
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
-                            <IconTitle title="Valor FOB" variant="lineChart" size="light" />
-
-                            {vlFob.length > 0 && (
+                            <IconTitle title="Valor FOB" variant="lineChart" size='textLight' />
+                            <div className="componentWrapper">
                                 <LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={vlFob.map(value => Number(value.total))}
+                                    values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
                                     dataName="vl_fob"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo13"
                                     group="bottomInfo1"
                                 />
-                            )
-                            }
+                            </div>
                         </div>
                     </section>
                 </section>

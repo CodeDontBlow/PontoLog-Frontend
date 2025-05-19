@@ -2,7 +2,10 @@ import Chart from "react-apexcharts"
 import React , {useState} from 'react'
 
 //GRÁFICO DE DUAS LINHAS
-const DoubleLineChart = ({period , values , dataName, chartDescription , colorPalette}) => {
+const DoubleLineChart = ({period , values , dataName, chartDescription , colorPalette , legends=true}) => {
+
+    let showLegends
+    legends == "false" ? showLegends = false : showLegends = true
 
     //PROPS
     //period: Periodo de tempo (eixo x) [lista]
@@ -26,6 +29,9 @@ const DoubleLineChart = ({period , values , dataName, chartDescription , colorPa
                 toolbar: {
                     show: false,
                 },
+                events: {
+                    animationEnd: () => {window.dispatchEvent(new Event('resize'))},
+                }
             },
             title: {
                 text: {chartDescription},
@@ -42,6 +48,31 @@ const DoubleLineChart = ({period , values , dataName, chartDescription , colorPa
             stroke : {
                 curve: "smooth",
                 width: "3"
+            },
+            markers: {
+                size: 3,
+                colors: colorPalette,
+                strokeColors: "var(--white-300)",
+                strokeWidth: 2,
+            },
+            legend: {
+                show: showLegends,
+                position: "bottom",
+                horizontalAlign: "left",
+                fontFamily: "'Roboto', sans-serif",
+                fontSize: "15px",
+                offsetX: 0,
+                markers: {
+                    size: 8.5,
+                    shape: "square",
+                },
+                labels: {
+                    colors: colorPalette
+                },
+                itemMargin: {
+                    horizontal: 10,
+                    vertical: 7,
+                },
             }
         }
     )
@@ -60,13 +91,12 @@ const DoubleLineChart = ({period , values , dataName, chartDescription , colorPa
 
     //Componente de gráfico do ApexCharts recebendo os valores definidos acima
     return(
-        <div className="componentWrapper">
-            <Chart
-                options = {options}
-                series = {series}
-                type = "line"
-            />
-        </div>
+        <Chart
+            options = {options}
+            series = {series}
+            type = "line"
+            height="100%"
+        />
     )
 }
 
