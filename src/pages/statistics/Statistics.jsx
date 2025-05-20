@@ -4,6 +4,7 @@ import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 
 // Importando componentes e api
 import api from '../../api/api'
+import { fetchData, getProductByLetter } from '../../services/fetchService'
 import Button from '../../components/Buttons/Button/Button'
 import Checkbox from '../../components/Buttons/Checkbox/Checkbox'
 import LineChart from '../../components/Charts/LineChart'
@@ -22,9 +23,9 @@ const Statistics = () => {
     // states dos filtros
     const [sh, setSh] = useState('sh4');
     const [product, setProduct] = useState('');
-    // const [estado, setEstado] = useState('');
+    const [estado, setEstado] = useState('');
     const [tradeType, setTradeType] = useState('exportacao');
-    // const [region, setRegion] = useState('');
+    const [region, setRegion] = useState('');
     const [initYear, setInitYear] = useState(2014);
     const [finalYear, setFinalYear] = useState(2024);
     const [periodoUnico, setPeriodoUnico] = useState(true);
@@ -56,23 +57,23 @@ const Statistics = () => {
         return params.toString();
     }
 
-    const getProductByLetter = async (searchTerm) => {
-        if (searchTerm.length > 0) {
-            const formattedTerm = searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1).toLowerCase();
-            try {
-                const response = await api.get(`/product/no_${sh}_por/${formattedTerm}`);
+    // const getProductByLetter = async (searchTerm) => {
+    //     if (searchTerm.length > 0) {
+    //         const formattedTerm = searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1).toLowerCase();
+    //         try {
+    //             const response = await api.get(`/product/no_${sh}_por/${formattedTerm}`);
 
-                const responseData = response.data;
-                const data = responseData.data;
+    //             const responseData = response.data;
+    //             const data = responseData.data;
 
-                setOpcoesDeProduto(data);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        } else {
-            setOpcoesDeProduto([])
-        }
-    }
+    //             setOpcoesDeProduto(data);
+    //         } catch (error) {
+    //             console.error("Error fetching data:", error);
+    //         }
+    //     } else {
+    //         setOpcoesDeProduto([])
+    //     }
+    // }
 
     const debounce = (func, delay) => {
         let timer;
@@ -84,36 +85,36 @@ const Statistics = () => {
 
     const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 50), [sh]);
 
-    const fetchData = async (endpoint, setter) => {
-    try {
-        const params = buildQueryParams()
+    // const fetchData = async (endpoint, setter) => {
+    //     try {
+    //         const params = buildQueryParams()
 
-        const url = endpoint === "balanco"
-            ? `/${endpoint}/${initYear}?${params}`
-            : `/${tradeType}/${endpoint}/${initYear}?${params}`
+    //         const url = endpoint === "balanco"
+    //             ? `/${endpoint}/${initYear}?${params}`
+    //             : `/${tradeType}/${endpoint}/${initYear}?${params}`
 
-        const response = await api.get(url)
-        const responseData = response.data
-        const data = responseData.data
+    //         const response = await api.get(url)
+    //         const responseData = response.data
+    //         const data = responseData.data
 
-        setter(data)
-    } catch (error) {
-        console.error(`Erro fetching ${endpoint}:`, error.response?.data || error.message)
-    }
-}
+    //         setter(data)
+    //     } catch (error) {
+    //         console.error(`Erro fetching ${endpoint}:`, error.response?.data || error.message)
+    //     }
+    // }
     useEffect(() => {
         const fetchAllData = async () => {
             try {
                 await Promise.all([
-                    fetchData('fat', setFatAgregado),
-                    fetchData(`product/no_${sh}_por`, setProdutoPopular),
-                    fetchData('via', setVias),
-                    fetchData('urf', setUrfs),
-                    fetchData('vl_agregado', setVlAgregado),
-                    fetchData('vl_fob', setVlFob),
-                    fetchData('kg_liquido', setKgLiq),
-                    fetchData('balanco', setBalanca),
-                    fetchData('countries', setCountries),
+                    fetchData('fat', setFatAgregado, initYear, tradeType, region, estado, product, sh, finalYear, periodoUnico),
+                    fetchData(`product/no_${sh}_por`, setProdutoPopular, initYear, tradeType, region, estado, product, sh, finalYear, periodoUnico),
+                    fetchData('via', setVias, initYear, tradeType, region, estado, product, sh, finalYear, periodoUnico),
+                    fetchData('urf', setUrfs, initYear, tradeType, region, estado, product, sh, finalYear, periodoUnico),
+                    fetchData('vl_agregado', setVlAgregado, initYear, tradeType, region, estado, product, sh, finalYear, periodoUnico),
+                    fetchData('vl_fob', setVlFob, initYear, tradeType, region, estado, product, sh, finalYear, periodoUnico),
+                    fetchData('kg_liquido', setKgLiq, initYear, tradeType, region, estado, product, sh, finalYear, periodoUnico),
+                    fetchData('balanco', setBalanca, initYear, tradeType, region, estado, product, sh, finalYear, periodoUnico),
+                    fetchData('countries', setCountries, initYear, tradeType, region, estado, product, sh, finalYear, periodoUnico),
                 ]);
             } catch (error) {
                 console.error("Erro ao buscar dados", error);
@@ -123,9 +124,11 @@ const Statistics = () => {
         fetchAllData()
     }, [product, initYear, finalYear, tradeType, periodoUnico, sh]);
 
+
+
     useEffect(() => {
         if (product.length > 0) {
-            getProductByLetter(product);
+            getProductByLetter(product, setOpcoesDeProduto, sh);
         }
     }, [product, sh]);
 
