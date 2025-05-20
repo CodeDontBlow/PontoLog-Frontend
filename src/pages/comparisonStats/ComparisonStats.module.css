@@ -137,7 +137,6 @@ section#primaryInfos .navMap {
     .navMap .mapDescription {
         color: var(--black-500);
         font: var(--text-medium);
-        text-align: center;
     }
 
 /* Dados de Exportação / Importação */

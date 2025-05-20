@@ -7,7 +7,7 @@ import DoubleLineChart from '../../components/Charts/DoubleLineChart'
 import ColorCard from '../../components/Cards/ColorCard/ColorCard'
 import BarChart from '../../components/Charts/BarChart'
 import AlertCard from '../../components/Cards/AlertCard/AlertCard'
-import BrazilMap from '../../components/Maps/BrazilMap'
+import MultiBrazilMap from '../../components/Maps/MultiBrazilMap'
 import WorldMap from '../../components/Maps/WorldMap'
 import Checkbox from '../../components/Buttons/Checkbox/Checkbox'
 import IconTitle from '../../components/IconTitle/IconTitle'
@@ -19,7 +19,28 @@ const ComparisonStats = () => {
 
     const [region, setRegion] = useState('');
     const [state, setState] = useState('');
+    const [statesList , setStatesList] = useState([]);
+    
+    // Mudando a lista de estados quando um estado novo for selecionado
+    useEffect(() => {
+        if (state) {
+            if(statesList[0] == state){
+                return
+            }
+            setStatesList(previewList => {
+                const updatedList = [...previewList] //Cópia de segurança do conteúdo da lista anterior
+                // Caso a lista já tenha 2 elementos, remove o último
+                if(updatedList.length >= 2){
+                    updatedList.pop()
+                }
+                // Adiciona o novo estado selecionado no BrazilMap
+                return [...updatedList , state]
+            })
+        }
+    }, [state])
 
+    console.log(statesList)
+    
     // Opções de descrição para o mapa do Brasil
     const getDescriptionText = () => {
         if (state) { //Selecionou um estado
@@ -157,7 +178,7 @@ const ComparisonStats = () => {
         },
       ]
     };
-    
+
     // Variáveis para os inputs
     const [product , setProduct] = useState('')
     const [sh, setSh] = useState('sh4');
@@ -268,15 +289,25 @@ const ComparisonStats = () => {
                     
                     {/* Legenda do mapa do brasil */}
                     <p className={styles.mapDescription}>{getDescriptionText()}</p>
+                    
+                    {statesList[1] ?
+                        <p className={styles.mapDescription}>[ {statesList[0]} | {statesList[1]} ]</p> :
+                    statesList[0] ?
+                        <p className={styles.mapDescription}>[ {statesList[0]} ]</p> : 
+                        null
+                    }
 
                     {/* Região/Estado selecionado */}
-                    {state ? (
-                    <h2 className={styles.mapCurrentState}>{state}</h2>
-                    ) : region ? (
-                    <h2 className={styles.mapCurrentState}>Região {region}</h2>
+                    {state ? 
+                        null : 
+                    region ? (
+                        <h2 className={styles.mapCurrentState}>Região {region}</h2>
                     ) : null}
 
-                    <BrazilMap onRegionChange={({ regiao, estado }) => { setRegion(regiao ?? undefined); setState(estado ?? undefined);}} />
+                    <MultiBrazilMap onRegionChange={({ regiao, estado }) => { 
+                        setRegion(regiao || '');
+                        setState(estado || '');
+                    }} />
                 </div>
 
                 <section className={`${styles.infoGridVertical} infoGridVertical`}>
