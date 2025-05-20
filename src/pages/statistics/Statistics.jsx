@@ -83,22 +83,27 @@ const Statistics = () => {
     const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 50), [sh]);
 
     const fetchData = async (endpoint, setter) => {
-        try {
-            const params = buildQueryParams()
+    const label = `Tempo de resposta do ${endpoint}`
+    const start = performance.now() 
 
-            const url = endpoint === "balanco"
-                ? `/${endpoint}/${initYear}?${params}`
-                : `/${tradeType}/${endpoint}/${initYear}?${params}`
+    try {
+        const params = buildQueryParams()
 
-            const response = await api.get(url)
-            const responseData = response.data
-            const data = responseData.data
-
-            setter(data)
-        } catch (error) {
-            console.error(`Erro fetching ${endpoint}:`, error.response?.data || error.message)
-        }
+        const url = endpoint === "balanco"
+            ? `/${endpoint}/${initYear}?${params}`
+            : `/${tradeType}/${endpoint}/${initYear}?${params}`
+        const response = await api.get(url)
+        const responseData = response.data
+        const data = responseData.data
+        setter(data)
+    } catch (error) {
+        console.error(`Erro fetching ${endpoint}:`, error.response?.data || error.message)
+    } finally {
+        const end = performance.now()
+        const durationInSeconds = ((end - start) / 1000).toFixed(2)
+        console.debug(`[DEBUG] ${label}: ${durationInSeconds}s`)
     }
+}
     useEffect(() => {
         const fetchAllData = async () => {
             try {
@@ -276,7 +281,7 @@ const Statistics = () => {
                             <div className="componentWrapper">
                                 <BarChart
                                     items={vias.map(via => via.NO_VIA)}
-                                    values={[48, 35, 27]}
+                                    values={vias.map(via => Number(via.total))}
                                     colorPalette={["#D92B66"]}
                                 />
                             </div>
@@ -306,8 +311,8 @@ const Statistics = () => {
                             <div className="componentWrapper">
                                 <LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
-                                    dataName="Balança Comercial"
+                                    values={vlAgregado.map(vl => Number(vl.total))}
+                                    dataName="Valor Agregado"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo11"
                                     group="bottomInfo1"
@@ -323,8 +328,8 @@ const Statistics = () => {
                             <div className="componentWrapper">
                                 <LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
-                                    dataName="kg_liquido"
+                                    values={kgLiq.map(kg => Number(kg.total))}
+                                    dataName="KG Líquido"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo12"
                                     group="bottomInfo1"
@@ -337,8 +342,8 @@ const Statistics = () => {
                             <div className="componentWrapper">
                                 <LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
-                                    dataName="vl_fob"
+                                    values={vlFob.map(vl => Number(vl.total))}
+                                    dataName="Valor FOB"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo13"
                                     group="bottomInfo1"
