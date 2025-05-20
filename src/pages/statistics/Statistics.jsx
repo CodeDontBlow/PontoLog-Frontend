@@ -22,7 +22,7 @@ const Statistics = () => {
     const [product, setProduct] = useState('');
     const [state, setState] = useState('');
     const [tradeType, setTradeType] = useState('exportacao');
-    // const [region, setRegion] = useState('');
+    const [region, setRegion] = useState('');
     const [initYear, setInitYear] = useState(2014);
     const [finalYear, setFinalYear] = useState(2024);
     const [periodoUnico, setPeriodoUnico] = useState(true);
@@ -46,10 +46,11 @@ const Statistics = () => {
     const buildQueryParams = () => {
         const params = new URLSearchParams()
 
-        // if (region) params.append('region', region);
         if (product) params.append('productName', product);
         if (sh) params.append('sh', `no_${sh}_por`);
         if (!periodoUnico) params.append('endYear', finalYear);
+        if (state) params.append('uf', state);
+        if (region) params.append('region', region);
 
         return params.toString();
     }
@@ -120,7 +121,7 @@ const Statistics = () => {
         };
 
         fetchAllData()
-    }, [product, initYear, finalYear, tradeType, periodoUnico, sh]);
+    }, [product, initYear, finalYear, tradeType, periodoUnico, sh, region]);
 
     useEffect(() => {
         if (product.length > 0) {
