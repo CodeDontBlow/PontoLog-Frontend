@@ -1,8 +1,10 @@
 import { useState , useEffect } from 'react'
-import api from '../../api/api'
 
-// Importando CSS e Componentes
+// Importando Componentes e Services
 import styles from './ComparisonStats.module.css'
+
+import { fetchData, getProductByLetter } from '../../services/fetchService'
+
 import DoubleLineChart from '../../components/Charts/DoubleLineChart'
 import ColorCard from '../../components/Cards/ColorCard/ColorCard'
 import BarChart from '../../components/Charts/BarChart'
@@ -142,7 +144,6 @@ const ComparisonStats = () => {
       ]
     };
 
-    
     // Variáveis para os inputs
     const [product , setProduct] = useState('')
     const [sh, setSh] = useState('sh4');
@@ -153,23 +154,7 @@ const ComparisonStats = () => {
 
     const opcoesDeProduto = ["Abacaxi" , "Cenoura"];
     const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
-    
-    const getProductByLetter = async () => {
-        if (product.length > 0) {
-            try {
-                const response = await api.get(`/product/no_${sh}_por/${product}`)
 
-                const responseData = response.data
-                const data = responseData.data
-
-                setOpcoesDeProduto(data)
-            } catch (error) {
-                console.error("Error fetching data:", error)
-            }
-        }
-    }
-
-    
     useEffect(() => {
         setProduct(product ? product[0].toUpperCase() + product.slice(1).toLowerCase() : product)
 
@@ -181,11 +166,8 @@ const ComparisonStats = () => {
 
     }, [product])
     
-    
-    
     return (
         <div id={styles.statisticsPage}>
-
 
         {/* Área dos Inputs */}
             {/* Labels */}
@@ -242,11 +224,7 @@ const ComparisonStats = () => {
                 </div>
             </section>
 
-
-
             <AlertCard variant='allInfo' icon={faCircleInfo} product="Todos os Produtos" period={[2019 , 2020]}/>
-
-
 
             <section id={styles.primaryInfos}>
                 <div className={styles.navMap}>
@@ -370,14 +348,6 @@ const ComparisonStats = () => {
                         </section>
                     </section>
                 </section>
-
-
-
-
-
-
-
-
 
                 <section className="infoGridHorizontal lineChartsArea" id={styles.halfGrid}>
                     <section className="leftArea">

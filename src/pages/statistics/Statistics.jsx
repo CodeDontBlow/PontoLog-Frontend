@@ -2,8 +2,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 
-// Importando componentes e api
-import api from '../../api/api'
+// Importando componentes e Services
+import { fetchData, getProductByLetter } from '../../services/fetchService'
+import Button from '../../components/Buttons/Button/Button'
 import Checkbox from '../../components/Buttons/Checkbox/Checkbox'
 import LineChart from '../../components/Charts/LineChart'
 import BarChart from '../../components/Charts/BarChart'
@@ -43,36 +44,6 @@ const Statistics = () => {
     const [countries, setCountries] = useState([])
     const [balanca, setBalanca] = useState([])
 
-    const buildQueryParams = () => {
-        const params = new URLSearchParams()
-
-        if (product) params.append('productName', product);
-        if (sh) params.append('sh', `no_${sh}_por`);
-        if (!periodoUnico) params.append('endYear', finalYear);
-        if (state) params.append('uf', state);
-        if (region) params.append('region', region);
-
-        return params.toString();
-    }
-
-    const getProductByLetter = async (searchTerm) => {
-        if (searchTerm.length > 0) {
-            const formattedTerm = searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1).toLowerCase();
-            try {
-                const response = await api.get(`/product/no_${sh}_por/${formattedTerm}`);
-
-                const responseData = response.data;
-                const data = responseData.data;
-
-                setOpcoesDeProduto(data);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        } else {
-            setOpcoesDeProduto([])
-        }
-    }
-
     const debounce = (func, delay) => {
         let timer;
         return (...args) => {
@@ -83,37 +54,19 @@ const Statistics = () => {
 
     const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 50), [sh]);
 
-    const fetchData = async (endpoint, setter) => {
-        try {
-            const params = buildQueryParams()
-
-            const url = endpoint === "balanco"
-                ? `/${endpoint}/${initYear}?${params}`
-                : `/${tradeType}/${endpoint}/${initYear}?${params}`
-
-            const response = await api.get(url)
-            const responseData = response.data
-            const data = responseData.data
-
-            setter(data)
-        } catch (error) {
-            console.error(`Erro fetching ${endpoint}:`, error.response?.data || error.message)
-        }
-    }
-
     useEffect(() => {
         const fetchAllData = async () => {
             try {
                 await Promise.all([
-                    fetchData('fat', setFatAgregado),
-                    fetchData(`product/no_${sh}_por`, setProdutoPopular),
-                    fetchData('via', setVias),
-                    fetchData('urf', setUrfs),
-                    fetchData('vl_agregado', setVlAgregado),
-                    fetchData('vl_fob', setVlFob),
-                    fetchData('kg_liquido', setKgLiq),
-                    fetchData('balanco', setBalanca),
-                    fetchData('countries', setCountries),
+                    fetchData('fat', setFatAgregado, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+                    fetchData(`product/no_${sh}_por`, setProdutoPopular, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+                    fetchData('via', setVias, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+                    fetchData('urf', setUrfs, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+                    fetchData('vl_agregado', setVlAgregado, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+                    fetchData('vl_fob', setVlFob, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+                    fetchData('kg_liquido', setKgLiq, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+                    fetchData('balanco', setBalanca, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+                    fetchData('countries', setCountries, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
                 ]);
             } catch (error) {
                 console.error("Erro ao buscar dados", error);
@@ -125,11 +78,9 @@ const Statistics = () => {
 
     useEffect(() => {
         if (product.length > 0) {
-            getProductByLetter(product);
+            getProductByLetter(product, setOpcoesDeProduto, sh);
         }
     }, [product, sh]);
-
-
 
     return (
         <div id={styles.statisticsPage}>
