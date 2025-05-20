@@ -1,8 +1,8 @@
 import Chart from "react-apexcharts"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 //GRÁFICO DE BARRA
-function BarChart({items , values , chartDescription , colorPalette , isQuarter = false}){
+function BarChart({ items, values, chartDescription, colorPalette , isQuarter = false }) {
 
 
     //PROPS
@@ -13,7 +13,7 @@ function BarChart({items , values , chartDescription , colorPalette , isQuarter 
     //Ex.: <BarChart items={["Rodoviária" , "Aquífera" , "Aérea"]} values={[412,213,123]} Vias" colorPalette="#ff0011"/>
 
     //Opções de customização do gráfico
-    const [options] = useState (
+    const [options, setOptions] = useState(
         {
             chart: {
                 type: 'bar',
@@ -34,7 +34,7 @@ function BarChart({items , values , chartDescription , colorPalette , isQuarter 
                 show: false,
             },
             title: {
-                text: chartDescription,                
+                text: chartDescription,
                 style: {
                     fontSize: "1rem",
                     fontWeight: "regular",
@@ -72,7 +72,7 @@ function BarChart({items , values , chartDescription , colorPalette , isQuarter 
                     textOverflow: "ellipsis",
                 },
                 formatter: function (val, opt) {
-                  return "\u00A0 \u00A0" + opt.w.globals.labels[opt.dataPointIndex]
+                    return "\u00A0 \u00A0" + opt.w.globals.labels[opt.dataPointIndex]
                 },
             },
         }
@@ -221,19 +221,33 @@ function BarChart({items , values , chartDescription , colorPalette , isQuarter 
     
 
     //Valores do gráfico
-    const [series] = useState([
+    const [series, setSeries] = useState([
         {
             name: "Ocorrências",
             data: values
         },
     ])
 
+    useEffect(() => {
+        setOptions({
+            ...options,
+            xaxis: {
+                categories: items,
+            },
+        })
+
+        setSeries([{
+            name: "Ocorrências",
+            data: values
+        }])
+    }, [values, items])
+
     //Componente de gráfico do ApexCharts recebendo os valores definidos acima
-    return(
+    return (
         <Chart
-            options = {options}
-            series = {series}
-            type = "bar"
+            options={options}
+            series={series}
+            type="bar"
             height="100%"
         />
     )
