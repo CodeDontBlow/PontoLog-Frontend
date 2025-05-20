@@ -2,8 +2,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 
-// Importando componentes e api
-import api from '../../api/api'
+// Importando componentes e Services
 import { fetchData, getProductByLetter } from '../../services/fetchService'
 import Button from '../../components/Buttons/Button/Button'
 import Checkbox from '../../components/Buttons/Checkbox/Checkbox'
@@ -15,7 +14,6 @@ import BrazilMap from '../../components/Maps/BrazilMap'
 import WorldMap from '../../components/Maps/WorldMap'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import IconTitle from '../../components/IconTitle/IconTitle'
-import TabNavigation from '../../components/Tab/TabNavigation'
 
 import styles from './Statistics.module.css'
 
@@ -23,7 +21,7 @@ const Statistics = () => {
     // states dos filtros
     const [sh, setSh] = useState('sh4');
     const [product, setProduct] = useState('');
-    const [estado, setEstado] = useState('');
+    const [state, setState] = useState('');
     const [tradeType, setTradeType] = useState('exportacao');
     const [region, setRegion] = useState('');
     const [initYear, setInitYear] = useState(2014);
@@ -46,35 +44,6 @@ const Statistics = () => {
     const [countries, setCountries] = useState([])
     const [balanca, setBalanca] = useState([])
 
-    const buildQueryParams = () => {
-        const params = new URLSearchParams()
-
-        // if (region) params.append('region', region);
-        if (product) params.append('productName', product);
-        if (sh) params.append('sh', `no_${sh}_por`);
-        if (!periodoUnico) params.append('endYear', finalYear);
-
-        return params.toString();
-    }
-
-    // const getProductByLetter = async (searchTerm) => {
-    //     if (searchTerm.length > 0) {
-    //         const formattedTerm = searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1).toLowerCase();
-    //         try {
-    //             const response = await api.get(`/product/no_${sh}_por/${formattedTerm}`);
-
-    //             const responseData = response.data;
-    //             const data = responseData.data;
-
-    //             setOpcoesDeProduto(data);
-    //         } catch (error) {
-    //             console.error("Error fetching data:", error);
-    //         }
-    //     } else {
-    //         setOpcoesDeProduto([])
-    //     }
-    // }
-
     const debounce = (func, delay) => {
         let timer;
         return (...args) => {
@@ -85,36 +54,19 @@ const Statistics = () => {
 
     const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 50), [sh]);
 
-    // const fetchData = async (endpoint, setter) => {
-    //     try {
-    //         const params = buildQueryParams()
-
-    //         const url = endpoint === "balanco"
-    //             ? `/${endpoint}/${initYear}?${params}`
-    //             : `/${tradeType}/${endpoint}/${initYear}?${params}`
-
-    //         const response = await api.get(url)
-    //         const responseData = response.data
-    //         const data = responseData.data
-
-    //         setter(data)
-    //     } catch (error) {
-    //         console.error(`Erro fetching ${endpoint}:`, error.response?.data || error.message)
-    //     }
-    // }
     useEffect(() => {
         const fetchAllData = async () => {
             try {
                 await Promise.all([
-                    fetchData('fat', setFatAgregado, initYear, tradeType, region, estado, product, sh, finalYear, periodoUnico),
-                    fetchData(`product/no_${sh}_por`, setProdutoPopular, initYear, tradeType, region, estado, product, sh, finalYear, periodoUnico),
-                    fetchData('via', setVias, initYear, tradeType, region, estado, product, sh, finalYear, periodoUnico),
-                    fetchData('urf', setUrfs, initYear, tradeType, region, estado, product, sh, finalYear, periodoUnico),
-                    fetchData('vl_agregado', setVlAgregado, initYear, tradeType, region, estado, product, sh, finalYear, periodoUnico),
-                    fetchData('vl_fob', setVlFob, initYear, tradeType, region, estado, product, sh, finalYear, periodoUnico),
-                    fetchData('kg_liquido', setKgLiq, initYear, tradeType, region, estado, product, sh, finalYear, periodoUnico),
-                    fetchData('balanco', setBalanca, initYear, tradeType, region, estado, product, sh, finalYear, periodoUnico),
-                    fetchData('countries', setCountries, initYear, tradeType, region, estado, product, sh, finalYear, periodoUnico),
+                    fetchData('fat', setFatAgregado, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+                    fetchData(`product/no_${sh}_por`, setProdutoPopular, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+                    fetchData('via', setVias, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+                    fetchData('urf', setUrfs, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+                    fetchData('vl_agregado', setVlAgregado, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+                    fetchData('vl_fob', setVlFob, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+                    fetchData('kg_liquido', setKgLiq, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+                    fetchData('balanco', setBalanca, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+                    fetchData('countries', setCountries, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
                 ]);
             } catch (error) {
                 console.error("Erro ao buscar dados", error);
@@ -122,17 +74,13 @@ const Statistics = () => {
         };
 
         fetchAllData()
-    }, [product, initYear, finalYear, tradeType, periodoUnico, sh]);
-
-
+    }, [product, initYear, finalYear, tradeType, periodoUnico, sh, state]);
 
     useEffect(() => {
         if (product.length > 0) {
             getProductByLetter(product, setOpcoesDeProduto, sh);
         }
     }, [product, sh]);
-
-
 
     return (
         <div id={styles.statisticsPage}>
@@ -199,7 +147,7 @@ const Statistics = () => {
 
 
             {/* Alerta de quais Informações estão sendo exibidas */}
-            <AlertCard icon={faCircleInfo} product="Todos os Produtos" region="Brasil" period={period} />
+            <AlertCard variant="allInfo" icon={faCircleInfo} product="Todos os Produtos" region="Brasil" period={period} />
 
 
 
@@ -207,7 +155,7 @@ const Statistics = () => {
             <section id={styles.primaryInfos}>
                 {/* Mapa do Brasil */}
                 <div className={styles.navMap}>
-                    <BrazilMap />
+                    <BrazilMap onRegionChange={({ regiao, estado }) => { setRegion(regiao ?? undefined); setState(estado ?? undefined);}} />
                 </div>
 
                 {/* Molde de Grid Vertical Reutilizável */}
@@ -215,15 +163,17 @@ const Statistics = () => {
                     {/* Parte de Cima */}
                     <section className="topArea">
                         <div className="gridItem">
-                            <IconTitle title="Balança Comercial" variant="lineChart" size='medium' />
-                            {balanca.length > 0 && (
-                                <LineChart
-                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={balanca.map(bal => Number(bal.total))}
-                                    dataName="Balança Comercial"
-                                    colorPalette={["#D92B66"]}
-                                />
-                            )}
+                            <IconTitle title="Balança Comercial" variant="lineChart" size='textMedium' />
+                            <div className="componentWrapper">
+                                {balanca.length > 0 && (
+                                    <LineChart
+                                        period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                        values={balanca.map(bal => Number(bal.total))}
+                                        dataName="Balança Comercial"
+                                        colorPalette={["#D92B66"]}
+                                    />
+                                )}
+                            </div>
                         </div>
                     </section>
 
@@ -250,20 +200,23 @@ const Statistics = () => {
                     {/* Parte da Esquerda (Mapa do Mundo) */}
                     <section className="leftArea">
                         <div className="gridItem">
-                            <IconTitle variant="map" title="Principais Países" size='medium' />
-                            <WorldMap
-                                selectedRegion="Norte"
-                                tradeType="exportacao"
-                                countryDatas={{
-                                    exportacao: countries.map(c => ({
-                                        country: c.NO_PAIS,
-                                        quantidade: Number(c.TOTAL_REGISTROS),
-                                        vl: Number(c.TOTAL_VL_AGREGADO),
-                                        kg: Number(c.TOTAL_KG_LIQUIDO),
-                                    })),
-                                    importacao: [], // não tiver dados
-                                }}
-                            />
+                            <IconTitle variant="map" title="Principais Países" size='textMedium' />
+                            <div className="componentWrapper">
+                                <WorldMap
+                                    selectedRegion="Norte"
+                                    tradeType="exportacao"
+                                    colorPalette={["#B81D4E", "#D92B66", "#F5A4C3", "#F1A1B5"]}
+                                    countryDatas={{
+                                        exportacao: countries.map(c => ({
+                                            country: c.NO_PAIS,
+                                            quantidade: Number(c.TOTAL_REGISTROS),
+                                            vl: Number(c.TOTAL_VL_AGREGADO),
+                                            kg: Number(c.TOTAL_KG_LIQUIDO),
+                                        })),
+                                        importacao: [],
+                                    }}
+                                />
+                            </div>
                         </div>
                     </section>
 
@@ -271,26 +224,28 @@ const Statistics = () => {
                     <section className="rightArea">
                         {/* Item 1 */}
                         <div className="gridItem">
-                            <IconTitle variant="barChart" title="Principais Vias Usadas" size='light' />
+                            <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight' />
 
-                            {vias.length > 0 && (
+                            <div className="componentWrapper">
                                 <BarChart
                                     items={vias.map(via => via.NO_VIA)}
                                     values={vias.map(via => Number(via.total))}
                                     colorPalette={["#D92B66"]}
                                 />
-                            )}
+                            </div>
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
                             <IconTitle variant="barChart" title="Principais URFs" size='light' />
-                            {urfs.length > 0 && (
-                                <BarChart
-                                    items={urfs.map(urf => urf.NO_URF)}
-                                    values={urfs.map(urf => Number(urf.total))}
-                                    colorPalette={["#D92B66"]}
-                                />
-                            )}
+                            <div className="componentWrapper">
+                                {urfs.length > 0 && (
+                                    <BarChart
+                                        items={urfs.map(urf => urf.NO_URF)}
+                                        values={urfs.map(urf => Number(urf.total))}
+                                        colorPalette={["#D92B66"]}
+                                    />
+                                )}
+                            </div>
                         </div>
                     </section>
                 </section>
@@ -300,8 +255,8 @@ const Statistics = () => {
                     {/* Parte da Esquerda */}
                     <section className="leftArea">
                         <div className="gridItem">
-                            <IconTitle title="Valor Agregado" variant="lineChart" size='medium' />
-                            {vlAgregado.length > 0 && (
+                            <IconTitle title="Valor Agregado" variant="lineChart" size='textMedium' />
+                            <div className="componentWrapper">
                                 <LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={vlAgregado.map(value => Number(value.total))}
@@ -310,16 +265,15 @@ const Statistics = () => {
                                     id="bottomInfo11"
                                     group="bottomInfo1"
                                 />
-                            )
-                            }
+                            </div>
                         </div>
                     </section>
                     {/* Parte da Direita */}
                     <section className="rightArea">
                         {/* Item 1 */}
                         <div className="gridItem">
-                            <IconTitle title="Quilograma Líquido" variant="lineChart" size='light' />
-                            {kgLiq.length > 0 && (
+                            <IconTitle title="Quilograma Líquido" variant="lineChart" size='textLight' />
+                            <div className="componentWrapper">
                                 <LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={kgLiq.map(value => Number(value.total))}
@@ -328,14 +282,12 @@ const Statistics = () => {
                                     id="bottomInfo12"
                                     group="bottomInfo1"
                                 />
-                            )
-                            }
+                            </div>
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
-                            <IconTitle title="Valor FOB" variant="lineChart" size="light" />
-
-                            {vlFob.length > 0 && (
+                            <IconTitle title="Valor FOB" variant="lineChart" size='textLight' />
+                            <div className="componentWrapper">
                                 <LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={vlFob.map(value => Number(value.total))}
@@ -344,8 +296,7 @@ const Statistics = () => {
                                     id="bottomInfo13"
                                     group="bottomInfo1"
                                 />
-                            )
-                            }
+                            </div>
                         </div>
                     </section>
                 </section>

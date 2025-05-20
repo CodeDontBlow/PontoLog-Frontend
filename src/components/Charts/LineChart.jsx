@@ -14,12 +14,6 @@ const LineChart = ({period , values , dataName , chartDescription , colorPalette
 
     //Ex.: <LineChart values={[20,10,20,10,-10]} period={[2014,2015,2016,2017,2018]} dataName={"Valor Agregado"} colorPalette="#ff0011" id="id" group="grupo"/>
 
-    useEffect(() => {
-        setTimeout(() => {
-            window.dispatchEvent(new Event('resize'));
-        },100);
-    }, []);
-
     //Opções de customização do gráfico
     const [options] = useState(
         {
@@ -28,16 +22,15 @@ const LineChart = ({period , values , dataName , chartDescription , colorPalette
                 id: id,
                 group: group,
                 type: "line",
-                animations: {
-                    enabled: true,
-                    speed: 500,
-                },
                 zoom : {
                     enabled: false,
                 },
                 toolbar : {
                     show: false,
                 },
+                events: {
+                    animationEnd: () => {window.dispatchEvent(new Event('resize'))},
+                }
             },
             xaxis: {
                 categories: period
@@ -62,6 +55,12 @@ const LineChart = ({period , values , dataName , chartDescription , colorPalette
             stroke : {
                 curve: "smooth",
                 width: "3",
+            },
+            markers: {
+                size: 3,
+                colors: colorPalette,
+                strokeColors: "var(--white-300)",
+                strokeWidth: 2,
             }
         }
     )
@@ -85,15 +84,13 @@ const LineChart = ({period , values , dataName , chartDescription , colorPalette
 
     //Componente de gráfico do ApexCharts recebendo os valores definidos acima
     return(
-        <div className="componentWrapper">
-            <Chart
-                options = {options}
-                series = {series}
-                width="100%"
-                height="100%"
-                type = "line"
-            />
-        </div>
+        <Chart
+            options = {options}
+            series = {series}
+            width="100%"
+            height="100%"
+            type = "line"
+        />
     )
 }
 

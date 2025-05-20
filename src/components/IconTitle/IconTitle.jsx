@@ -11,7 +11,7 @@ const presetIcons = {
     map : faMap,
 }
 
-const IconTitle = ({icon , title , variant , size = "medium"}) => {
+const IconTitle = ({icon , title , variant , size = "textMedium"}) => {
     // Define o ícone selecionado (um ícone específico ou uma das variantes) 
     const selectedIcon = icon || presetIcons[variant]
 

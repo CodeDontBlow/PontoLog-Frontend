@@ -29,45 +29,62 @@
 
 /* Área de Input */
 section#inputArea {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+section#inputArea > div{
     display: grid;
     grid-template-columns: 4fr 2fr;
     gap: 1.25rem;
 }
 
-section#inputArea>div {
-    justify-items: start;
-    display: flex;
-    flex-direction: column;
-    gap: 0.313rem;
+/* Área dos Labels */
+div.labelsContainer{
+
 }
 
-.periodArea {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.periodInputs {
+div.labelsContainer > *{
     width: 100%;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.625rem;
-    display: flex;
-    flex-direction: row;
+
+    color: var(--black-500);
+    font: var(--text-medium);
+    font-weight: 600;
+    text-align: left;
+    text-indent: 0.313rem;
 }
 
-/* Opções de Input (botões e checkbox) */
-.inputOptions {
+/* Área dos Inputs */
+div.inputsContainer{
+}
+
+.periodInputs{
     display: flex;
-    gap: 0.625rem;
+    gap: 10px;
+}
+
+.periodInputs > div{
+    flex: 1 1 50%;
+}
+
+
+/* Área das Opções de Input (botões e checkbox) */
+div.optionsContainer{
+    margin-top: 5px;
 }
 
 /* Botões SH4 e SH6 */
-.inputOptions>input[type="radio"] {
+.productOptions{
+    display: flex;
+    gap: 7px;
+}
+
+.productOptions>input[type="radio"] {
     display: none;
 }
 
-.inputOptions>label {
+.productOptions>label {
     background-color: var(--white-700);
     padding: 0.313rem 1.25rem;
 
@@ -81,28 +98,20 @@ section#inputArea>div {
     user-select: none;
 }
 
-.inputOptions>label:hover {
+.productOptions>label:hover {
     font-weight: 500;
     cursor: pointer;
     transform: scale(1.05);
 }
 
-.inputOptions>input[type="radio"]:checked+label {
+.productOptions>input[type="radio"]:checked+label {
     background-color: var(--base-pink);
 
     color: var(--white-500);
     font-weight: 500;
 }
 
-.label {
-    width: 100%;
-    color: var(--black-500);
-    font: var(--text-medium);
-    font-weight: 600;
-    text-align: left;
-    text-indent: 0.313rem;
-    cursor: text;
-}
+
 
 /* Dados iniciais */
 section#primaryInfos {
@@ -124,4 +133,18 @@ section#ExpImpInfos {
     display: flex;
     flex-direction: column;
     gap: 1.875rem;
+}
+
+section#mainInfosArea{
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+section#mainInfosArea .stateTitle{
+    color: var(--base-pink);
+    font: var(--title-regular);
+    font-weight: 600;
 }
