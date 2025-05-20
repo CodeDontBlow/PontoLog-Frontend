@@ -121,7 +121,7 @@ const Statistics = () => {
         };
 
         fetchAllData()
-    }, [product, initYear, finalYear, tradeType, periodoUnico, sh, region]);
+    }, [product, initYear, finalYear, tradeType, periodoUnico, sh, state]);
 
     useEffect(() => {
         if (product.length > 0) {
