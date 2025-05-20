@@ -1,8 +1,21 @@
 import styles from './About.module.css'
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 
 const About = () => {
-    return (
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash) {
+      const element = document.getElementById(location.hash.replace('#', ''));
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [location]);
+
+  return(
         <div className={styles.aboutContainer}>
             <header className={styles.header}>
                 <div className={styles.imagesContainer}>
@@ -38,7 +51,7 @@ const About = () => {
                 </div>
             </section>
 
-            <section className={styles.section}>
+            <section id="tratamento-dados" className={styles.section}>
                 <h1 className={styles.title}>Tratamento de Dados</h1>
                 <p className={styles.text}>Nosso compromisso é oferecer dados precisos e relevantes. Para isso, aplicamos um rigoroso processo de limpeza, removendo milhares de linhas com informações inválidas, duplicadas ou irrelevantes. Esse refinamento garante que apenas dados confiáveis sejam utilizados em nossas análises, permitindo que gestores e empresas tenham insights mais assertivos sobre o comércio exterior e o desempenho dos Estados Brasileiros no mercado internacional. Você pode ter maiores detalhes no link a seguir:
                 </p><br />

@@ -10,9 +10,9 @@ const Footer = () => {
           <div className={styles.column}>
             <h4 className={styles.title}>Projeto</h4>
             <ul className={styles.list}>
-              <li><a href="https://www.gov.br/mdic/pt-br/assuntos/comercio-exterior/estatisticas/base-de-dados-bruta#ncms">Dados utilizados</a></li>
-              <li><a href="#">Tratamento de Dados</a></li>
-              <li><a href="https://github.com/CodeDontBlow/PontoLog">Github do Projeto</a></li>
+              <li><a href="https://www.gov.br/mdic/pt-br/assuntos/comercio-exterior/estatisticas/base-de-dados-bruta#ncms" target="_blank" >Dados utilizados</a></li>
+              <li> <a href="/about#tratamento-dados"> Tratamento de Dados </a></li>
+              <li><a href="https://github.com/CodeDontBlow/PontoLog" target="_blank">Github do Projeto</a></li>
             </ul>
           </div>
 
@@ -20,7 +20,7 @@ const Footer = () => {
             <h4 className={styles.title}>Equipe</h4>
             <ul className={styles.list}>
               <li> <Link to={'/about'}>Sobre Nós </Link></li>
-              <li><a href="https://github.com/CodeDontBlow">Github da Equipe</a></li>
+              <li><a href="https://github.com/CodeDontBlow" target="_blank">Github da Equipe</a></li>
             </ul>
           </div>
         </div>
