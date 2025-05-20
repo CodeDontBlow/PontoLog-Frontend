@@ -484,10 +484,17 @@ const Statistics = () => {
         ]
     };
 
+    // Criando objetos TAB
     const tab = [
-        { id: 1, label: "Exportações" },
-        { id: 2, label: "Importações" },
+        { id: 1, label: "Exportações" , tradeType: "exportacao"},
+        { id: 2, label: "Importações" , tradeType: "importacao"},
     ]
+
+    useEffect (() => {
+        console.log(`Stats: ${tradeType}`)
+        console.log(`/${tradeType}/countries/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`)
+        
+    }, [tradeType])
 
     return (
         <div id={styles.statisticsPage}>
@@ -576,13 +583,13 @@ const Statistics = () => {
             </section>
 
 
-            {/* Deve-se definir melhor o uso do tab navigation!!! */}
-            <TabNavigation tab={tab} />
 
 
 
             {/* Informação completas de Exportação ou Importação */}
             <section id={styles.ExpImpInfos}>
+            {/* Deve-se definir melhor o uso do tab navigation!!! */}
+            <TabNavigation tab={tab} onTabClick={(tabTradeType) => (setTradeType(tabTradeType))} />
                 {/* Molde de Grid Horizontal Reutilizável */}
                 <section className="infoGridHorizontal">
                     {/* Parte da Esquerda (Mapa do Mundo) */}
