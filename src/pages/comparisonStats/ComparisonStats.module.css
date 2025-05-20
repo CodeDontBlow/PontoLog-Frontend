@@ -126,17 +126,53 @@ section#primaryInfos .navMap {
     height: 100%;
 }
 
+    .navMap .mapDescription {
+        color: var(--black-500);
+        font: var(--text-medium);
+        text-align: center;
+    }
+
+    div#statesListContainer{
+    }
+
+        div#statesListContainer p.statesList{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+
+            color: var(--black-500);
+            font: var(--text-medium);
+            text-align: center;
+        }
+
+            div#statesListContainer p.statesList span{
+                cursor: pointer;
+
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-weight: 600;
+                text-align: center;
+
+                transition: all 150ms ease-out;
+            }
+
+                div#statesListContainer p.statesList span:hover{
+                    transform: scale(1.03);
+                }
+
+                div#statesListContainer p.statesList span .icon{
+                    color: var(--black-500);
+                    font: var(--label-medium);
+                }
+
     /* Legenda do mapa do brasil */
     .navMap .mapCurrentState{
         margin-top: 0.875rem;
         color: var(--black-500);
         font: var(--title-regular);
         text-align: center;
-    }
-
-    .navMap .mapDescription {
-        color: var(--black-500);
-        font: var(--text-medium);
     }
 
 /* Dados de Exportação / Importação */

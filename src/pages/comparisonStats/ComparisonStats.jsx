@@ -14,6 +14,8 @@ import IconTitle from '../../components/IconTitle/IconTitle'
 import Dropdown from '../../components/Dropdown/Dropdown'
 
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
+import { faX } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const ComparisonStats = () => {
 
@@ -38,6 +40,13 @@ const ComparisonStats = () => {
             })
         }
     }, [state])
+
+    const removeStateByIndex = (index) => {
+        setStatesList( previewList => [
+            ...previewList.slice(0 , index),
+            ...previewList.slice(index + 1)
+        ])
+    }
 
     console.log(statesList)
     
@@ -290,19 +299,24 @@ const ComparisonStats = () => {
                     {/* Legenda do mapa do brasil */}
                     <p className={styles.mapDescription}>{getDescriptionText()}</p>
                     
-                    {statesList[1] ?
-                        <p className={styles.mapDescription}>[ {statesList[0]} | {statesList[1]} ]</p> :
-                    statesList[0] ?
-                        <p className={styles.mapDescription}>[ {statesList[0]} ]</p> : 
-                        null
-                    }
+                    {/* Nomes dos estados */}
+                    <div id={styles.statesListContainer}>
+                        {statesList.length >= 1 &&
+                            <p className={styles.statesList}>
+                                [
+                                {statesList[0] && <>   
+                                    <span onClick={() => {removeStateByIndex(0)}} style={{color:'var(--base-green)'}}> <FontAwesomeIcon icon={faX} className={styles.icon}/> {statesList[0]} </span> </> }
+                                {statesList[1] && <> | 
+                                    <span onClick={() => {removeStateByIndex(1)}} style={{color:'var(--base-teal)'}}> <FontAwesomeIcon icon={faX} className={styles.icon}/> {statesList[1]} </span> </>}
+                                ]
+                            </p>
+                        }
+                    </div>
 
-                    {/* Região/Estado selecionado */}
-                    {state ? 
-                        null : 
-                    region ? (
+                    {/* Exibir região selecionada */}
+                    {(region && !state) && (
                         <h2 className={styles.mapCurrentState}>Região {region}</h2>
-                    ) : null}
+                    )}
 
                     <MultiBrazilMap onRegionChange={({ regiao, estado }) => { 
                         setRegion(regiao || '');
