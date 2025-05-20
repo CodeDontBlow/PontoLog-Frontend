@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styles from './TabNavigation.module.css'
 
-function TabNavigation({ contents, tab }) {
+function TabNavigation({ tab }) {
 
   const [activeTab, setActiveTab] = useState(1)
 
@@ -19,10 +19,6 @@ function TabNavigation({ contents, tab }) {
             {tab.label}
           </button>
         ))}
-      </div>
-
-      <div className={styles.tabContent}>
-        {contents[activeTab]}
       </div>
     </div>
   )

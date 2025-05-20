@@ -484,6 +484,11 @@ const Statistics = () => {
         ]
     };
 
+    const tab = [
+        { id: 1, label: "Exportações" },
+        { id: 2, label: "Importações" },
+    ]
+
     return (
         <div id={styles.statisticsPage}>
 
@@ -572,7 +577,7 @@ const Statistics = () => {
 
 
             {/* Deve-se definir melhor o uso do tab navigation!!! */}
-            {/* <TabNavigation tab={tabs} contents={contents} /> */}
+            <TabNavigation tab={tab} />
 
 
 
