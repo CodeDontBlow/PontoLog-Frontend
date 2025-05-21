@@ -163,11 +163,9 @@ const ComparisonStats = () => {
 
     // Função para buscar todos os dados de um estado
     const fetchStateData = async (state) => {
-        const [vias, urfs, fatAgregado, produtoPopular, vlAgregado, kgLiq, vlFob, balanca, countries] = await Promise.all([
+        const [vias, urfs, vlAgregado, kgLiq, vlFob, balanca, countries] = await Promise.all([
             fetchData('via', null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
             fetchData('urf', null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-            fetchData('fat', null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-            fetchData(`product/no_${sh}_por`, null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
             fetchData('vl_agregado', null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
             fetchData('kg_liquido', null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
             fetchData('vl_fob', null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
@@ -178,8 +176,6 @@ const ComparisonStats = () => {
             nome: state,
             vias,
             urfs,
-            fatAgregado,
-            produtoPopular,
             vlAgregado,
             kgLiq,
             vlFob,
@@ -198,11 +194,8 @@ const ComparisonStats = () => {
 
 
     useEffect(() => {
-        const arrayBalanca = statesData.map((state) => {
-            return state.balanca
-        })
 
-        console.log(arrayBalanca)
+        console.log(statesData)
     }, [statesData]);
 
     useEffect(() => {
@@ -297,8 +290,8 @@ const ComparisonStats = () => {
                             <div className="componentWrapper">
                                 <DoubleLineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={[[12, 8, 5, 37, -82, 29, 45, 13, 45, 45, 73, -3], [35, -12, 48, 5, -27, 100, 22, -40, 10, 55, 28, 30]]}
-                                    dataName={["Estado 1", "Estado 2"]}
+                                    values={statesData.map(state => state.balanca?.map(item => item.total))}
+                                    dataName={statesData.map(state => state.nome)}
                                     colorPalette={["#D92B66", "#028391"]}
                                 />
                             </div>
@@ -341,8 +334,8 @@ const ComparisonStats = () => {
                                 <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight' />
                                 <div className="componentWrapper" style={{ padding: 0 }}>
                                     <BarChart
-                                        items={["Via Aquífera", "Via Rodoviária", "Via Aérea"]}
-                                        values={[512, 485, 271]}
+                                        items={statesData[0]?.vias?.map(item => item.NO_VIA)}
+                                        values={statesData[0]?.vias?.map(item => item.total)}
                                         colorPalette={["#D92B66"]}
                                         isQuarter={true}
                                     />
@@ -352,8 +345,8 @@ const ComparisonStats = () => {
                                 <IconTitle variant="barChart" title="Principais URF's Usadas" size='textLight' />
                                 <div className="componentWrapper" style={{ padding: 0 }}>
                                     <BarChart
-                                        items={["Porto 123", "Rodovia 123", "Aeroporto 123"]}
-                                        values={[52, 45, 21]}
+                                        items={statesData[0]?.urfs?.map(item => item.NO_URF)}
+                                        values={statesData[0]?.urfs?.map(item => item.total)}
                                         colorPalette={["#D92B66"]}
                                         isQuarter={true}
                                     />
@@ -386,8 +379,8 @@ const ComparisonStats = () => {
                                 <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight' />
                                 <div className="componentWrapper" style={{ padding: 0 }}>
                                     <BarChart
-                                        items={["Via Aquífera", "Via Rodoviária", "Via Aérea"]}
-                                        values={[512, 485, 271]}
+                                        items={statesData[1]?.vias?.map(item => item.NO_VIA)}
+                                        values={statesData[1]?.vias?.map(item => item.total)}
                                         colorPalette={["#028391"]}
                                         isQuarter={true}
                                     />
@@ -397,8 +390,8 @@ const ComparisonStats = () => {
                                 <IconTitle variant="barChart" title="Principais URF's Usadas" size='textLight' />
                                 <div className="componentWrapper" style={{ padding: 0 }}>
                                     <BarChart
-                                        items={["Porto 123", "Rodovia 123", "Aeroporto 123"]}
-                                        values={[52, 45, 21]}
+                                        items={statesData[1]?.urfs?.map(item => item.NO_URF)}
+                                        values={statesData[1]?.urfs?.map(item => item.total)}
                                         colorPalette={["#028391"]}
                                         isQuarter={true}
                                     />
@@ -415,8 +408,8 @@ const ComparisonStats = () => {
                             <div className="componentWrapper">
                                 <DoubleLineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={[[12, 8, 5, 37, -82, 29, 45, 13, 45, 45, 73, -3], [35, -12, 48, 5, -27, 100, 22, -40, 10, 55, 28, 30]]}
-                                    dataName={["Estado 1", "Estado 2"]}
+                                    values={statesData.map(state => state.vlAgregado?.map(item => item.total))}
+                                    dataName={statesList}
                                     colorPalette={["#D92B66", "#028391"]}
                                 />
                             </div>
@@ -428,8 +421,8 @@ const ComparisonStats = () => {
                             <div className="componentWrapper">
                                 <DoubleLineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={[[12, 8, 5, 37, -82, 29, 45, 13, 45, 45, 73, -3], [35, -12, 48, 5, -27, 100, 22, -40, 10, 55, 28, 30]]}
-                                    dataName={["Estado 1", "Estado 2"]}
+                                    values={statesData.map(state => state.kgLiq?.map(item => item.total))}
+                                    dataName={statesList}
                                     colorPalette={["#D92B66", "#028391"]}
                                     legends="false"
                                 />
@@ -440,8 +433,8 @@ const ComparisonStats = () => {
                             <div className="componentWrapper">
                                 <DoubleLineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={[[12, 8, 5, 37, -82, 29, 45, 13, 45, 45, 73, -3], [35, -12, 48, 5, -27, 100, 22, -40, 10, 55, 28, 30]]}
-                                    dataName={["Estado 1", "Estado 2"]}
+                                    values={statesData.map(state => state.vlFob?.map(item => item.total))}
+                                    dataName={statesList}
                                     colorPalette={["#D92B66", "#028391"]}
                                     legends="false"
                                 />
