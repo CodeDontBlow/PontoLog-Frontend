@@ -40,6 +40,7 @@ const BrazilMap = ({ onRegionChange }) => {
   const [regions, setRegions] = useState({});
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
+  const [selectedUF , setSelectedUF] = useState(null)
 
   useEffect(() => {
     const grouped = {};
@@ -55,7 +56,7 @@ const BrazilMap = ({ onRegionChange }) => {
   const getSelectedStateFeature = () => {
     return Object.values(regions)
       .flat()
-      .find((f) => f.properties.name === selectedState);
+      .find((f) => f.properties.name === selectedState && f.properties.sigla === selectedUF);
   };
 
   const renderGeoJSON = () => {
@@ -80,7 +81,8 @@ const BrazilMap = ({ onRegionChange }) => {
               click: () => {
                 setSelectedRegion(null);
                 setSelectedState(null);
-                onRegionChange?.({ regiao: null, estado: null }); // reset
+                setSelectedUF(null)
+                onRegionChange?.({ regiao: null, estado: null , uf: null }); // reset
               },
             });
             layer.bindPopup(feature.properties.name);
@@ -109,10 +111,12 @@ const BrazilMap = ({ onRegionChange }) => {
           }}
           onEachFeature={(feature, layer) => {
             const stateName = feature.properties.name;
+            const stateSigla = feature.properties.sigla;
             layer.on({
               click: () => {
                 setSelectedState(stateName);
-                onRegionChange?.({ regiao: selectedRegion, estado: stateName });
+                setSelectedUF(stateSigla);
+                onRegionChange?.({ regiao: selectedRegion, estado: stateName , uf: stateSigla});
               },
             });
             layer.bindPopup(stateName);
@@ -140,7 +144,8 @@ const BrazilMap = ({ onRegionChange }) => {
             e.originalEvent.stopPropagation();
             setSelectedRegion(regionName);
             setSelectedState(null);
-            onRegionChange?.({ regiao: regionName, estado: null }); // região selecionada
+            setSelectedUF(null);
+            onRegionChange?.({ regiao: regionName, estado: null , uf: null }); // região selecionada
           },
         }}
         onEachFeature={(feature, layer) => {

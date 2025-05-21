@@ -21,6 +21,7 @@ const ComparisonStats = () => {
 
     const [region, setRegion] = useState('');
     const [state, setState] = useState('');
+    const [uf , setUf] = useState('');
     const [statesList , setStatesList] = useState([]);
     
     // Mudando a lista de estados quando um estado novo for selecionado
@@ -30,13 +31,18 @@ const ComparisonStats = () => {
                 return
             }
             setStatesList(previewList => {
-                const updatedList = [...previewList] //Cópia de segurança do conteúdo da lista anterior
+                const currentList = [...previewList] //Cópia de segurança do conteúdo da lista anterior
                 // Caso a lista já tenha 2 elementos, remove o último
-                if(updatedList.length >= 2){
-                    updatedList.pop()
+                if(currentList.length >= 2){
+                    currentList.pop()
                 }
                 // Adiciona o novo estado selecionado no BrazilMap
-                return [...updatedList , state]
+                let newStateObject = {
+                    estado: state,
+                    uf: uf,
+                }
+
+                return [...currentList , newStateObject]
             })
         }
     }, [state])
@@ -307,9 +313,9 @@ const ComparisonStats = () => {
                             <p className={styles.statesList}>
                                 [
                                 {statesList[0] && <>   
-                                    <span onClick={() => {removeStateByIndex(0)}} style={{color:'var(--base-green)'}}> <FontAwesomeIcon icon={faX} className={styles.icon}/> {statesList[0]} </span> </> }
+                                    <span onClick={() => {removeStateByIndex(0)}} style={{color:'var(--base-green)'}}> <FontAwesomeIcon icon={faX} className={styles.icon}/> {statesList[0].estado} </span> </> }
                                 {statesList[1] && <> | 
-                                    <span onClick={() => {removeStateByIndex(1)}} style={{color:'var(--base-teal)'}}> <FontAwesomeIcon icon={faX} className={styles.icon}/> {statesList[1]} </span> </>}
+                                    <span onClick={() => {removeStateByIndex(1)}} style={{color:'var(--base-teal)'}}> <FontAwesomeIcon icon={faX} className={styles.icon}/> {statesList[1].estado} </span> </>}
                                 ]
                             </p>
                         }
@@ -320,9 +326,10 @@ const ComparisonStats = () => {
                         <h2 className={styles.mapCurrentState}>Região {region}</h2>
                     )}
 
-                    <MultiBrazilMap onRegionChange={({ regiao, estado }) => { 
+                    <MultiBrazilMap onRegionChange={({ regiao, estado , uf}) => { 
                         setRegion(regiao || '');
                         setState(estado || '');
+                        setUf(uf || '');
                     }} />
                 </div>
 

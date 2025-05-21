@@ -60,15 +60,16 @@ const BrazilMap = ({ onRegionChange }) => {
   const handleRegionClick = (regionName) => {
     setSelectedRegion(regionName);
     setZoomToBrazil(false);
-    onRegionChange?.({ regiao: regionName, estado: null });
+    onRegionChange?.({ regiao: regionName, estado: null , uf: null});
   };
 
   const handleStateClick = (stateFeature) => {
     const regionName = regionMap[parseInt(stateFeature.properties.regiao_id)];
     const stateName = stateFeature.properties.name;
+    const stateSigla = stateFeature.properties.sigla;
 
     // Passa os dados
-    onRegionChange?.({ regiao: regionName, estado: stateName });
+    onRegionChange?.({ regiao: regionName, estado: stateName , uf: stateSigla});
 
     // Reseta seleção e ativa zoom pro Brasil
     setSelectedRegion(null);
