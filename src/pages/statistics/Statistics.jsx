@@ -33,6 +33,7 @@ const Statistics = () => {
     const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
 
     // states para valores retornados pelo back
+    const [allData, setAllData] = useState([])
     const [fatAgregado, setFatAgregado] = useState(null)
     const [produtoPopular, setProdutoPopular] = useState('')
     const [vias, setVias] = useState([])
@@ -83,40 +84,50 @@ const Statistics = () => {
     const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 50), [sh]);
 
     const fetchData = async (endpoint, setter) => {
-    const label = `Tempo de resposta do ${endpoint}`
-    const start = performance.now() 
+        const label = `Tempo de resposta do ${endpoint}`
+        const start = performance.now()
 
-    try {
-        const params = buildQueryParams()
+        try {
+            const params = buildQueryParams()
 
-        const url = endpoint === "balanco"
-            ? `/${endpoint}/${initYear}?${params}`
-            : `/${tradeType}/${endpoint}/${initYear}?${params}`
-        const response = await api.get(url)
-        const responseData = response.data
-        const data = responseData.data
-        setter(data)
-    } catch (error) {
-        console.error(`Erro fetching ${endpoint}:`, error.response?.data || error.message)
-    } finally {
-        const end = performance.now()
-        const durationInSeconds = ((end - start) / 1000).toFixed(2)
-        console.debug(`[DEBUG] ${label}: ${durationInSeconds}s`)
+            let url
+            if (!endpoint) {
+                // Se não houver endpoint
+                url = `/${tradeType}/${initYear}?${params}`
+            } else if (endpoint === "balanco") {
+                url = `/${endpoint}/${initYear}?${params}`
+            } else {
+                url = `/${tradeType}/${endpoint}/${initYear}?${params}`
+            }
+
+            console.log("URL final:", url)
+
+            const response = await api.get(url)
+            const responseData = response.data
+            const data = responseData.data
+            setter(data)
+        } catch (error) {
+            console.error(`Erro fetching ${endpoint}:`, error.response?.data || error.message)
+        } finally {
+            const end = performance.now()
+            const durationInSeconds = ((end - start) / 1000).toFixed(2)
+            console.debug(`[DEBUG] ${label}: ${durationInSeconds}s`)
+        }
     }
-}
     useEffect(() => {
         const fetchAllData = async () => {
             try {
                 await Promise.all([
                     fetchData('fat', setFatAgregado),
-                    fetchData(`product/no_${sh}_por`, setProdutoPopular),
-                    fetchData('via', setVias),
-                    fetchData('urf', setUrfs),
-                    fetchData('vl_agregado', setVlAgregado),
-                    fetchData('vl_fob', setVlFob),
-                    fetchData('kg_liquido', setKgLiq),
+                    // fetchData(`product/no_${sh}_por`, setProdutoPopular),
+                    // fetchData('via', setVias),
+                    // fetchData('urf', setUrfs),
+                    // fetchData('vl_agregado', setVlAgregado),
+                    // fetchData('vl_fob', setVlFob),
+                    // fetchData('kg_liquido', setKgLiq),
                     fetchData('balanco', setBalanca),
-                    fetchData('countries', setCountries),
+                    // fetchData('countries', setCountries),
+                    fetchData('', setAllData)
                 ]);
             } catch (error) {
                 console.error("Erro ao buscar dados", error);
@@ -280,8 +291,8 @@ const Statistics = () => {
 
                             <div className="componentWrapper">
                                 <BarChart
-                                    items={vias.map(via => via.NO_VIA)}
-                                    values={vias.map(via => Number(via.total))}
+                                    items={allData.via?.map(item => item.NO_VIA) || []}
+                                    values={allData.via?.map(item => Number(item.total)) || []}
                                     colorPalette={["#D92B66"]}
                                 />
                             </div>
@@ -290,13 +301,13 @@ const Statistics = () => {
                         <div className="gridItem">
                             <IconTitle variant="barChart" title="Principais URFs" size='light' />
                             <div className="componentWrapper">
-                            {urfs.length > 0 && (
-                                <BarChart
-                                    items={urfs.map(urf => urf.NO_URF)}
-                                    values={urfs.map(urf => Number(urf.total))}
-                                    colorPalette={["#D92B66"]}
-                                />
-                            )}
+                                {urfs.length > 0 && (
+                                    <BarChart
+                                        items={allData.urf?.map(item => item.NO_URF) || []}
+                                        values={allData.urf?.map(item => Number(item.total)) || []}
+                                        colorPalette={["#D92B66"]}
+                                    />
+                                )}
                             </div>
                         </div>
                     </section>
@@ -311,7 +322,9 @@ const Statistics = () => {
                             <div className="componentWrapper">
                                 <LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={vlAgregado.map(vl => Number(vl.total))}
+                                    values={allData.vlAgregado
+                                        ?.sort((a, b) => a.CO_MES - b.CO_MES)
+                                        .map(item => Number(item.total)) || []}
                                     dataName="Valor Agregado"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo11"
@@ -328,7 +341,9 @@ const Statistics = () => {
                             <div className="componentWrapper">
                                 <LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={kgLiq.map(kg => Number(kg.total))}
+                                    values={allData.kgLiquido
+                                        ?.sort((a, b) => a.CO_MES - b.CO_MES)
+                                        .map(kg => Number(kg.total)) || []}
                                     dataName="KG Líquido"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo12"
@@ -342,7 +357,10 @@ const Statistics = () => {
                             <div className="componentWrapper">
                                 <LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={vlFob.map(vl => Number(vl.total))}
+                                    values={allData.vlFob
+                                        ?.sort((a, b) => a.CO_MES - b.CO_MES)
+                                        .map(kg => Number(kg.total)) || []}
+
                                     dataName="Valor FOB"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo13"
