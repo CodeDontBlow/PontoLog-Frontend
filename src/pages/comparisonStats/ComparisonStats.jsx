@@ -152,42 +152,58 @@ const ComparisonStats = () => {
     const [finalYear, setFinalYear] = useState(2024)
     const [opcoesDeProduto, setOpcoesDeProduto] = useState([])
     const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
-    const [state, setState] = useState('');
+    // const [state, setState] = useState('');
     const [tradeType, setTradeType] = useState('exportacao');
-    const [region, setRegion] = useState('');
+    const [region, setRegion] = useState('REGIAO SUDESTE');
 
-    // states para valores retornados pelo back
-    const [fatAgregado, setFatAgregado] = useState(null)
-    const [produtoPopular, setProdutoPopular] = useState('')
-    const [vias, setVias] = useState([])
-    const [urfs, setUrfs] = useState([])
-    const [vlAgregado, setVlAgregado] = useState([])
-    const [kgLiq, setKgLiq] = useState([])
-    const [vlFob, setVlFob] = useState([])
-    const [countries, setCountries] = useState([])
-    const [balanca, setBalanca] = useState([])
+    // ...existing code...
+    const [statesList, setStatesList] = useState(['SP', 'RJ']);
+
+    const [statesData, setStatesData] = useState([]);
+
+    // Função para buscar todos os dados de um estado
+    const fetchStateData = async (state) => {
+        const [vias, urfs, fatAgregado, produtoPopular, vlAgregado, kgLiq, vlFob, balanca, countries] = await Promise.all([
+            fetchData('via', null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+            fetchData('urf', null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+            fetchData('fat', null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+            fetchData(`product/no_${sh}_por`, null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+            fetchData('vl_agregado', null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+            fetchData('kg_liquido', null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+            fetchData('vl_fob', null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+            fetchData('balanco', null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+            fetchData('countries', null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+        ]);
+        return {
+            nome: state,
+            vias,
+            urfs,
+            fatAgregado,
+            produtoPopular,
+            vlAgregado,
+            kgLiq,
+            vlFob,
+            balanca,
+            countries,
+        };
+    };
 
     useEffect(() => {
-        const fetchAllData = async () => {
-            try {
-                await Promise.all([
-                    fetchData('fat', setFatAgregado, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData(`product/no_${sh}_por`, setProdutoPopular, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData('via', setVias, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData('urf', setUrfs, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData('vl_agregado', setVlAgregado, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData('vl_fob', setVlFob, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData('kg_liquido', setKgLiq, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData('balanco', setBalanca, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData('countries', setCountries, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                ]);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        }
+        const fetchAllStatesData = async () => {
+            const results = await Promise.all(statesList.map(fetchStateData));
+            setStatesData(results);
+        };
+        fetchAllStatesData();
+    }, [product, sh, periodoUnico, initYear, finalYear, statesList, tradeType, region]);
 
-        fetchAllData();
-    }, [product, sh, periodoUnico, initYear, finalYear])
+
+    useEffect(() => {
+        const arrayBalanca = statesData.map((state) => {
+            return state.balanca
+        })
+
+        console.log(arrayBalanca)
+    }, [statesData]);
 
     useEffect(() => {
         if (product.length > 0) {

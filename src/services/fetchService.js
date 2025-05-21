@@ -38,12 +38,16 @@ const fetchData = async (endpoint, setter, initYear, tradeType, region, estado, 
             ? `/${endpoint}/${initYear}?${params}`
             : `/${tradeType}/${endpoint}/${initYear}?${params}`
 
+
         const response = await api.get(url)
         const responseData = response.data
         const data = responseData.data
 
-        console.log(`Data fetched from ${endpoint}:`, data)
-        setter(data)
+        if (endpoint === "fat") console.log(url)
+
+        if (setter) setter(data);
+
+        return data
     } catch (error) {
         console.error(`Erro fetching ${endpoint}:`, error.response?.data || error.message)
     }
