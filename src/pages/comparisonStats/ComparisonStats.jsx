@@ -50,14 +50,16 @@ const ComparisonStats = () => {
 
     console.log(statesList)
     
-    // Opções de descrição para o mapa do Brasil
+    // Opções de descrição para o mapa do Brasil (para comparação)
     const getDescriptionText = () => {
-        if (state) { //Selecionou um estado
-        return "Para desfazer a seleção de estado atual, clique no mapa abaixo.";
+        if (statesList.length >= 2) { //Selecionou dois estados
+            return "Para desfazer a seleção de um dos estados, clique em seu nome abaixo.";
+        } else if (statesList.length >= 1) { //Selecionou um estado
+            return "Para selecionar o segundo estado, escolha mais uma das regiões do mapa.";
         } else if (region) { //Selecionou uma região
-        return "Escolha um dos estados para analisar seus dados.";
+            return "Escolha um dos estados dessa região para analisar seus dados.";
         } else { //Não selecionou nada
-        return "Para selecionar um estado, escolha uma das regiões do mapa abaixo.";
+            return "Para começar a comparação entre estados, escolha uma das regiões do mapa abaixo."
         }
     };
 

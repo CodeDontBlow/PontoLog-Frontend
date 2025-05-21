@@ -42,14 +42,14 @@ const Statistics = () => {
     const [vlFob, setVlFob] = useState([])
     const [countries, setCountries] = useState([])
 
-    // Opções de descrição para o mapa do Brasil
+    // Opções de descrição para o mapa do Brasil (para estatísticas)
     const getDescriptionText = () => {
         if (state) { //Selecionou um estado
-        return "Para desfazer a seleção de estado atual, clique no mapa abaixo.";
+            return "Para desfazer a seleção de estado atual, clique no mapa abaixo.";
         } else if (region) { //Selecionou uma região
-        return "Escolha um dos estados para analisar seus dados.";
+            return "Escolha um dos estados para analisar seus dados.";
         } else { //Não selecionou nada
-        return "Para selecionar um estado, escolha uma das regiões do mapa abaixo.";
+            return "Para ver estatísticas de um estado, escolha uma das regiões do mapa abaixo.";
         }
     };
 
