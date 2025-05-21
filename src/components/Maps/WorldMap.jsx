@@ -20,14 +20,10 @@ export default function WorldMap({ selectedRegion, countryDatas, tradeType, setT
         ],
         ...dadosSelecionados.map((item) => {
           const tooltip = `
-            <div styles="background-color: red">
-              <h5>${
-                tradeType === "exportacao" ? "Exportação" : "Importação"
-              }:</h5>
-              <br/>
-              <b>Quantidade: </b> <span>${item.quantidade} </span> <br/>
+            <div>
+              <b>Quantidade: </b> ${item.quantidade}<br/>
               <b>Valor Agregado: </b> R$ ${item.vl.toLocaleString()}<br/>
-              <b>Quilograma Líquido: </b>${item.kg.toLocaleString()} kg
+              <b>Quilograma Líquido: </b>${item.kg.toLocaleString()}
             </div>
           `;
           return [item.country, item.quantidade, tooltip];

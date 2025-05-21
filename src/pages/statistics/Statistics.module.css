@@ -41,11 +41,19 @@ section#inputArea>div {
     gap: 0.313rem;
 }
 
+.periodArea {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .periodInputs {
     width: 100%;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.625rem;
+    display: flex;
+    flex-direction: row;
 }
 
 /* Opções de Input (botões e checkbox) */
@@ -86,6 +94,15 @@ section#inputArea>div {
     font-weight: 500;
 }
 
+.label {
+    width: 100%;
+    color: var(--black-500);
+    font: var(--text-medium);
+    font-weight: 600;
+    text-align: left;
+    text-indent: 0.313rem;
+    cursor: text;
+}
 
 /* Dados iniciais */
 section#primaryInfos {
