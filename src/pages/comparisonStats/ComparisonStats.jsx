@@ -18,134 +18,9 @@ import Dropdown from '../../components/Dropdown/Dropdown'
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 import { faX } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useFetcher } from 'react-router-dom'
 
 const ComparisonStats = () => {
-
-    // TESTE ATUALIZAÇÃO DO ESTADO YEAR
-    const dadosTeste = {
-        exportacao: [
-            {
-                country: "United States",
-                quantidade: 8000,
-                vl: 5000000,
-                kg: 1500000,
-            },
-            {
-                country: "China",
-                quantidade: 6500,
-                vl: 4800000,
-                kg: 1400000,
-            },
-            {
-                country: "Germany",
-                quantidade: 4500,
-                vl: 3000000,
-                kg: 900000,
-            },
-            {
-                country: "Spain",
-                quantidade: 3000,
-                vl: 2000000,
-                kg: 800000,
-            },
-            {
-                country: "Japan",
-                quantidade: 4000,
-                vl: 3500000,
-                kg: 950000,
-            },
-            {
-                country: "Brazil",
-                quantidade: 3500,
-                vl: 1800000,
-                kg: 700000,
-            },
-            {
-                country: "India",
-                quantidade: 5000,
-                vl: 2200000,
-                kg: 850000,
-            },
-            {
-                country: "France",
-                quantidade: 3800,
-                vl: 2800000,
-                kg: 750000,
-            },
-            {
-                country: "United Kingdom",
-                quantidade: 4200,
-                vl: 3200000,
-                kg: 880000,
-            },
-            {
-                country: "Italy",
-                quantidade: 3200,
-                vl: 2100000,
-                kg: 650000,
-            },
-            {
-                country: "Canada",
-                quantidade: 2900,
-                vl: 1900000,
-                kg: 600000,
-            },
-            {
-                country: "South Korea",
-                quantidade: 3600,
-                vl: 2400000,
-                kg: 720000,
-            },
-            {
-                country: "Mexico",
-                quantidade: 2800,
-                vl: 1500000,
-                kg: 550000,
-            },
-            {
-                country: "Australia",
-                quantidade: 2500,
-                vl: 1700000,
-                kg: 500000,
-            },
-            {
-                country: "Netherlands",
-                quantidade: 2200,
-                vl: 1600000,
-                kg: 480000,
-            },
-            {
-                country: "Russia",
-                quantidade: 3000,
-                vl: 2000000,
-                kg: 750000,
-            },
-            {
-                country: "Switzerland",
-                quantidade: 1800,
-                vl: 1400000,
-                kg: 400000,
-            },
-            {
-                country: "Turkey",
-                quantidade: 2700,
-                vl: 1300000,
-                kg: 520000,
-            },
-            {
-                country: "Saudi Arabia",
-                quantidade: 2300,
-                vl: 1200000,
-                kg: 450000,
-            },
-            {
-                country: "Argentina",
-                quantidade: 2000,
-                vl: 900000,
-                kg: 380000,
-            },
-        ]
-    };
 
     // STATES DOS FILTROS
     const [product, setProduct] = useState('')
@@ -153,7 +28,7 @@ const ComparisonStats = () => {
     const [periodoUnico, setPeriodoUnico] = useState(true);
     const [initYear, setInitYear] = useState(2014)
     const [finalYear, setFinalYear] = useState(2024)
-
+    const [perido, setPeriodo] = useState([])
     const [region, setRegion] = useState('');
     const [state, setState] = useState('');
     const [uf, setUf] = useState('');
@@ -235,6 +110,16 @@ const ComparisonStats = () => {
         };
     };
 
+    const debounce = (func, delay) => {
+        let timer;
+        return (...args) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => func(...args), delay);
+        };
+    };
+
+    const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 50), [sh]);
+
     useEffect(() => {
         const currentList = [...statesList];
 
@@ -264,15 +149,13 @@ const ComparisonStats = () => {
         }
     }, [product, sh]);
 
-    const debounce = (func, delay) => {
-        let timer;
-        return (...args) => {
-            clearTimeout(timer);
-            timer = setTimeout(() => func(...args), delay);
-        };
-    };
+    useEffect(() => {
+        console.log("statesData", statesData)
+    }, [statesData])
 
-    const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 50), [sh]);
+    useEffect(() => {
+        setPeriodo([initYear, finalYear])
+    }, [initYear, finalYear])
 
     return (
         <div id={styles.statisticsPage}>
@@ -336,7 +219,7 @@ const ComparisonStats = () => {
                 </div>
             </section>
 
-            <AlertCard variant='allInfo' icon={faCircleInfo} product="Todos os Produtos" period={[2019, 2020]} />
+            <AlertCard variant='allInfo' icon={faCircleInfo} product="Todos os Produtos" period={perido} />
 
             <section id={styles.primaryInfos}>
                 <div className={styles.navMap}>
@@ -390,8 +273,8 @@ const ComparisonStats = () => {
                     </section>
 
                     <section className="bottomArea">
-                        <ColorCard color="#D92B66" title="BR" region="Brasil" />
-                        <ColorCard color="#028391" title="SP" region="São Paulo" />
+                        <ColorCard color="#D92B66" title={statesList[0] ? statesList[0].uf : 'UF 1'} region={statesList[0] ? statesList[0].state : 'Estado 1'} />
+                        <ColorCard color="#028391" title={statesList[1] ? statesList[1].uf : 'UF 2'} region={statesList[1] ? statesList[1].state : 'Estado 2'} />
                     </section>
                 </section>
             </section>
@@ -401,7 +284,7 @@ const ComparisonStats = () => {
                     {/* Estado 1 */}
                     <section className="infoGridVertical">
                         <section className="topArea">
-                            <h3 className={styles.stateTitle}>Brasil</h3>
+                            <h3 className={styles.stateTitle}>{statesList[0] ? statesList[0].state : 'Estado 1'}</h3>
                         </section>
                         <section className="midArea">
                             <div className="gridItem">
@@ -411,7 +294,17 @@ const ComparisonStats = () => {
                                         selectedRegion="Norte"
                                         tradeType="exportacao"
                                         colorPalette={["#B81D4E", "#D92B66", "#F5A4C3", "#F1A1B5"]}
-                                        countryDatas={dadosTeste}
+                                        countryDatas={{
+                                            exportacao: statesData[0]?.countries
+                                                ? statesData[0].countries.map((country) => ({
+                                                    country: country.NO_PAIS,
+                                                    quantidade: Number(country.TOTAL_REGISTROS),
+                                                    vl: Number(country.TOTAL_VL_AGREGADO),
+                                                    kg: Number(country.TOTAL_KG_LIQUIDO),
+                                                }))
+                                                : [],
+                                            importacao: []
+                                        }}
                                     />
                                 </div>
                             </div>
@@ -445,7 +338,7 @@ const ComparisonStats = () => {
                     {/* Estado 2 */}
                     <section className="infoGridVertical">
                         <section className="topArea">
-                            <h3 className={styles.stateTitle}>São Paulo</h3>
+                            <h3 className={styles.stateTitle}> {statesList[1] ? statesList[1].state : 'Estado 2'}</h3>
                         </section>
                         <section className="midArea">
                             <div className="gridItem">
@@ -455,7 +348,17 @@ const ComparisonStats = () => {
                                         selectedRegion="Norte"
                                         tradeType="exportacao"
                                         colorPalette={["#16707A", "#028391", "#80B8B8", "#A0D0D0"]}
-                                        countryDatas={dadosTeste}
+                                        countryDatas={{
+                                            exportacao: statesData[1]?.countries
+                                                ? statesData[1].countries.map((country) => ({
+                                                    country: country.NO_PAIS,
+                                                    quantidade: Number(country.TOTAL_REGISTROS),
+                                                    vl: Number(country.TOTAL_VL_AGREGADO),
+                                                    kg: Number(country.TOTAL_KG_LIQUIDO),
+                                                }))
+                                                : [],
+                                            importacao: []
+                                        }}
                                         isQuarter={true}
                                     />
                                 </div>
