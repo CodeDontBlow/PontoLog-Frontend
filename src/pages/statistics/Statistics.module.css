@@ -41,11 +41,19 @@ section#inputArea>div {
     gap: 0.313rem;
 }
 
+.periodArea {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .periodInputs {
     width: 100%;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.625rem;
+    display: flex;
+    flex-direction: row;
 }
 
 /* Opções de Input (botões e checkbox) */
@@ -86,6 +94,15 @@ section#inputArea>div {
     font-weight: 500;
 }
 
+.label {
+    width: 100%;
+    color: var(--black-500);
+    font: var(--text-medium);
+    font-weight: 600;
+    text-align: left;
+    text-indent: 0.313rem;
+    cursor: text;
+}
 
 /* Dados iniciais */
 section#primaryInfos {
@@ -100,10 +117,23 @@ section#primaryInfos .navMap {
     height: 100%;
 }
 
+    /* Legenda do mapa do brasil */
+    .navMap .mapCurrentState{
+        margin-top: 0.875rem;
+        color: var(--black-500);
+        font: var(--title-regular);
+        text-align: center;
+    }
+
+    .navMap .mapDescription {
+        color: var(--black-500);
+        font: var(--text-medium);
+        text-align: center;
+    }
 
 /* Dados de Exportação / Importação */
 section#ExpImpInfos {
-    padding: 0.625rem 6.25rem;
+    padding: 0.625rem 1.563em;
     display: flex;
     flex-direction: column;
     gap: 1.875rem;

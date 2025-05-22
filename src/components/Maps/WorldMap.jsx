@@ -1,10 +1,8 @@
 import React , {useEffect} from "react";
 import { Chart } from "react-google-charts";
 import styles from "./Maps.module.css"
-import { tooltip } from "leaflet";
 
-export default function WorldMap({ selectedRegion, countryDatas, tradeType, setTradeType}) {
-  const regionColor = ["#F1A1B5","#D92B66" ,"#B81D4E"];
+export default function WorldMap({ selectedRegion, countryDatas, tradeType, setTradeType , colorPalette}) {
   const showData = Boolean(selectedRegion);
 
   const dadosSelecionados = countryDatas[tradeType];
@@ -23,13 +21,9 @@ export default function WorldMap({ selectedRegion, countryDatas, tradeType, setT
         ...dadosSelecionados.map((item) => {
           const tooltip = `
             <div>
-              <h5>${
-                tradeType === "exportacao" ? "Exportação" : "Importação"
-              }:</h5>
-              <br/>
               <b>Quantidade: </b> ${item.quantidade}<br/>
               <b>Valor Agregado: </b> R$ ${item.vl.toLocaleString()}<br/>
-              <b>Quilograma Líquido: </b>${item.kg.toLocaleString()} kg
+              <b>Quilograma Líquido: </b>${item.kg.toLocaleString()}
             </div>
           `;
           return [item.country, item.quantidade, tooltip];
@@ -45,19 +39,17 @@ export default function WorldMap({ selectedRegion, countryDatas, tradeType, setT
 
   const options = {
     colorAxis: {
-      colors: showData ? regionColor : ["#f0f0f0", "#f0f0f0"],
+      colors: showData ? colorPalette : ["#f0f0f0", "#f0f0f0"],
       minValue: 0,
       maxValue: maxQuantidade,
     },
-    datalessRegionColor: regionColor[0],
-    tooltip: {
-      isHtml: true 
-    },
+    datalessRegionColor: colorPalette[3],
+    tooltip: { isHtml: true  },
     legend: "none",
   };
 
   return (
-    <div className="componentWrapper">
+      <>
         {/* <button //botão apenas para vizualizar imp e exp separados
           onClick={() =>
             setTradeType((prev) =>
@@ -75,6 +67,6 @@ export default function WorldMap({ selectedRegion, countryDatas, tradeType, setT
         width="100%"
         height="100%"
       />
-    </div>
+      </>
   );
 }
