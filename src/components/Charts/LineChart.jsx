@@ -85,12 +85,21 @@ const LineChart = ({period , values , dataName , chartDescription , colorPalette
     )
 
     //Valores do gráfico
-    const [series] = useState([
+    const [series, setSeries] = useState([
         { 
             name:dataName, 
             data: values,
         },
     ])
+
+    useEffect(() => {
+        setSeries([
+            { 
+                name:dataName, 
+                data: values,
+            },
+        ])
+    }, [values])
 
     //Componente de gráfico do ApexCharts recebendo os valores definidos acima
     return(
