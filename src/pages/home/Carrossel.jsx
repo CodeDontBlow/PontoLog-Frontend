@@ -3,9 +3,6 @@ import { useState, useEffect } from 'react';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import styles from './Home.module.css';
-import './Carrossel.css'
-
-
 
 const Carrossel = () => {
   const query = `"economia" OR "geopolítica" OR "exportações" OR "importações"`;
@@ -31,28 +28,51 @@ const Carrossel = () => {
     dots: false,
     infinite: true,
     speed: 800,
-    slidesToShow: 1,
+    slidesToShow: 3, 
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 5000,
+    responsive: [
+      {
+        breakpoint: 1024, 
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 600, 
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
   };
 
   if (loading) return <p>Carregando notícias...</p>;
 
+  console.log(news); 
+
   return (
-    <div className="news-carousel">
-      <h2>Últimas Notícias</h2>
+    <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
       <Slider {...settings}>
-        {news.map((article, index) => (
-          <div key={index} className="news-slide">
-            <img src={article.urlToImage} alt={article.title} className="news-image" />
-            <div className="news-content">
-              <h3>{article.title}</h3>
-              <p>{article.description}</p>
-              <a href={article.url} target="_blank" rel="noopener noreferrer">Leia mais</a>
+        {news
+          .filter(article => article.urlToImage && article.title && article.description)
+          .map((article, index) => (
+            <div key={index}>
+              <div className={styles.noticiaCard}>
+                <img src={article.urlToImage} alt={article.title} className={styles.noticiaImagem} />
+                <div className={styles.noticiaConteudo}>
+                  <h3>{article.title}</h3>
+                  <p>
+                    {article.description.length > 200
+                      ? article.description.slice(0, 200) + '...'
+                      : article.description}
+                  </p>
+                  <a href={article.url} target="_blank" rel="noopener noreferrer">Leia mais</a>
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </Slider>
     </div>
   );

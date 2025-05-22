@@ -3,7 +3,8 @@ import Footer from '../../components/Footer/Footer';
 import Button from '../../components/Buttons/Button/Button';
 import styles from './Home.module.css';
 import IconTitle from '../../components/IconTitle/IconTitle';
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faNewspaper } from "@fortawesome/free-solid-svg-icons";
+
 
 import Carrossel from './Carrossel';
 
@@ -15,10 +16,7 @@ const Home = () => {
                 <div className={styles.header}>
                     <img src="src/assets/images/home/HEADER.svg" alt="Header" className={styles.headerImagem} />
                 </div>
-
                 
-                
-
                 <div className={styles.homeContainer}>
                     {/* seção "Sobre a PontoLog" */}
                     <section className={styles.section}>
@@ -46,10 +44,20 @@ const Home = () => {
                         </div>
                     </section>
 
-                    {/* seção de notícias sobre política e economia */}
+                {/* seção de notícias sobre política e economia */}
                 <section className={styles.section}>
-                    <Carrossel/>
+                    <div className={styles.titleContainer}>
+                        <h2 className={styles.title}>
+                            <IconTitle
+                                icon={faNewspaper}
+                                size="large"      
+                            />
+                            Últimas Notícias
+                        </h2>
+                    </div>
+                    <Carrossel />
                 </section>
+
                     
                     {/* seção "Filtro" */}
                     <section className={styles.section}>
