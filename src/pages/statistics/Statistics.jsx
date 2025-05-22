@@ -14,6 +14,7 @@ import BrazilMap from '../../components/Maps/BrazilMap'
 import WorldMap from '../../components/Maps/WorldMap'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import IconTitle from '../../components/IconTitle/IconTitle'
+import TabNavigation from '../../components/Tab/TabNavigation'
 
 import styles from './Statistics.module.css'
 
@@ -106,6 +107,7 @@ const Statistics = () => {
         { id: 2, label: "Importações" , tradeType: "importacao"},
     ]
 
+    // Teste para verificar a troca de exportação e importação na TAB
     useEffect (() => {
         console.log(`Stats: ${tradeType}`)
         console.log(`/${tradeType}/countries/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`)
