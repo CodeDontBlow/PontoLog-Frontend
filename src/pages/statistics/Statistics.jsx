@@ -18,17 +18,24 @@ import IconTitle from '../../components/IconTitle/IconTitle'
 import styles from './Statistics.module.css'
 
 const Statistics = () => {
-    // states dos filtros
+    // STATES DOS FILTROS
+    // Produto
     const [sh, setSh] = useState('sh4');
     const [product, setProduct] = useState('');
-    const [state, setState] = useState('');
-    const [tradeType, setTradeType] = useState('exportacao');
-    const [region, setRegion] = useState('');
+
+    // Período
     const [initYear, setInitYear] = useState(2014);
     const [finalYear, setFinalYear] = useState(2024);
     const [periodoUnico, setPeriodoUnico] = useState(true);
     const [period, setPeriod] = useState([initYear, finalYear]);
 
+    // Estado
+    const [region, setRegion] = useState('');
+    const [state, setState] = useState('');
+    const [uf , setUf] = useState('');
+
+    const [tradeType, setTradeType] = useState('exportacao');
+    
     // state de opções dos inputs
     const [opcoesDeProduto, setOpcoesDeProduto] = useState([]);
     const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
@@ -42,6 +49,17 @@ const Statistics = () => {
     const [kgLiq, setKgLiq] = useState([])
     const [vlFob, setVlFob] = useState([])
     const [countries, setCountries] = useState([])
+
+    // Opções de descrição para o mapa do Brasil (para estatísticas)
+    const getDescriptionText = () => {
+        if (state) { //Selecionou um estado
+            return "Para desfazer a seleção de estado atual, clique no mapa abaixo.";
+        } else if (region) { //Selecionou uma região
+            return "Escolha um dos estados para analisar seus dados.";
+        } else { //Não selecionou nada
+            return "Para ver estatísticas de um estado, escolha uma das regiões do mapa abaixo.";
+        }
+    };
     const [balanca, setBalanca] = useState([])
 
     const debounce = (func, delay) => {
@@ -155,7 +173,21 @@ const Statistics = () => {
             <section id={styles.primaryInfos}>
                 {/* Mapa do Brasil */}
                 <div className={styles.navMap}>
-                    <BrazilMap onRegionChange={({ regiao, estado }) => { setRegion(regiao ?? undefined); setState(estado ?? undefined);}} />
+
+                    {/* Legenda do mapa do brasil */}
+                    <p className={styles.mapDescription}>{getDescriptionText()}</p>
+
+                    {/* Região/Estado selecionado */}
+                    {state ? (
+                    <h2 className={styles.mapCurrentState}>{state}</h2>
+                    ) : region ? (
+                    <h2 className={styles.mapCurrentState}>Região {region}</h2>
+                    ) : null}
+                    <BrazilMap onRegionChange={ ({ regiao, estado , uf }) => {
+                        setRegion(regiao || ''); 
+                        setState(estado || ''); 
+                        setUf(uf || '');
+                    }} />
                 </div>
 
                 {/* Molde de Grid Vertical Reutilizável */}
