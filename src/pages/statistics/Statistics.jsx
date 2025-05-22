@@ -14,6 +14,7 @@ import BrazilMap from '../../components/Maps/BrazilMap'
 import WorldMap from '../../components/Maps/WorldMap'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import IconTitle from '../../components/IconTitle/IconTitle'
+import TabNavigation from '../../components/Tab/TabNavigation'
 
 import styles from './Statistics.module.css'
 
@@ -99,6 +100,19 @@ const Statistics = () => {
             getProductByLetter(product, setOpcoesDeProduto, sh);
         }
     }, [product, sh]);
+
+    // Criando objetos TAB
+    const tab = [
+        { id: 1, label: "Exportações" , tradeType: "exportacao"},
+        { id: 2, label: "Importações" , tradeType: "importacao"},
+    ]
+
+    // Teste para verificar a troca de exportação e importação na TAB
+    useEffect (() => {
+        console.log(`Stats: ${tradeType}`)
+        console.log(`/${tradeType}/countries/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`)
+        
+    }, [tradeType])
 
     return (
         <div id={styles.statisticsPage}>
@@ -220,13 +234,13 @@ const Statistics = () => {
             </section>
 
 
-            {/* Deve-se definir melhor o uso do tab navigation!!! */}
-            {/* <TabNavigation tab={tabs} contents={contents} /> */}
 
 
 
             {/* Informação completas de Exportação ou Importação */}
             <section id={styles.ExpImpInfos}>
+            {/* Deve-se definir melhor o uso do tab navigation!!! */}
+            <TabNavigation tab={tab} onTabClick={(tabTradeType) => (setTradeType(tabTradeType))} />
                 {/* Molde de Grid Horizontal Reutilizável */}
                 <section className="infoGridHorizontal">
                     {/* Parte da Esquerda (Mapa do Mundo) */}
