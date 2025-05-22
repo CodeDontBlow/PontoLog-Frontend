@@ -148,50 +148,48 @@ const ComparisonStats = () => {
     };
 
     // STATES DOS FILTROS
-    // Produto
     const [product, setProduct] = useState('')
     const [sh, setSh] = useState('sh4');
-    // Período
     const [periodoUnico, setPeriodoUnico] = useState(true);
     const [initYear, setInitYear] = useState(2014)
     const [finalYear, setFinalYear] = useState(2024)
 
-    // Estado
     const [region, setRegion] = useState('');
     const [state, setState] = useState('');
-    const [uf , setUf] = useState('');
-    const [statesList , setStatesList] = useState([]);
+    const [uf, setUf] = useState('');
+    const [statesList, setStatesList] = useState([]);
 
     // Mudando a lista de estados quando um estado novo for selecionado
     useEffect(() => {
         if (state) {
-            if(statesList[0] == state){
+            if (statesList[0] == state) {
                 return
             }
             setStatesList(previewList => {
                 const currentList = [...previewList] //Cópia de segurança do conteúdo da lista anterior
                 // Caso a lista já tenha 2 elementos, remove o último
-                if(currentList.length >= 2){
+                if (currentList.length >= 2) {
                     currentList.pop()
                 }
                 // Adiciona o novo estado selecionado no BrazilMap
                 let newStateObject = {
                     state: state,
                     uf: uf,
+                    region: region
                 }
 
-                return [...currentList , newStateObject]
+                return [...currentList, newStateObject]
             })
         }
     }, [state])
 
     const removeStateByIndex = (index) => {
-        setStatesList( previewList => [
-            ...previewList.slice(0 , index),
+        setStatesList(previewList => [
+            ...previewList.slice(0, index),
             ...previewList.slice(index + 1)
         ])
     }
-    
+
     // Opções de descrição para o mapa do Brasil (para comparação)
     const getDescriptionText = () => {
         if (statesList.length >= 2) { //Selecionou dois estados
@@ -215,18 +213,18 @@ const ComparisonStats = () => {
     const [statesData, setStatesData] = useState([]);
 
     // Função para buscar todos os dados de um estado
-    const fetchStateData = async (state) => {
+    const fetchStateData = async (uf, region) => {
         const [vias, urfs, vlAgregado, kgLiq, vlFob, balanca, countries] = await Promise.all([
-            fetchData('via', null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-            fetchData('urf', null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-            fetchData('vl_agregado', null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-            fetchData('kg_liquido', null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-            fetchData('vl_fob', null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-            fetchData('balanco', null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-            fetchData('countries', null, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+            fetchData('via', null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+            fetchData('urf', null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+            fetchData('vl_agregado', null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+            fetchData('kg_liquido', null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+            fetchData('vl_fob', null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+            fetchData('balanco', null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+            fetchData('countries', null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
         ]);
         return {
-            nome: state,
+            estado: uf,
             vias,
             urfs,
             vlAgregado,
@@ -238,12 +236,21 @@ const ComparisonStats = () => {
     };
 
     useEffect(() => {
+        const currentList = [...statesList];
+
         const fetchAllStatesData = async () => {
-            const results = await Promise.all(statesList.map(fetchStateData));
+            const results = await Promise.all(
+                currentList.map((state) => fetchStateData(state.uf, state.region))
+            );
             setStatesData(results);
         };
-        fetchAllStatesData();
-    }, [product, sh, periodoUnico, initYear, finalYear, statesList, tradeType, region]);
+
+        if (!currentList.length <= 1) {
+            fetchAllStatesData();
+        } else {
+            setStatesData([])
+        }
+    }, [product, sh, periodoUnico, initYear, finalYear, JSON.stringify(statesList), tradeType]);
 
 
     useEffect(() => {
@@ -333,19 +340,19 @@ const ComparisonStats = () => {
 
             <section id={styles.primaryInfos}>
                 <div className={styles.navMap}>
-                    
+
                     {/* Legenda do mapa do brasil */}
                     <p className={styles.mapDescription}>{getDescriptionText()}</p>
-                    
+
                     {/* Nomes dos estados */}
                     <div id={styles.statesListContainer}>
                         {statesList.length >= 1 &&
                             <p className={styles.statesList}>
                                 [
-                                {statesList[0] && <>   
-                                    <span onClick={() => {removeStateByIndex(0)}} style={{color:'var(--base-green)'}}> <FontAwesomeIcon icon={faX} className={styles.icon}/> {statesList[0].state} </span> </> }
-                                {statesList[1] && <> | 
-                                    <span onClick={() => {removeStateByIndex(1)}} style={{color:'var(--base-teal)'}}> <FontAwesomeIcon icon={faX} className={styles.icon}/> {statesList[1].state} </span> </>}
+                                {statesList[0] && <>
+                                    <span onClick={() => { removeStateByIndex(0) }} style={{ color: 'var(--base-green)' }}> <FontAwesomeIcon icon={faX} className={styles.icon} /> {statesList[0].state} </span> </>}
+                                {statesList[1] && <> |
+                                    <span onClick={() => { removeStateByIndex(1) }} style={{ color: 'var(--base-teal)' }}> <FontAwesomeIcon icon={faX} className={styles.icon} /> {statesList[1].state} </span> </>}
                                 ]
                             </p>
                         }
@@ -356,8 +363,8 @@ const ComparisonStats = () => {
                         <h2 className={styles.mapCurrentState}>Região {region}</h2>
                     )}
 
-                    <MultiBrazilMap onRegionChange={({ regiao, estado , uf}) => { 
-                        setRegion(regiao || '');
+                    <MultiBrazilMap onRegionChange={({ regiao, estado, uf }) => {
+                        setRegion(`REGIAO ${regiao.toUpperCase()}`)
                         setState(estado || '');
                         setUf(uf || '');
                     }} />
@@ -371,7 +378,7 @@ const ComparisonStats = () => {
                                 <DoubleLineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={statesData.map(state => state.balanca?.map(item => item.total))}
-                                    dataName={statesData.map(state => state.nome)}
+                                    dataName={statesList.map((state) => state.state)}
                                     colorPalette={["#D92B66", "#028391"]}
                                 />
                             </div>
@@ -489,7 +496,7 @@ const ComparisonStats = () => {
                                 <DoubleLineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={statesData.map(state => state.vlAgregado?.map(item => item.total))}
-                                    dataName={statesList}
+                                    dataName={statesList.map((state) => state.state)}
                                     colorPalette={["#D92B66", "#028391"]}
                                 />
                             </div>
@@ -502,7 +509,7 @@ const ComparisonStats = () => {
                                 <DoubleLineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={statesData.map(state => state.kgLiq?.map(item => item.total))}
-                                    dataName={statesList}
+                                    dataName={statesList.map((state) => state.state)}
                                     colorPalette={["#D92B66", "#028391"]}
                                     legends="false"
                                 />
@@ -514,7 +521,7 @@ const ComparisonStats = () => {
                                 <DoubleLineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={statesData.map(state => state.vlFob?.map(item => item.total))}
-                                    dataName={statesList}
+                                    dataName={statesList.map((state) => state.state)}
                                     colorPalette={["#D92B66", "#028391"]}
                                     legends="false"
                                 />
