@@ -117,6 +117,19 @@ section#primaryInfos .navMap {
     height: 100%;
 }
 
+    /* Legenda do mapa do brasil */
+    .navMap .mapCurrentState{
+        margin-top: 0.875rem;
+        color: var(--black-500);
+        font: var(--title-regular);
+        text-align: center;
+    }
+
+    .navMap .mapDescription {
+        color: var(--black-500);
+        font: var(--text-medium);
+        text-align: center;
+    }
 
 /* Dados de Exportação / Importação */
 section#ExpImpInfos {

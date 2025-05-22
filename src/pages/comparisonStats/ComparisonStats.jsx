@@ -9,15 +9,18 @@ import DoubleLineChart from '../../components/Charts/DoubleLineChart'
 import ColorCard from '../../components/Cards/ColorCard/ColorCard'
 import BarChart from '../../components/Charts/BarChart'
 import AlertCard from '../../components/Cards/AlertCard/AlertCard'
-import BrazilMap from '../../components/Maps/BrazilMap'
+import MultiBrazilMap from '../../components/Maps/MultiBrazilMap'
 import WorldMap from '../../components/Maps/WorldMap'
 import Checkbox from '../../components/Buttons/Checkbox/Checkbox'
 import IconTitle from '../../components/IconTitle/IconTitle'
 import Dropdown from '../../components/Dropdown/Dropdown'
 
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
+import { faX } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const ComparisonStats = () => {
+
     // TESTE ATUALIZAÇÃO DO ESTADO YEAR
     const dadosTeste = {
       exportacao: [
@@ -144,13 +147,65 @@ const ComparisonStats = () => {
       ]
     };
 
-    // Variáveis para os inputs
+    // STATES DOS FILTROS
+    // Produto
     const [product , setProduct] = useState('')
     const [sh, setSh] = useState('sh4');
 
+    // Período
     const [periodoUnico, setPeriodoUnico] = useState(true);
     const [initYear , setInitYear] = useState(2014)
     const [finalYear , setFinalYear] = useState(2024)
+
+    // Estado
+    const [region, setRegion] = useState('');
+    const [state, setState] = useState('');
+    const [uf , setUf] = useState('');
+    const [statesList , setStatesList] = useState([]);
+
+    // Mudando a lista de estados quando um estado novo for selecionado
+    useEffect(() => {
+        if (state) {
+            if(statesList[0] == state){
+                return
+            }
+            setStatesList(previewList => {
+                const currentList = [...previewList] //Cópia de segurança do conteúdo da lista anterior
+                // Caso a lista já tenha 2 elementos, remove o último
+                if(currentList.length >= 2){
+                    currentList.pop()
+                }
+                // Adiciona o novo estado selecionado no BrazilMap
+                let newStateObject = {
+                    state: state,
+                    uf: uf,
+                }
+
+                return [...currentList , newStateObject]
+            })
+        }
+    }, [state])
+
+    const removeStateByIndex = (index) => {
+        setStatesList( previewList => [
+            ...previewList.slice(0 , index),
+            ...previewList.slice(index + 1)
+        ])
+    }
+    
+    // Opções de descrição para o mapa do Brasil (para comparação)
+    const getDescriptionText = () => {
+        if (statesList.length >= 2) { //Selecionou dois estados
+            return "Para desfazer a seleção de um dos estados, clique em seu nome abaixo.";
+        } else if (statesList.length >= 1) { //Selecionou um estado
+            return "Para selecionar o segundo estado, escolha mais uma das regiões do mapa.";
+        } else if (region) { //Selecionou uma região
+            return "Escolha um dos estados dessa região para analisar seus dados.";
+        } else { //Não selecionou nada
+            return "Para começar a comparação entre estados, escolha uma das regiões do mapa abaixo."
+        }
+    };
+
 
     const opcoesDeProduto = ["Abacaxi" , "Cenoura"];
     const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
@@ -228,7 +283,34 @@ const ComparisonStats = () => {
 
             <section id={styles.primaryInfos}>
                 <div className={styles.navMap}>
-                    <BrazilMap/>
+                    
+                    {/* Legenda do mapa do brasil */}
+                    <p className={styles.mapDescription}>{getDescriptionText()}</p>
+                    
+                    {/* Nomes dos estados */}
+                    <div id={styles.statesListContainer}>
+                        {statesList.length >= 1 &&
+                            <p className={styles.statesList}>
+                                [
+                                {statesList[0] && <>   
+                                    <span onClick={() => {removeStateByIndex(0)}} style={{color:'var(--base-green)'}}> <FontAwesomeIcon icon={faX} className={styles.icon}/> {statesList[0].state} </span> </> }
+                                {statesList[1] && <> | 
+                                    <span onClick={() => {removeStateByIndex(1)}} style={{color:'var(--base-teal)'}}> <FontAwesomeIcon icon={faX} className={styles.icon}/> {statesList[1].state} </span> </>}
+                                ]
+                            </p>
+                        }
+                    </div>
+
+                    {/* Exibir região selecionada */}
+                    {(region && !state) && (
+                        <h2 className={styles.mapCurrentState}>Região {region}</h2>
+                    )}
+
+                    <MultiBrazilMap onRegionChange={({ regiao, estado , uf}) => { 
+                        setRegion(regiao || '');
+                        setState(estado || '');
+                        setUf(uf || '');
+                    }} />
                 </div>
 
                 <section className={`${styles.infoGridVertical} infoGridVertical`}>
