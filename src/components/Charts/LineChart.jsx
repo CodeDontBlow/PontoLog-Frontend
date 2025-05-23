@@ -15,8 +15,10 @@ const LineChart = ({period , values , dataName , chartDescription , colorPalette
     //Ex.: <LineChart values={[20,10,20,10,-10]} period={[2014,2015,2016,2017,2018]} dataName={"Valor Agregado"} colorPalette="#ff0011" id="id" group="grupo"/>
 
     //Opções de customização do gráfico
-    const [options] = useState(
-        {
+   const [options, setOptions] = useState({}) // começa vazio
+
+    useEffect(() => {
+        setOptions({
             colors: colorPalette,
             chart:{
                 id: id,
@@ -58,12 +60,14 @@ const LineChart = ({period , values , dataName , chartDescription , colorPalette
             },
             markers: {
                 size: 3,
-                colors: colorPalette,
+                colors: Array.isArray(colorPalette) ? colorPalette : [colorPalette],
                 strokeColors: "var(--white-300)",
                 strokeWidth: 2,
             }
-        }
-    )
+        })
+    }, [colorPalette, period, chartDescription, id, group])
+
+    
 
     //Valores do gráfico
     const [series, setSeries] = useState([

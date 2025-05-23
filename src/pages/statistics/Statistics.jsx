@@ -37,39 +37,60 @@ const Statistics = () => {
 
     const [tradeType, setTradeType] = useState('exportacao');
     
-  // cores dinâmicas
-  const [pageColors , setPageColors] = useState(
-    {
-        700: "var(--pink-700)",
-        base: "var(--base-pink)",
-        500: "var(--pink-500)",
-        300: "var(--pink-300)",
-    }
-  )
-  useEffect(() => {
-    let colorName
-    if (state && region) {
-        colorName = regionColors[region]
-    }
-    else{
-        colorName = 'pink'
-    }
-    setPageColors(
+    // TROCA DINAMICA DE CORES
+    // Objeto com as cores atuais
+    const [pageColors , setPageColors] = useState(
         {
-            700: `var(--${colorName}-700)`,
-            base: `var(--base-${colorName})`,
-            500: `var(--${colorName}-500)`,
-            300: `var(--${colorName}-300)`,
+            700: "var(--pink-700)",
+            base: "var(--base-pink)",
+            500: "var(--pink-500)",
+            300: "var(--pink-300)",
         }
     )
-  }, [state]);
 
-  useEffect( () => {
-    for(let [key , value] of Object.entries(pageColors)){
-        console.log(`--highlight-${key}:` + value)
-        document.documentElement.style.setProperty(`--highlight-${key}` , value)
-    }
-  }, [pageColors])
+    const [hexColors , setHexColors] = useState(['#B81D4E' , '#D92B66' , '#F5A4C3' , '#F1A1B5'])
+
+    // Mudando o objeto pageColors
+    useEffect(() => {
+        // Pega o nome da cor de acordo com a região || ou define como rosa
+        let colorName = regionColors[region] || 'pink' 
+
+        // Muda o objeto pageColors para a cor da região
+        setPageColors(
+            {
+                700: `var(--${colorName}-700)`,
+                base: `var(--base-${colorName})`,
+                500: `var(--${colorName}-500)`,
+                300: `var(--${colorName}-300)`,
+            }
+        )
+    }, [state]);
+
+
+
+    // Muda a variável CSS highlight, que recebe o valor da cor atual
+    useEffect( () => {
+        let colorName = regionColors[region] || 'pink'
+        let colorsArray = []
+        let arrayOrder = [700 , "base" , 500 , 300]
+
+        let element = document.documentElement
+        let computed = getComputedStyle(element)
+
+        for(let key of arrayOrder){
+            let value = pageColors[key]
+            element.style.setProperty(`--highlight-${key}` , value)
+
+            let hexCode = key == "base"
+                ? computed.getPropertyValue(`--${key}-${colorName}`).trim()
+                : computed.getPropertyValue(`--${colorName}-${key}`).trim()
+
+            colorsArray.push(hexCode)
+        }
+    
+        setHexColors(colorsArray)
+
+    }, [pageColors])
 
     // state de opções dos inputs
     const [opcoesDeProduto, setOpcoesDeProduto] = useState([]);
@@ -232,14 +253,15 @@ const Statistics = () => {
                         <div className="gridItem">
                             <IconTitle title="Balança Comercial" variant="lineChart" size='textMedium' />
                             <div className="componentWrapper">
-                                {balanca.length > 0 && (
+                                {/* {balanca.length > 0 && ( */}
                                     <LineChart
                                         period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                        values={balanca.map(bal => Number(bal.total))}
+                                        // values={balanca.map(bal => Number(bal.total))}
+                                        values={[1,2,3,4,5,6]}
                                         dataName="Balança Comercial"
-                                        colorPalette={["#D92B66"]}
+                                        colorPalette={[hexColors[1]]}
                                     />
-                                )}
+                                {/* )} */}
                             </div>
                         </div>
                     </section>
