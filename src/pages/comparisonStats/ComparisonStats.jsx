@@ -19,7 +19,6 @@ import TabNavigation from '../../components/Tab/TabNavigation'
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 import { faX } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useFetcher } from 'react-router-dom'
 
 const ComparisonStats = () => {
 
@@ -318,7 +317,6 @@ const ComparisonStats = () => {
                                                     kg: Number(country.TOTAL_KG_LIQUIDO),
                                                 }))
                                                 : [],
-                                            importacao: []
                                         }}
                                     />
                                 </div>
@@ -372,7 +370,6 @@ const ComparisonStats = () => {
                                                     kg: Number(country.TOTAL_KG_LIQUIDO),
                                                 }))
                                                 : [],
-                                            importacao: []
                                         }}
                                         isQuarter={true}
                                     />
