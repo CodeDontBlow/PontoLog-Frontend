@@ -13,6 +13,7 @@ import BrazilMap from '../../components/Maps/BrazilMap'
 import WorldMap from '../../components/Maps/WorldMap'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import IconTitle from '../../components/IconTitle/IconTitle'
+import { regionColors } from '../../components/Maps/BrazilMap'
 
 import styles from './Statistics.module.css'
 
@@ -27,6 +28,18 @@ const Statistics = () => {
     const [finalYear, setFinalYear] = useState(2024);
     const [periodoUnico, setPeriodoUnico] = useState(true);
     const [period, setPeriod] = useState([initYear, finalYear]);
+
+  // cores dinâmicas
+  useEffect(() => {
+    if (region) {
+      const color = regionColors[region];
+      if (color) {
+        document.documentElement.style.setProperty("--base-highlight", color);
+      }
+    } else {
+      document.documentElement.style.setProperty("--base-highlight", "#D92B66");
+    }
+  }, [region]);
 
     // state de opções dos inputs
     const [opcoesDeProduto, setOpcoesDeProduto] = useState([]);
@@ -540,7 +553,7 @@ const Statistics = () => {
             <section id={styles.primaryInfos}>
                 {/* Mapa do Brasil */}
                 <div className={styles.navMap}>
-                    <BrazilMap />
+                    <BrazilMap onRegionChange={({ regiao, estado }) => { setRegion(regiao ?? null); setState(estado ?? null);}}/>
                 </div>
 
                 {/* Molde de Grid Vertical Reutilizável */}
