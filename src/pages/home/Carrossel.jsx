@@ -28,19 +28,19 @@ const Carrossel = () => {
     dots: false,
     infinite: true,
     speed: 800,
-    slidesToShow: 3, 
+    slidesToShow: 3,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 5000,
     responsive: [
       {
-        breakpoint: 1024, 
+        breakpoint: 1024,
         settings: {
           slidesToShow: 2,
         },
       },
       {
-        breakpoint: 600, 
+        breakpoint: 600,
         settings: {
           slidesToShow: 1,
         },
@@ -50,8 +50,6 @@ const Carrossel = () => {
 
   if (loading) return <p>Carregando notícias...</p>;
 
-  console.log(news); 
-
   return (
     <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
       <Slider {...settings}>
@@ -60,7 +58,11 @@ const Carrossel = () => {
           .map((article, index) => (
             <div key={index}>
               <div className={styles.noticiaCard}>
-                <img src={article.urlToImage} alt={article.title} className={styles.noticiaImagem} />
+                <img
+                  src={article.urlToImage}
+                  alt={article.title}
+                  className={styles.noticiaImagem}
+                />
                 <div className={styles.noticiaConteudo}>
                   <h3>{article.title}</h3>
                   <p>
@@ -68,7 +70,23 @@ const Carrossel = () => {
                       ? article.description.slice(0, 200) + '...'
                       : article.description}
                   </p>
-                  <a href={article.url} target="_blank" rel="noopener noreferrer">Leia mais</a>
+                  <div className={styles.noticiaRodape}>
+                    <p className={styles.noticiaData}>
+                      {new Date(article.publishedAt).toLocaleDateString('pt-BR', {
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric',
+                      })}
+                    </p>
+                    <a
+                      href={article.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.noticiaLink}
+                    >
+                      Leia mais
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
