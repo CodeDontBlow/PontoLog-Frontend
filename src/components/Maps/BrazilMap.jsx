@@ -4,7 +4,6 @@ import statesData from "../../assets/geojson/brazil-states.json";
 import { useState, useEffect } from "react";
 import L from "leaflet";
 import "./../../App.css";
-import styles from "./Maps.module.css";
 
 const regionMap = {
   1: "Norte",
@@ -41,6 +40,7 @@ const BrazilMap = ({ onRegionChange }) => {
   const [regions, setRegions] = useState({});
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
+  const [selectedUF , setSelectedUF] = useState(null)
 
   useEffect(() => {
     const grouped = {};
@@ -56,7 +56,7 @@ const BrazilMap = ({ onRegionChange }) => {
   const getSelectedStateFeature = () => {
     return Object.values(regions)
       .flat()
-      .find((f) => f.properties.name === selectedState);
+      .find((f) => f.properties.name === selectedState && f.properties.sigla === selectedUF);
   };
 
   const renderGeoJSON = () => {
@@ -81,7 +81,8 @@ const BrazilMap = ({ onRegionChange }) => {
               click: () => {
                 setSelectedRegion(null);
                 setSelectedState(null);
-                onRegionChange?.({ regiao: null, estado: null }); // limpa seleção no mundi
+                setSelectedUF(null)
+                onRegionChange?.({ regiao: null, estado: null , uf: null }); // reset
               },
             });
             layer.bindPopup(feature.properties.name);
@@ -110,10 +111,12 @@ const BrazilMap = ({ onRegionChange }) => {
           }}
           onEachFeature={(feature, layer) => {
             const stateName = feature.properties.name;
+            const stateSigla = feature.properties.sigla;
             layer.on({
               click: () => {
                 setSelectedState(stateName);
-                onRegionChange?.({ regiao: selectedRegion, estado: stateName });
+                setSelectedUF(stateSigla);
+                onRegionChange?.({ regiao: selectedRegion, estado: stateName , uf: stateSigla});
               },
             });
             layer.bindPopup(stateName);
@@ -141,7 +144,8 @@ const BrazilMap = ({ onRegionChange }) => {
             e.originalEvent.stopPropagation();
             setSelectedRegion(regionName);
             setSelectedState(null);
-            onRegionChange?.({ regiao: regionName, estado: null });
+            setSelectedUF(null);
+            onRegionChange?.({ regiao: regionName, estado: null , uf: null }); // região selecionada
           },
         }}
         onEachFeature={(feature, layer) => {
@@ -157,24 +161,8 @@ const BrazilMap = ({ onRegionChange }) => {
     ? regions[selectedRegion]
     : statesData.features;
 
-  const getDescriptionText = () => {
-    if (selectedState) {
-      return "Para desfazer a seleção de estado atual, clique no mapa abaixo.";
-    } else if (selectedRegion) {
-      return "Escolha um dos estados para analisar seus dados.";
-    } else {
-      return "Para selecionar um estado, escolha uma das regiões do mapa abaixo.";
-    }
-  };
-
   return (
     <div className="brazil-map-container">
-      <p className={styles.mapDescription}>{getDescriptionText()}</p>
-      {selectedState ? (
-        <h2 className={styles.mapCurrentState}>{selectedState}</h2>
-      ) : selectedRegion ? (
-        <h2 className={styles.mapCurrentState}> Região {selectedRegion}</h2>
-      ) : null}
 
       <MapContainer
         center={[-14.235, -51.9253]}
@@ -195,9 +183,7 @@ const BrazilMap = ({ onRegionChange }) => {
       >
         {renderGeoJSON()}
         <FitBoundsToRegion features={currentFeatures} />
-
       </MapContainer>
-
     </div>
   );
 };
