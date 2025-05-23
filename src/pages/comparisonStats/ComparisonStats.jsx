@@ -289,7 +289,7 @@ const ComparisonStats = () => {
 
                     {/* Checkbox Período de Tempo */}
                     <div className={styles.periodOptions}>
-                        <Checkbox label="Ativar busca somente para um ano" value={periodoUnico} checked={periodoUnico} onChange={() => { setPeriodoUnico(!periodoUnico) }} />
+                        <Checkbox label="Ativar busca por um período entre 2 anos" value={periodoUnico} checked={periodoUnico} onChange={() => { setPeriodoUnico(!periodoUnico) }} />
                     </div>
                 </div>
             </section>
