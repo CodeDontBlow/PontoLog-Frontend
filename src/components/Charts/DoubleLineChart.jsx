@@ -42,6 +42,25 @@ const DoubleLineChart = ({period , values , dataName, chartDescription , colorPa
                     color: "var(--black-500)",
                 }
             },
+            yaxis: {
+                labels: {
+                    //Formatação para resumir os números
+                    formatter: function (items){
+                        if((Math.abs(items) / 10**9) >= 1 ){
+                            return(items / 10**9) + "B"
+                        }
+                        else if((Math.abs(items) / 10**6) >= 1 ){
+                            return(items / 10**6) + "M"
+                        }
+                        else if ((Math.abs(items) / 1000) >= 1){
+                            return (items / 1000) + "k"
+                        }
+                        else{
+                            return items
+                        }
+                    },
+                },
+            },
             xaxis: {
                 categories: period
             },
