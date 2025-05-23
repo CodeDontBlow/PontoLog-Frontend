@@ -14,6 +14,7 @@ import WorldMap from '../../components/Maps/WorldMap'
 import Checkbox from '../../components/Buttons/Checkbox/Checkbox'
 import IconTitle from '../../components/IconTitle/IconTitle'
 import Dropdown from '../../components/Dropdown/Dropdown'
+import TabNavigation from '../../components/Tab/TabNavigation'
 
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 import { faX } from "@fortawesome/free-solid-svg-icons"
@@ -157,6 +158,19 @@ const ComparisonStats = () => {
         setPeriodo([initYear, finalYear])
     }, [initYear, finalYear])
 
+        // Criando objetos TAB
+    const tab = [
+        { id: 1, label: "Exportações" , tradeType: "exportacao"},
+        { id: 2, label: "Importações" , tradeType: "importacao"},
+    ]
+
+    // Teste para verificar a troca de exportação e importação na TAB
+    useEffect (() => {
+        console.log(`Stats: ${tradeType}`)
+        console.log(`/${tradeType}/countries/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`)
+        
+    }, [tradeType])
+
     return (
         <div id={styles.statisticsPage}>
 
@@ -214,7 +228,7 @@ const ComparisonStats = () => {
 
                     {/* Checkbox Período de Tempo */}
                     <div className={styles.periodOptions}>
-                        <Checkbox label="Ativar busca somente para um ano" value={periodoUnico} checked={periodoUnico} onChange={() => { setPeriodoUnico(!periodoUnico) }} />
+                        <Checkbox label="Ativar busca por um período entre 2 anos" value={periodoUnico} checked={periodoUnico} onChange={() => { setPeriodoUnico(!periodoUnico) }} />
                     </div>
                 </div>
             </section>
@@ -280,6 +294,7 @@ const ComparisonStats = () => {
             </section>
 
             <section id={styles.ExpImpInfos}>
+                <TabNavigation tab={tab} onTabClick={(tabTradeType) => (setTradeType(tabTradeType))} />
                 <section id={styles.mainInfosArea}>
                     {/* Estado 1 */}
                     <section className="infoGridVertical">

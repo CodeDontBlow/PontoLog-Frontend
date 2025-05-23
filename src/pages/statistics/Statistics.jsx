@@ -14,6 +14,7 @@ import BrazilMap from '../../components/Maps/BrazilMap'
 import WorldMap from '../../components/Maps/WorldMap'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import IconTitle from '../../components/IconTitle/IconTitle'
+import TabNavigation from '../../components/Tab/TabNavigation'
 
 import styles from './Statistics.module.css'
 
@@ -100,69 +101,91 @@ const Statistics = () => {
         }
     }, [product, sh]);
 
+    // Criando objetos TAB
+    const tab = [
+        { id: 1, label: "Exportações" , tradeType: "exportacao"},
+        { id: 2, label: "Importações" , tradeType: "importacao"},
+    ]
+
+    // Teste para verificar a troca de exportação e importação na TAB
+    useEffect (() => {
+        console.log(`Stats: ${tradeType}`)
+        console.log(`/${tradeType}/countries/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`)
+        
+    }, [tradeType])
+
     return (
         <div id={styles.statisticsPage}>
 
             {/* Área dos Inputs */}
+            {/* Labels */}
             <section id={styles.inputArea}>
-                {/* Input do Nome do Produto */}
-                <div className={styles.productArea}>
-                    {/* <Input label="Nome do Produto" type="text" placeholder="Produto" id="product"/> */}
-                    <Dropdown label={"Produtos"} search={true} placeholder={"Pesquisar..."} options={opcoesDeProduto.length > 0 ? opcoesDeProduto : ['...']} value={product} onChange={(e) => {
-                        const value = e.target.value;
-                        setProduct(value);
-                        debouncedGetProductByLetter(value);
-                    }
-                    }
-                        onSelect={(produto) => setProduct(produto)} />
-                    {/* Botões SH4 e SH6 */}
-                    <div className={styles.inputOptions}>
-                        {/* SH4 */}
-                        <input type="radio" name="sh-selection" id="sh4" defaultChecked onClick={() => {
-                            setSh('sh4');
-                            setProduct('');
-                            setOpcoesDeProduto([])
-                        }} />
-                        <label htmlFor="sh4"> SH4 </label>
+                <div className={styles.labelsContainer}>
+                    <label className={styles.productLabel} htmlFor="">Produtos</label>
 
-                        {/* SH6 */}
-
-                        <input type="radio" name="sh-selection" id="sh6" onClick={() => {
-                            setSh('sh6');
-                            setProduct('');
-                            setOpcoesDeProduto('');
-                        }} />
-                        <label htmlFor="sh6"> SH6 </label>
-                    </div>
+                    <label className={styles.periodLabel} htmlFor="">Período de Tempo</label>
                 </div>
 
-                {/* Input de Periodo de Tempo */}
-                <div className={styles.periodArea}>
-                    {/* Inputs */}
-                    <label className={styles.label} > Período de tempo</label>
+                {/* Inputs */}
+                <div className={styles.inputsContainer}>
+
+                    {/* Input do Produto */}
+                    <div className={styles.productInput}>
+                        {/* <Input label="Nome do Produto" type="text" placeholder="Produto" id="product"/> */}
+                        <Dropdown search={true} placeholder={"Pesquisar..."} options={opcoesDeProduto.length > 0 ? opcoesDeProduto : ['...']} value={product} onChange={ (e) => {
+                            const value = e.target.value;
+                            setProduct(value);
+                            debouncedGetProductByLetter(value);
+                        }}
+                        onSelect={ (produto) => setProduct(produto)} />
+                    </div>
+
+                    {/* Input dos Anos */}
                     <div className={styles.periodInputs}>
-                        {/* Primeiro Ano do Período */}
                         <div className={styles.firstYear}>
                             {/* <Input label="Período de Tempo" placeholder="Ano de Início" type="number" id="firstYear" /> */}
                             <Dropdown label={"Ano de Início"} options={years} placeholder={"Ano de Início"} value={initYear} onSelect={(year) => setInitYear(year)} />
                         </div>
 
                         {/* Último Ano do Período */}
-                        <div className={styles.lastYear}>
+                        {periodoUnico &&
+                            <div className={styles.lastYear}>
                             {/* <Input label="..." placeholder="Ano de Término" type="Number" id="lastYear" / */}
+                                <Dropdown label={"Ano de Término"} options={years} placeholder={"Ano de Término"} value={finalYear} onSelect={(year) => setFinalYear(year)} disable={periodoUnico} />
+                            </div>
+                        }
+                    </div>
+                </div>
 
-                            <Dropdown label={"Ano de Término"} options={years} placeholder={"Ano de Término"} value={finalYear} onSelect={(year) => setFinalYear(year)} disable={periodoUnico} />
-                        </div>
+                {/* Opções */}
+                <div className={styles.optionsContainer}>
+                    {/* Botões SH's */}
+                    <div className={styles.productOptions}>
+                        {/* SH4 */}
+                        <input type="radio" name="sh-selection" id="sh4" defaultChecked 
+                        onClick={ () => {
+                            setSh('sh4');
+                            setProduct('');
+                            setOpcoesDeProduto([])
+                        }}/>
+                        <label htmlFor="sh4"> SH4 </label>
+                        
+                        {/* SH6 */}
+                        <input type="radio" name="sh-selection" id="sh6" 
+                        onClick={ () => {
+                            setSh('sh6');
+                            setProduct('');
+                            setOpcoesDeProduto('')
+                        }}/>
+                        <label htmlFor="sh6"> SH6 </label>
                     </div>
 
-                    {/* Checkbox (Decidir se iremos utilizar)*/}
-                    <div className={styles.inputOptions}>
-                        <Checkbox label="Ativar busca somente para um ano" value={periodoUnico} checked={periodoUnico} onChange={() => { setPeriodoUnico(!periodoUnico) }} />
+                    {/* Checkbox Período de Tempo */}
+                    <div className={styles.periodOptions}>
+                        <Checkbox label="Ativar busca por um período entre 2 anos" value={periodoUnico} checked={periodoUnico} onChange={() => { setPeriodoUnico(!periodoUnico) }} />
                     </div>
                 </div>
             </section>
-
-
 
             {/* Alerta de quais Informações estão sendo exibidas */}
             <AlertCard variant="allInfo" icon={faCircleInfo} product="Todos os Produtos" region="Brasil" period={period} />
@@ -220,13 +243,13 @@ const Statistics = () => {
             </section>
 
 
-            {/* Deve-se definir melhor o uso do tab navigation!!! */}
-            {/* <TabNavigation tab={tabs} contents={contents} /> */}
 
 
 
             {/* Informação completas de Exportação ou Importação */}
             <section id={styles.ExpImpInfos}>
+            {/* Deve-se definir melhor o uso do tab navigation!!! */}
+            <TabNavigation tab={tab} onTabClick={(tabTradeType) => (setTradeType(tabTradeType))} />
                 {/* Molde de Grid Horizontal Reutilizável */}
                 <section className="infoGridHorizontal">
                     {/* Parte da Esquerda (Mapa do Mundo) */}

@@ -29,6 +29,23 @@ function BarChart({ items, values, chartDescription, colorPalette , isQuarter = 
             },
             xaxis: {
                 categories: items,
+                labels: {
+                    //Formatação para resumir os números
+                    formatter: function (items){
+                        if((Math.abs(items) / 10**9) >= 1 ){
+                            return(items / 10**9) + "B"
+                        }
+                        else if((Math.abs(items) / 10**6) >= 1 ){
+                            return(items / 10**6) + "M"
+                        }
+                        else if ((Math.abs(items) / 1000) >= 1){
+                            return (items / 1000) + "k"
+                        }
+                        else{
+                            return items
+                        }
+                    },
+                },
             },
             yaxis: {
                 show: false,
@@ -71,8 +88,10 @@ function BarChart({ items, values, chartDescription, colorPalette , isQuarter = 
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                 },
-                formatter: function (val, opt) {
-                    return "\u00A0 \u00A0" + opt.w.globals.labels[opt.dataPointIndex]
+                formatter: function (val, labelRaw) {
+                    let label = labelRaw.w.globals.labels[labelRaw.dataPointIndex]
+                    
+                    return "\u00A0 \u00A0" + label
                 },
             },
         }
