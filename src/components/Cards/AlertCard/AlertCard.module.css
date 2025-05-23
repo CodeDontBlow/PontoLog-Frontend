@@ -10,7 +10,7 @@ div.card{
 }
 
 .icon{
-    color: var(--base-highlight);
+    color: var(--highlight-base);
 }
 
 p.text{
@@ -19,7 +19,7 @@ p.text{
 }
 
 span.dataDisplay{
-    color: var(--base-highlight);
+    color: var(--highlight-base);
     font-weight: 600;
     text-decoration: underline;
     /* margin-left: .33em; */

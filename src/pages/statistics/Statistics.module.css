@@ -88,7 +88,7 @@ section#inputArea>div {
 }
 
 .inputOptions>input[type="radio"]:checked+label {
-    background-color: var(--base-highlight);
+    background-color: var(--highlight-base);
 
     color: var(--white-500);
     font-weight: 500;

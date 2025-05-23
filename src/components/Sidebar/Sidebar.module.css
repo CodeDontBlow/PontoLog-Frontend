@@ -43,7 +43,7 @@
     background-color: var(--white-300);
 }
 .mainButtons .navButton.active, .infoButton.active {
-    background-color: var(--base-highlight);
+    background-color: var(--highlight-base);
 }
 
 .mainButtons .navButton.active .navButtonIcon, .infoButton.active .infoIcon {

@@ -38,16 +38,38 @@ const Statistics = () => {
     const [tradeType, setTradeType] = useState('exportacao');
     
   // cores dinâmicas
-  useEffect(() => {
-    if (region) {
-      const color = regionColors[region];
-      if (color) {
-        document.documentElement.style.setProperty("--base-highlight", color);
-      }
-    } else {
-      document.documentElement.style.setProperty("--base-highlight", "#D92B66");
+  const [pageColors , setPageColors] = useState(
+    {
+        700: "var(--pink-700)",
+        base: "var(--base-pink)",
+        500: "var(--pink-500)",
+        300: "var(--pink-300)",
     }
-  }, [region]);
+  )
+  useEffect(() => {
+    let colorName
+    if (state && region) {
+        colorName = regionColors[region]
+    }
+    else{
+        colorName = 'pink'
+    }
+    setPageColors(
+        {
+            700: `var(--${colorName}-700)`,
+            base: `var(--base-${colorName})`,
+            500: `var(--${colorName}-500)`,
+            300: `var(--${colorName}-300)`,
+        }
+    )
+  }, [state]);
+
+  useEffect( () => {
+    for(let [key , value] of Object.entries(pageColors)){
+        console.log(`--highlight-${key}:` + value)
+        document.documentElement.style.setProperty(`--highlight-${key}` , value)
+    }
+  }, [pageColors])
 
     // state de opções dos inputs
     const [opcoesDeProduto, setOpcoesDeProduto] = useState([]);
@@ -114,7 +136,7 @@ const Statistics = () => {
     }, [product, sh]);
 
     return (
-        <div id={styles.statisticsPage} style={{color:"var(--base-highlight)"}}>
+        <div id={styles.statisticsPage} style={{color:"var(--highlight-base)"}}>
 
             {/* Área dos Inputs */}
             <section id={styles.inputArea}>

@@ -11,7 +11,7 @@ const Comparison = () => {
       <img src="src\assets\img\header.svg" alt="header" className={styles.header}/>       
 
       <div className={styles.contentArea}>
-        <IconTitle icon={faBalanceScale} title={"Comparações"} size='titleRegular' color="var(--base-highlight)"></IconTitle>     
+        <IconTitle icon={faBalanceScale} title={"Comparações"} size='titleRegular' color="var(--highlight-base)"></IconTitle>     
       
         <p className={styles.textMedium}>Os preços e condições dos produtos podem variar de um estado para outro devido a fatores como impostos, disponibilidade e regulamentações locais. </p> 
         

@@ -222,7 +222,7 @@ const ComparisonStats = () => {
     }, [product])
     
     return (
-        <div id={styles.statisticsPage} style={{color:"var(--base-highlight)"}}>
+        <div id={styles.statisticsPage} style={{color:"var(--highlight-base)"}}>
 
 
         {/* Área dos Inputs */}
