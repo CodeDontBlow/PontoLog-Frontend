@@ -137,21 +137,11 @@ const ComparisonStats = () => {
         }
     }, [product, sh, periodoUnico, initYear, finalYear, JSON.stringify(statesList), tradeType]);
 
-
-    useEffect(() => {
-
-        console.log(statesData)
-    }, [statesData]);
-
     useEffect(() => {
         if (product.length > 0) {
             getProductByLetter(product, setOpcoesDeProduto, sh);
         }
     }, [product, sh]);
-
-    useEffect(() => {
-        console.log("statesData", statesData)
-    }, [statesData])
 
     useEffect(() => {
         setPeriodo([initYear, finalYear])
@@ -162,13 +152,6 @@ const ComparisonStats = () => {
         { id: 1, label: "Exportações" , tradeType: "exportacao"},
         { id: 2, label: "Importações" , tradeType: "importacao"},
     ]
-
-    // Teste para verificar a troca de exportação e importação na TAB
-    useEffect (() => {
-        console.log(`Stats: ${tradeType}`)
-        console.log(`/${tradeType}/countries/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`)
-        
-    }, [tradeType])
 
     return (
         <div id={styles.statisticsPage}>
@@ -260,7 +243,7 @@ const ComparisonStats = () => {
                     )}
 
                     <MultiBrazilMap onRegionChange={({ regiao, estado, uf }) => {
-                        setRegion(`REGIAO ${regiao.toUpperCase()}`)
+                        setRegion(`REGIAO ${regiao.toUpperCase().replace('-', ' ')}`)
                         setState(estado || '');
                         setUf(uf || '');
                     }} />

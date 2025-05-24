@@ -77,15 +77,15 @@ const Statistics = () => {
         const fetchAllData = async () => {
             try {
                 await Promise.all([
-                    fetchData('fat', setFatAgregado, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData(`product/no_${sh}_por`, setProdutoPopular, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData('via', setVias, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData('urf', setUrfs, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData('vl_agregado', setVlAgregado, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData('vl_fob', setVlFob, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData('kg_liquido', setKgLiq, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData('balanco', setBalanca, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData('countries', setCountries, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+                    fetchData('fat', setFatAgregado, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+                    fetchData(`product/no_${sh}_por`, setProdutoPopular, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+                    fetchData('via', setVias, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+                    fetchData('urf', setUrfs, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+                    fetchData('vl_agregado', setVlAgregado, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+                    fetchData('vl_fob', setVlFob, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+                    fetchData('kg_liquido', setKgLiq, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+                    fetchData('balanco', setBalanca, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+                    fetchData('countries', setCountries, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
                 ]);
             } catch (error) {
                 console.error("Erro ao buscar dados", error);
@@ -106,13 +106,6 @@ const Statistics = () => {
         { id: 1, label: "Exportações" , tradeType: "exportacao"},
         { id: 2, label: "Importações" , tradeType: "importacao"},
     ]
-
-    // Teste para verificar a troca de exportação e importação na TAB
-    useEffect (() => {
-        console.log(`Stats: ${tradeType}`)
-        console.log(`/${tradeType}/countries/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`)
-        
-    }, [tradeType])
 
     return (
         <div id={styles.statisticsPage}>
@@ -207,7 +200,7 @@ const Statistics = () => {
                     <h2 className={styles.mapCurrentState}>Região {region}</h2>
                     ) : null}
                     <BrazilMap onRegionChange={ ({ regiao, estado , uf }) => {
-                        setRegion(regiao || ''); 
+                        setRegion(`REGIAO ${regiao.toUpperCase().replace('-', ' ')}`); 
                         setState(estado || ''); 
                         setUf(uf || '');
                     }} />
