@@ -5,6 +5,8 @@ import styles from "./Maps.module.css"
 export default function WorldMap({ selectedRegion, countryDatas, tradeType, setTradeType , colorPalette}) {
   const showData = Boolean(selectedRegion);
 
+  let colors = colorPalette.slice(0).reverse()
+
   const dadosSelecionados = countryDatas[tradeType];
 
   const maxQuantidade = Math.max(
@@ -39,11 +41,11 @@ export default function WorldMap({ selectedRegion, countryDatas, tradeType, setT
 
   const options = {
     colorAxis: {
-      colors: showData ? colorPalette : ["#f0f0f0", "#f0f0f0"],
+      colors: showData ? colors.slice(1,4) : ["#f0f0f0", "#f0f0f0"],
       minValue: 0,
       maxValue: maxQuantidade,
     },
-    datalessRegionColor: colorPalette[3],
+    datalessRegionColor: colors[0],
     tooltip: { isHtml: true  },
     legend: "none",
   };

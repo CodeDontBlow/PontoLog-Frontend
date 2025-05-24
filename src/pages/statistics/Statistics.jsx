@@ -226,7 +226,7 @@ const Statistics = () => {
 
 
             {/* Primeiras Informações da Página + mapa do brasil */}
-            <section id={styles.primaryInfos}>
+            <section id={styles.primaryInfos} style={{minHeight:"490px"}}>
                 {/* Mapa do Brasil */}
                 <div className={styles.navMap}>
 
@@ -259,7 +259,7 @@ const Statistics = () => {
                                         // values={balanca.map(bal => Number(bal.total))}
                                         values={[1,2,3,4,5,6]}
                                         dataName="Balança Comercial"
-                                        colorPalette={[hexColors[1]]}
+                                        colorPalette={hexColors}
                                     />
                                 {/* )} */}
                             </div>
@@ -294,7 +294,7 @@ const Statistics = () => {
                                 <WorldMap
                                     selectedRegion="Norte"
                                     tradeType="exportacao"
-                                    colorPalette={["#B81D4E", "#D92B66", "#F5A4C3", "#F1A1B5"]}
+                                    colorPalette={hexColors}
                                     countryDatas={{
                                         exportacao: countries.map(c => ({
                                             country: c.NO_PAIS,
@@ -318,8 +318,9 @@ const Statistics = () => {
                             <div className="componentWrapper">
                                 <BarChart
                                     items={vias.map(via => via.NO_VIA)}
-                                    values={vias.map(via => Number(via.total))}
-                                    colorPalette={["#D92B66"]}
+                                    // values={vias.map(via => Number(via.total))}
+                                    values={[42,31,21]}
+                                    colorPalette={hexColors}
                                 />
                             </div>
                         </div>

@@ -69,7 +69,7 @@ const BrazilMap = ({ onRegionChange }) => {
         <GeoJSON
           key={`state-${selectedState}`}
           data={feature}
-          style={{
+          style={{color: `var(--base-${regionColors[selectedRegion]})`,
             weight: 1,
             fillColor: color,
             fillOpacity: 1,
@@ -166,10 +166,10 @@ const BrazilMap = ({ onRegionChange }) => {
 
       <MapContainer
         center={[-14.235, -51.9253]}
-        zoomSnap={0.1}
-        zoom={6}
+        zoomSnap={0.0001}
+        zoom={70}
         style={{
-          height: "40em",
+          height: "35em",
           width: "100%",
           borderRadius: "12px",
         }}
