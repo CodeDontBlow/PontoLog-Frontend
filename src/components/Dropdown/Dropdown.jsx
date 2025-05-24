@@ -5,15 +5,15 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import Input from "../Input/Input";
 import styles from './Dropdown.module.css';
 
-const Dropdown = ({ label, options = [], value, classname = '', search = false, onSelect, placeholder, onChange, disable}) => {
+const Dropdown = ({ label, options = [], value, classname = '', search = false, onSelect, placeholder, onChange }) => {
     const [isOpen, setIsOpen] = useState(false);
-    // const [selectedOption, setSelectedOption] = useState(null);
+    const [selectedOption, setSelectedOption] = useState(null);
     const [focused, setFocused] = useState(false);
     const dropdownRef = useRef(null);
 
     const handleSelectOption = (option) => {
         setIsOpen(false);
-        // setSelectedOption(option);
+        setSelectedOption(option);
         onSelect && onSelect(option);
     };
 
@@ -48,8 +48,8 @@ const Dropdown = ({ label, options = [], value, classname = '', search = false, 
                     />
                 </div>
             ) : (
-                <button className={styles.button} onClick={() => setIsOpen(!isOpen)} disabled={disable}>
-                    {value || placeholder}
+                <button className={styles.button} onClick={() => setIsOpen(!isOpen)}>
+                    {selectedOption || 'Select an option'}
                     <FontAwesomeIcon icon={faChevronDown} className={`${styles.icon} ${isOpen ? styles.open : ''}`} />
                 </button>
             )}

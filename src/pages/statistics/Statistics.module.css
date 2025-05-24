@@ -29,62 +29,37 @@
 
 /* Área de Input */
 section#inputArea {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-section#inputArea > div{
     display: grid;
     grid-template-columns: 4fr 2fr;
     gap: 1.25rem;
 }
 
-/* Área dos Labels */
-div.labelsContainer{
-
-}
-
-div.labelsContainer > *{
-    width: 100%;
-
-    color: var(--black-500);
-    font: var(--text-medium);
-    font-weight: 600;
-    text-align: left;
-    text-indent: 0.313rem;
-}
-
-/* Área dos Inputs */
-div.inputsContainer{
-}
-
-.periodInputs{
+section#inputArea>div {
+    justify-items: start;
     display: flex;
-    gap: 10px;
+    flex-direction: column;
+    gap: 0.313rem;
 }
 
-.periodInputs > div{
-    flex: 1 1 50%;
+.periodInputs {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.625rem;
 }
 
-
-/* Área das Opções de Input (botões e checkbox) */
-div.optionsContainer{
-    margin-top: 5px;
+/* Opções de Input (botões e checkbox) */
+.inputOptions {
+    display: flex;
+    gap: 0.625rem;
 }
 
 /* Botões SH4 e SH6 */
-.productOptions{
-    display: flex;
-    gap: 7px;
-}
-
-.productOptions>input[type="radio"] {
+.inputOptions>input[type="radio"] {
     display: none;
 }
 
-.productOptions>label {
+.inputOptions>label {
     background-color: var(--white-700);
     padding: 0.313rem 1.25rem;
 
@@ -98,19 +73,18 @@ div.optionsContainer{
     user-select: none;
 }
 
-.productOptions>label:hover {
+.inputOptions>label:hover {
     font-weight: 500;
     cursor: pointer;
     transform: scale(1.05);
 }
 
-.productOptions>input[type="radio"]:checked+label {
+.inputOptions>input[type="radio"]:checked+label {
     background-color: var(--base-pink);
 
     color: var(--white-500);
     font-weight: 500;
 }
-
 
 
 /* Dados iniciais */
@@ -126,23 +100,10 @@ section#primaryInfos .navMap {
     height: 100%;
 }
 
-    /* Legenda do mapa do brasil */
-    .navMap .mapCurrentState{
-        margin-top: 0.875rem;
-        color: var(--black-500);
-        font: var(--title-regular);
-        text-align: center;
-    }
-
-    .navMap .mapDescription {
-        color: var(--black-500);
-        font: var(--text-medium);
-        text-align: center;
-    }
 
 /* Dados de Exportação / Importação */
 section#ExpImpInfos {
-    padding: 0.625rem 1.563em;
+    padding: 0.625rem 6.25rem;
     display: flex;
     flex-direction: column;
     gap: 1.875rem;
