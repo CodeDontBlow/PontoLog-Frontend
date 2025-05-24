@@ -42,7 +42,9 @@ const fetchData = async (endpoint, setter, initYear, tradeType, region, estado, 
         const responseData = response.data
         const data = responseData.data
 
-        setter(data)
+        if (setter) setter(data);
+
+        return data
     } catch (error) {
         console.error(`Erro fetching ${endpoint}:`, error.response?.data || error.message)
     }
