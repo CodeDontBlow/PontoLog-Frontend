@@ -1,4 +1,4 @@
-import Sidebar from '../../components/Sidebar/Sidebar'; 
+import Sidebar from '../../components/Sidebar/Sidebar';
 import Footer from '../../components/Footer/Footer';
 import Button from '../../components/Buttons/Button/Button';
 import styles from './Home.module.css';
@@ -11,7 +11,17 @@ const Home = () => {
     return (
         <div className={styles.pageContainer}>
             <div className={styles.header}>
-                <img src="src/assets/images/home/HEADER.svg" alt="Header" className={styles.headerImagem} />
+                <div className={styles.videoContainer}>
+                    <video autoPlay loop muted className={styles.headerImagem}>
+                        <source src="src\assets\video\Capa PontoLog.mp4" type="video/mp4" />
+                    </video>
+                    <div className={styles.videoOverlay}></div>
+                    <div className={styles.gradientOverlay}></div>
+                    <div className={styles.sideText}>
+                        <h1 className={styles.textoSobreVideoTitulo}>PontoLog</h1>
+                        <h1 className={styles.textoSobreVideoFrase}>Análise de dados confiáveis para você!</h1>
+                    </div>
+                </div>
             </div>
             <div className={styles.homeContainer}>
                 {/* sobre a PontoLog */}
@@ -83,28 +93,28 @@ const Home = () => {
 
                 {/* ferramenta de comparação */}
                 <div className={styles.comparisonCard}>
-                  <div className={styles.titleContainer}>
-                    <h2 className={styles.subtopicTitle}>
-                      <IconTitle variant="barChart" size="large" />
-                      Ferramenta de Comparação
-                    </h2>
-                  </div>
-                  <div className={styles.conteudoLinha}>
-                    <div className={styles.textContainer}>
-                      <p className={styles.text}>
-                        Os preços e condições dos produtos variam entre estados devido a impostos, disponibilidade e regulamentações locais. Com nossa ferramenta de comparação, você pode avaliar produtos em diferentes estados, facilitando decisões informadas. Selecione um produto e os estados desejados para obter um panorama completo do mercado.
-                        <br /><br />
-                      </p>
-                      <Button label="Comparar" onClick={() => window.location.href = '/comparison'} />
+                    <div className={styles.titleContainer}>
+                        <h2 className={styles.subtopicTitle}>
+                            <IconTitle variant="barChart" size="large" />
+                            Ferramenta de Comparação
+                        </h2>
                     </div>
-                    <div className={styles.imagemLado}>
-                      <img
-                        src="src/assets/img/comparison-example.png"
-                        alt="Exemplo de Comparação"
-                        className={styles.image}
-                      />
+                    <div className={styles.conteudoLinha}>
+                        <div className={styles.textContainer}>
+                            <p className={styles.text}>
+                                Os preços e condições dos produtos variam entre estados devido a impostos, disponibilidade e regulamentações locais. Com nossa ferramenta de comparação, você pode avaliar produtos em diferentes estados, facilitando decisões informadas. Selecione um produto e os estados desejados para obter um panorama completo do mercado.
+                                <br /><br />
+                            </p>
+                            <Button label="Comparar" onClick={() => window.location.href = '/comparison'} />
+                        </div>
+                        <div className={styles.imagemLado}>
+                            <img
+                                src="src/assets/img/comparison-example.png"
+                                alt="Exemplo de Comparação"
+                                className={styles.image}
+                            />
+                        </div>
                     </div>
-                  </div>
                 </div>
 
                 {/* últimas notícias */}
