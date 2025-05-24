@@ -1,8 +1,8 @@
 import Chart from "react-apexcharts"
-import React , {useState} from 'react'
+import React, { useState, useEffect} from 'react'
 
 //GRÁFICO DE DUAS LINHAS
-const DoubleLineChart = ({period , values , dataName, chartDescription , colorPalette , legends=true}) => {
+const DoubleLineChart = ({ period, values, dataName, chartDescription, colorPalette, legends = true }) => {
 
     let showLegends
     legends == "false" ? showLegends = false : showLegends = true
@@ -16,25 +16,25 @@ const DoubleLineChart = ({period , values , dataName, chartDescription , colorPa
     //group: grupo que o gráfico pertence (gráficos do mesmo grupo são visualmente melhor relacionados)
 
     //Ex.: <DoubleLineChart values={[[10,-10,10,-10,-50] , [-10,10,-10,10,50]]} period={[2014,2015,2016,2017,2018]} dataName={["Brasil" , "SP"]} colorPalette="#ff0011" id="id" group="grupo"/>
-    
+
     //Opções de customização do gráfico
     const [options] = useState(
         {
             colors: colorPalette,
-            chart:{
+            chart: {
                 type: "line",
-                zoom : {
+                zoom: {
                     enabled: false,
                 },
                 toolbar: {
                     show: false,
                 },
                 events: {
-                    animationEnd: () => {window.dispatchEvent(new Event('resize'))},
+                    animationEnd: () => { window.dispatchEvent(new Event('resize')) },
                 }
             },
             title: {
-                text: {chartDescription},
+                text: { chartDescription },
                 align: "left",
                 style: {
                     fontSize: "1rem",
@@ -64,7 +64,7 @@ const DoubleLineChart = ({period , values , dataName, chartDescription , colorPa
             xaxis: {
                 categories: period
             },
-            stroke : {
+            stroke: {
                 curve: "smooth",
                 width: "3"
             },
@@ -97,23 +97,36 @@ const DoubleLineChart = ({period , values , dataName, chartDescription , colorPa
     )
 
     //Valores do gráfico
-    const [series] = useState([
-        { 
-            name:dataName[0], 
+    const [series, setSeries] = useState([
+        {
+            name: dataName[0],
             data: values[0],
         },
         {
-            name: dataName[1], 
+            name: dataName[1],
             data: values[1],
         }
     ])
 
+    useEffect(() => {
+        setSeries([
+            {
+                name: dataName[0],
+                data: values[0],
+            },
+            {
+                name: dataName[1],
+                data: values[1],
+            }
+        ])
+    }, [values, dataName])
+
     //Componente de gráfico do ApexCharts recebendo os valores definidos acima
-    return(
+    return (
         <Chart
-            options = {options}
-            series = {series}
-            type = "line"
+            options={options}
+            series={series}
+            type="line"
             height="100%"
         />
     )
