@@ -1,4 +1,10 @@
- 
+.tabContainer {
+    width: 100%;
+    max-width: 37.5rem;
+    margin: 0 auto;
+    padding: 1rem;
+}
+  
 .tabHeader {
     display: flex;
     gap: 0;
@@ -13,7 +19,6 @@
     border: none;
     border-radius: 0.75rem 0.75rem 0 0;
     transition: background-color 0.2s ease;
-    cursor: pointer;
 }
   
 .tabButton:hover {

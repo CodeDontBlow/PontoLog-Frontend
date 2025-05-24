@@ -22,5 +22,5 @@ span.dataDisplay{
     color: var(--base-pink);
     font-weight: 600;
     text-decoration: underline;
-    /* margin-left: .33em; */
+    margin-left: .33em;
 }

@@ -1,9 +1,9 @@
 // Importando biblioteca de terceiros
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 
-// Importando componentes e Services
-import { fetchData, getProductByLetter } from '../../services/fetchService'
+// Importando componentes e api
+import api from '../../api/api'
 import Button from '../../components/Buttons/Button/Button'
 import Checkbox from '../../components/Buttons/Checkbox/Checkbox'
 import LineChart from '../../components/Charts/LineChart'
@@ -19,27 +19,20 @@ import TabNavigation from '../../components/Tab/TabNavigation'
 import styles from './Statistics.module.css'
 
 const Statistics = () => {
-    // STATES DOS FILTROS
-    // Produto
+    // states dos filtros
     const [sh, setSh] = useState('sh4');
     const [product, setProduct] = useState('');
-
-    // Período
+    const [estado, setEstado] = useState('');
+    const [tradeType, setTradeType] = useState('exportacao');
+    const [region, setRegion] = useState('');
     const [initYear, setInitYear] = useState(2014);
     const [finalYear, setFinalYear] = useState(2024);
     const [periodoUnico, setPeriodoUnico] = useState(true);
     const [period, setPeriod] = useState([initYear, finalYear]);
 
-    // Estado
-    const [region, setRegion] = useState('');
-    const [state, setState] = useState('');
-    const [uf , setUf] = useState('');
-
-    const [tradeType, setTradeType] = useState('exportacao');
-    
     // state de opções dos inputs
     const [opcoesDeProduto, setOpcoesDeProduto] = useState([]);
-    const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+    const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
 
     // states para valores retornados pelo back
     const [fatAgregado, setFatAgregado] = useState(null)
@@ -51,144 +44,497 @@ const Statistics = () => {
     const [vlFob, setVlFob] = useState([])
     const [countries, setCountries] = useState([])
 
-    // Opções de descrição para o mapa do Brasil (para estatísticas)
-    const getDescriptionText = () => {
-        if (state) { //Selecionou um estado
-            return "Para desfazer a seleção de estado atual, clique no mapa abaixo.";
-        } else if (region) { //Selecionou uma região
-            return "Escolha um dos estados para analisar seus dados.";
-        } else { //Não selecionou nada
-            return "Para ver estatísticas de um estado, escolha uma das regiões do mapa abaixo.";
+    const getProductByLetter = async () => {
+        if (product.length > 0) {
+            try {
+                const response = await api.get(`/product/no_${sh}_por/${product}`)
+
+                const responseData = response.data
+                const data = responseData.data
+
+                setOpcoesDeProduto(data)
+            } catch (error) {
+                console.error("Error fetching data:", error)
+            }
         }
-    };
-    const [balanca, setBalanca] = useState([])
+    }
 
-    const debounce = (func, delay) => {
-        let timer;
-        return (...args) => {
-            clearTimeout(timer);
-            timer = setTimeout(() => func(...args), delay);
-        };
-    };
+    const getFat = async () => {
+        try {
+            let response;
 
-    const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 50), [sh]);
+            if (periodoUnico) {
+                response = await api.get(`/${tradeType}/fat/${initYear}`)
+            }
+            else {
+                response = await api.get(`/${tradeType}/fat/${initYear}?endYear=${finalYear}`)
+            }
+
+            const responseData = response.data
+            const data = responseData.data
+
+            setFatAgregado(data)
+        } catch (error) {
+            console.error("Error fetching data:", error)
+        }
+    }
+
+    const getProduct = async () => {
+        try {
+            let response;
+
+            if (periodoUnico) {
+                response = await api.get(`/${tradeType}/product/no_${sh}_por/${initYear}`)
+            }
+            else {
+                response = await api.get(`/${tradeType}/product/no_${sh}_por/${initYear}?endYear=${finalYear}`)
+            }
+
+            const responseData = response.data
+            const data = responseData.data
+
+            setProdutoPopular(data)
+        } catch (error) {
+            console.error("Error fetching data:", error)
+
+        }
+    }
+
+    const getVia = async () => {
+        try {
+            let response;
+
+            if (periodoUnico) {
+                response = await api.get(`/${tradeType}/via/${initYear}`)
+            }
+            else {
+                response = await api.get(`/${tradeType}/via/${initYear}?endYear=${finalYear}`)
+            }
+
+            const responseData = response.data
+            const data = responseData.data
+
+            setVias(data)
+        } catch (error) {
+            console.error("Error fetching data:", error)
+        }
+    }
+
+
+    const getUrf = async () => {
+        try {
+            let response;
+
+            if (periodoUnico) {
+                response = await api.get(`/${tradeType}/urf/${initYear}`)
+            }
+            else {
+                response = await api.get(`/${tradeType}/urf/${initYear}?endYear=${finalYear}`)
+            }
+
+            const responseData = response.data
+            const data = responseData.data
+
+            setUrfs(data)
+        } catch (error) {
+            console.error("Error fetching data:", error)
+
+        }
+    }
+
+    const getVlAgregado = async () => {
+        try {
+            let response;
+
+            if (periodoUnico) {
+                switch (true) {
+                    case (region && product):
+                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}?region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        break;
+                    case (region):
+                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}?region=REGIAO SUDESTE`);
+                        break;
+                    case (product):
+                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        break;
+                    default:
+                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}`);
+                        break;
+                }
+            } else {
+                switch (true) {
+                    case (estado && region && product):
+                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        break;
+                    case (estado && region):
+                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE`);
+                        break;
+                    case (product):
+                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}?endYear=${finalYear}&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        break;
+                    default:
+                        response = await api.get(`/${tradeType}/vl_agregado/${initYear}?endYear=${finalYear}`);
+                        break;
+                }
+            }
+
+            const responseData = response.data
+            const data = responseData.data
+            setVlAgregado(data)
+        } catch (error) {
+            console.error("Error fetching data:", error)
+
+        }
+    }
+
+
+    const getVlFob = async () => {
+        try {
+            let response;
+
+            if (periodoUnico) {
+                switch (true) {
+                    case (region && product):
+                        response = await api.get(`/${tradeType}/vl_fob/${initYear}?region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        break;
+                    case (region):
+                        response = await api.get(`/${tradeType}/vl_fob/${initYear}?region=REGIAO SUDESTE`);
+                        break;
+                    case (product):
+                        response = await api.get(`/${tradeType}/vl_fob/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        break;
+                    default:
+                        response = await api.get(`/${tradeType}/vl_fob/${initYear}`);
+                        break;
+                }
+            } else {
+                switch (true) {
+                    case (region && product):
+                        response = await api.get(`/${tradeType}/vl_fob/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        break;
+                    case (region):
+                        response = await api.get(`/${tradeType}/vl_fob/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE`);
+                        break;
+                    case (product):
+                        response = await api.get(`/${tradeType}/vl_fob/${initYear}?endYear=${finalYear}&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        break;
+                    default:
+                        response = await api.get(`/${tradeType}/vl_fob/${initYear}?endYear=${finalYear}`);
+                        break;
+                }
+            }
+
+            const responseData = response.data
+            const data = responseData.data
+
+            setVlFob(data)
+        } catch (error) {
+            console.error("Error fetching data:", error)
+
+        }
+    }
+
+    const getKgLiq = async () => {
+        try {
+            let response;
+
+            if (periodoUnico) {
+                switch (true) {
+                    case (region && product):
+                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}?region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        break;
+                    case (region):
+                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}?region=REGIAO SUDESTE`);
+                        break;
+                    case (product):
+                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        break;
+                    default:
+                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}`);
+                        break;
+                }
+            } else {
+                switch (true) {
+                    case (region && product):
+                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        break;
+                    case (region):
+                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE`);
+                        break;
+                    case (product):
+                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}?endYear=${finalYear}&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        break;
+                    default:
+                        response = await api.get(`/${tradeType}/kg_liquido/${initYear}?endYear=${finalYear}`);
+                        break;
+                }
+            }
+
+            const responseData = response.data
+            const data = responseData.data
+            setKgLiq(data)
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    }
+
+    const getOverallCountries = async () => {
+        try {
+            let response;
+
+            if (periodoUnico) {
+                switch (true) {
+                    case (region && product):
+                        response = await api.get(`/${tradeType}/countries/${initYear}?region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        break;
+                    case (region):
+                        response = await api.get(`/${tradeType}/countries/${initYear}?region=REGIAO SUDESTE`);
+                        break;
+                    case (product):
+                        response = await api.get(`/${tradeType}/countries/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        break;
+                    default:
+                        response = await api.get(`/${tradeType}/countries/${initYear}`);
+                        break;
+                }
+
+            } else {
+                switch (true) {
+                    case (region && product):
+                        response = await api.get(`/${tradeType}/countries/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        break;
+                    case (region):
+                        response = await api.get(`/${tradeType}/countries/${initYear}?endYear=${finalYear}&region=REGIAO SUDESTE`);
+                        break;
+                    case (product):
+                        response = await api.get(`/${tradeType}/countries/${initYear}?endYear=${finalYear}&sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`);
+                        break;
+                    default:
+                        response = await api.get(`/${tradeType}/countries/${initYear}?endYear=${finalYear}`);
+                        break;
+                }
+            }
+
+            const responseData = response.data
+            const data = responseData.data
+
+            setCountries(data)
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     useEffect(() => {
-        const fetchAllData = async () => {
+        const fetchData = async () => {
+            console.time("fetchData");
             try {
                 await Promise.all([
-                    fetchData('fat', setFatAgregado, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData(`product/no_${sh}_por`, setProdutoPopular, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData('via', setVias, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData('urf', setUrfs, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData('vl_agregado', setVlAgregado, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData('vl_fob', setVlFob, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData('kg_liquido', setKgLiq, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData('balanco', setBalanca, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
-                    fetchData('countries', setCountries, initYear, tradeType, region, state, product, sh, finalYear, periodoUnico),
+                    getFat(),
+                    getProduct(),
+                    getVia(),
+                    getUrf(),
+                    getVlAgregado(),
+                    getVlFob(),
+                    getKgLiq(),
+                    getOverallCountries(),
                 ]);
             } catch (error) {
                 console.error("Erro ao buscar dados", error);
+            } finally {
+                console.timeEnd("fetchData");
             }
         };
 
-        fetchAllData()
-    }, [product, initYear, finalYear, tradeType, periodoUnico, sh, state]);
+        fetchData();
+    }, []);
 
     useEffect(() => {
+        setProduct(product ? product[0].toUpperCase() + product.slice(1).toLowerCase() : product)
+
+        console.log(product)
+
         if (product.length > 0) {
-            getProductByLetter(product, setOpcoesDeProduto, sh);
+            getProductByLetter()
         }
-    }, [product, sh]);
 
-    // Criando objetos TAB
-    const tab = [
-        { id: 1, label: "Exportações" , tradeType: "exportacao"},
-        { id: 2, label: "Importações" , tradeType: "importacao"},
-    ]
+    }, [product])
 
-    // Teste para verificar a troca de exportação e importação na TAB
-    useEffect (() => {
-        console.log(`Stats: ${tradeType}`)
-        console.log(`/${tradeType}/countries/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`)
-        
-    }, [tradeType])
+    const dadosTeste = {
+        exportacao: [
+            {
+                country: "United States",
+                quantidade: 8000,
+                vl: 5000000,
+                kg: 1500000,
+            },
+            {
+                country: "China",
+                quantidade: 6500,
+                vl: 4800000,
+                kg: 1400000,
+            },
+            {
+                country: "Germany",
+                quantidade: 4500,
+                vl: 3000000,
+                kg: 900000,
+            },
+            {
+                country: "Spain",
+                quantidade: 3000,
+                vl: 2000000,
+                kg: 800000,
+            },
+            {
+                country: "Japan",
+                quantidade: 4000,
+                vl: 3500000,
+                kg: 950000,
+            },
+            {
+                country: "Brazil",
+                quantidade: 3500,
+                vl: 1800000,
+                kg: 700000,
+            },
+            {
+                country: "India",
+                quantidade: 5000,
+                vl: 2200000,
+                kg: 850000,
+            },
+            {
+                country: "France",
+                quantidade: 3800,
+                vl: 2800000,
+                kg: 750000,
+            },
+            {
+                country: "United Kingdom",
+                quantidade: 4200,
+                vl: 3200000,
+                kg: 880000,
+            },
+            {
+                country: "Italy",
+                quantidade: 3200,
+                vl: 2100000,
+                kg: 650000,
+            },
+            {
+                country: "Canada",
+                quantidade: 2900,
+                vl: 1900000,
+                kg: 600000,
+            },
+            {
+                country: "South Korea",
+                quantidade: 3600,
+                vl: 2400000,
+                kg: 720000,
+            },
+            {
+                country: "Mexico",
+                quantidade: 2800,
+                vl: 1500000,
+                kg: 550000,
+            },
+            {
+                country: "Australia",
+                quantidade: 2500,
+                vl: 1700000,
+                kg: 500000,
+            },
+            {
+                country: "Netherlands",
+                quantidade: 2200,
+                vl: 1600000,
+                kg: 480000,
+            },
+            {
+                country: "Russia",
+                quantidade: 3000,
+                vl: 2000000,
+                kg: 750000,
+            },
+            {
+                country: "Switzerland",
+                quantidade: 1800,
+                vl: 1400000,
+                kg: 400000,
+            },
+            {
+                country: "Turkey",
+                quantidade: 2700,
+                vl: 1300000,
+                kg: 520000,
+            },
+            {
+                country: "Saudi Arabia",
+                quantidade: 2300,
+                vl: 1200000,
+                kg: 450000,
+            },
+            {
+                country: "Argentina",
+                quantidade: 2000,
+                vl: 900000,
+                kg: 380000,
+            },
+        ]
+    };
 
     return (
         <div id={styles.statisticsPage}>
 
             {/* Área dos Inputs */}
-            {/* Labels */}
             <section id={styles.inputArea}>
-                <div className={styles.labelsContainer}>
-                    <label className={styles.productLabel} htmlFor="">Produtos</label>
+                {/* Input do Nome do Produto */}
+                <div className={styles.productArea}>
+                    {/* <Input label="Nome do Produto" type="text" placeholder="Produto" id="product"/> */}
+                    <Dropdown label={"Produtos"} search={true} placeholder={"Pesquisar..."} options={opcoesDeProduto} value={product} onChange={(e) => setProduct(e.target.value)} onSelect={(produto) => setProduct(produto)} />
+                    {/* Botões SH4 e SH6 */}
+                    <div className={styles.inputOptions}>
+                        {/* SH4 */}
+                        <input type="radio" name="sh-selection" id="sh4" defaultChecked onClick={() => setSh('sh4')} />
+                        <label htmlFor="sh4"> SH4 </label>
 
-                    <label className={styles.periodLabel} htmlFor="">Período de Tempo</label>
+                        {/* SH6 */}
+
+                        <input type="radio" name="sh-selection" id="sh6" onClick={() => setSh('sh6')} />
+                        <label htmlFor="sh6"> SH6 </label>
+                    </div>
                 </div>
 
-                {/* Inputs */}
-                <div className={styles.inputsContainer}>
-
-                    {/* Input do Produto */}
-                    <div className={styles.productInput}>
-                        {/* <Input label="Nome do Produto" type="text" placeholder="Produto" id="product"/> */}
-                        <Dropdown search={true} placeholder={"Pesquisar..."} options={opcoesDeProduto.length > 0 ? opcoesDeProduto : ['...']} value={product} onChange={ (e) => {
-                            const value = e.target.value;
-                            setProduct(value);
-                            debouncedGetProductByLetter(value);
-                        }}
-                        onSelect={ (produto) => setProduct(produto)} />
-                    </div>
-
-                    {/* Input dos Anos */}
+                {/* Input de Periodo de Tempo */}
+                <div className={styles.periodArea}>
+                    {/* Inputs */}
                     <div className={styles.periodInputs}>
+                        <label className={styles.label} > Período de tempo</label>
+                        {/* Primeiro Ano do Período */}
                         <div className={styles.firstYear}>
                             {/* <Input label="Período de Tempo" placeholder="Ano de Início" type="number" id="firstYear" /> */}
                             <Dropdown label={"Ano de Início"} options={years} placeholder={"Ano de Início"} value={initYear} onSelect={(year) => setInitYear(year)} />
                         </div>
 
                         {/* Último Ano do Período */}
-                        {periodoUnico &&
-                            <div className={styles.lastYear}>
+                        <div className={styles.lastYear}>
                             {/* <Input label="..." placeholder="Ano de Término" type="Number" id="lastYear" / */}
-                                <Dropdown label={"Ano de Término"} options={years} placeholder={"Ano de Término"} value={finalYear} onSelect={(year) => setFinalYear(year)} disable={periodoUnico} />
-                            </div>
-                        }
-                    </div>
-                </div>
-
-                {/* Opções */}
-                <div className={styles.optionsContainer}>
-                    {/* Botões SH's */}
-                    <div className={styles.productOptions}>
-                        {/* SH4 */}
-                        <input type="radio" name="sh-selection" id="sh4" defaultChecked 
-                        onClick={ () => {
-                            setSh('sh4');
-                            setProduct('');
-                            setOpcoesDeProduto([])
-                        }}/>
-                        <label htmlFor="sh4"> SH4 </label>
-                        
-                        {/* SH6 */}
-                        <input type="radio" name="sh-selection" id="sh6" 
-                        onClick={ () => {
-                            setSh('sh6');
-                            setProduct('');
-                            setOpcoesDeProduto('')
-                        }}/>
-                        <label htmlFor="sh6"> SH6 </label>
+                            {!periodoUnico && <Dropdown label={"Ano de Início"} options={years} placeholder={"Ano de Início"} value={finalYear} onSelect={(year) => setFinalYear(year)} />}
+                        </div>
                     </div>
 
-                    {/* Checkbox Período de Tempo */}
-                    <div className={styles.periodOptions}>
-                        <Checkbox label="Ativar busca por um período entre 2 anos" value={periodoUnico} checked={periodoUnico} onChange={() => { setPeriodoUnico(!periodoUnico) }} />
+                    {/* Checkbox (Decidir se iremos utilizar)*/}
+                    <div className={styles.inputOptions}>
+                        <Checkbox label="Ativar busca somente para um ano" value={periodoUnico} checked={periodoUnico} onChange={() => { setPeriodoUnico(!periodoUnico) }} />
                     </div>
                 </div>
             </section>
 
+
+
             {/* Alerta de quais Informações estão sendo exibidas */}
-            <AlertCard variant="allInfo" icon={faCircleInfo} product="Todos os Produtos" region="Brasil" period={period} />
+            <AlertCard icon={faCircleInfo} product="Todos os Produtos" region="Brasil" period={period} />
 
 
 
@@ -196,21 +542,7 @@ const Statistics = () => {
             <section id={styles.primaryInfos}>
                 {/* Mapa do Brasil */}
                 <div className={styles.navMap}>
-
-                    {/* Legenda do mapa do brasil */}
-                    <p className={styles.mapDescription}>{getDescriptionText()}</p>
-
-                    {/* Região/Estado selecionado */}
-                    {state ? (
-                    <h2 className={styles.mapCurrentState}>{state}</h2>
-                    ) : region ? (
-                    <h2 className={styles.mapCurrentState}>Região {region}</h2>
-                    ) : null}
-                    <BrazilMap onRegionChange={ ({ regiao, estado , uf }) => {
-                        setRegion(regiao || ''); 
-                        setState(estado || ''); 
-                        setUf(uf || '');
-                    }} />
+                    <BrazilMap />
                 </div>
 
                 {/* Molde de Grid Vertical Reutilizável */}
@@ -218,17 +550,13 @@ const Statistics = () => {
                     {/* Parte de Cima */}
                     <section className="topArea">
                         <div className="gridItem">
-                            <IconTitle title="Balança Comercial" variant="lineChart" size='textMedium' />
-                            <div className="componentWrapper">
-                                {balanca.length > 0 && (
-                                    <LineChart
-                                        period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                        values={balanca.map(bal => Number(bal.total))}
-                                        dataName="Balança Comercial"
-                                        colorPalette={["#D92B66"]}
-                                    />
-                                )}
-                            </div>
+                            <IconTitle title="Balança Comercial" variant="lineChart" size='medium' />
+                            <LineChart
+                                period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                values={[35, -12, 48, 5, -27, 100, 22, -40, 10, 55, -18, 30]}
+                                dataName="Balança Comercial"
+                                colorPalette={["#D92B66"]}
+                            />
                         </div>
                     </section>
 
@@ -243,35 +571,24 @@ const Statistics = () => {
             </section>
 
 
+            {/* Deve-se definir melhor o uso do tab navigation!!! */}
+            {/* <TabNavigation tab={tabs} contents={contents} /> */}
 
 
 
             {/* Informação completas de Exportação ou Importação */}
             <section id={styles.ExpImpInfos}>
-            {/* Deve-se definir melhor o uso do tab navigation!!! */}
-            <TabNavigation tab={tab} onTabClick={(tabTradeType) => (setTradeType(tabTradeType))} />
                 {/* Molde de Grid Horizontal Reutilizável */}
                 <section className="infoGridHorizontal">
                     {/* Parte da Esquerda (Mapa do Mundo) */}
                     <section className="leftArea">
                         <div className="gridItem">
-                            <IconTitle variant="map" title="Principais Países" size='textMedium' />
-                            <div className="componentWrapper">
-                                <WorldMap
-                                    selectedRegion="Norte"
-                                    tradeType="exportacao"
-                                    colorPalette={["#B81D4E", "#D92B66", "#F5A4C3", "#F1A1B5"]}
-                                    countryDatas={{
-                                        exportacao: countries.map(c => ({
-                                            country: c.NO_PAIS,
-                                            quantidade: Number(c.TOTAL_REGISTROS),
-                                            vl: Number(c.TOTAL_VL_AGREGADO),
-                                            kg: Number(c.TOTAL_KG_LIQUIDO),
-                                        })),
-                                        importacao: [],
-                                    }}
-                                />
-                            </div>
+                            <IconTitle variant="map" title="Principais Países" size='medium' />
+                            <WorldMap
+                                selectedRegion="Norte"
+                                tradeType="exportacao"
+                                countryDatas={dadosTeste}
+                            />
                         </div>
                     </section>
 
@@ -279,28 +596,26 @@ const Statistics = () => {
                     <section className="rightArea">
                         {/* Item 1 */}
                         <div className="gridItem">
-                            <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight' />
+                            <IconTitle variant="barChart" title="Principais Vias Usadas" size='light' />
 
-                            <div className="componentWrapper">
+                            {vias.length > 0 && (
                                 <BarChart
                                     items={vias.map(via => via.NO_VIA)}
                                     values={vias.map(via => Number(via.total))}
                                     colorPalette={["#D92B66"]}
                                 />
-                            </div>
+                            )}
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
                             <IconTitle variant="barChart" title="Principais URFs" size='light' />
-                            <div className="componentWrapper">
-                                {urfs.length > 0 && (
-                                    <BarChart
-                                        items={urfs.map(urf => urf.NO_URF)}
-                                        values={urfs.map(urf => Number(urf.total))}
-                                        colorPalette={["#D92B66"]}
-                                    />
-                                )}
-                            </div>
+                            {urfs.length > 0 && (
+                                <BarChart
+                                    items={urfs.map(urf => urf.NO_URF)}
+                                    values={vias.map(urf => Number(urf.total))}
+                                    colorPalette={["#D92B66"]}
+                                />
+                            )}
                         </div>
                     </section>
                 </section>
@@ -310,8 +625,8 @@ const Statistics = () => {
                     {/* Parte da Esquerda */}
                     <section className="leftArea">
                         <div className="gridItem">
-                            <IconTitle title="Valor Agregado" variant="lineChart" size='textMedium' />
-                            <div className="componentWrapper">
+                            <IconTitle title="Valor Agregado" variant="lineChart" size='medium' />
+                            {vlAgregado.length > 0 && (
                                 <LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={vlAgregado.map(value => Number(value.total))}
@@ -320,15 +635,16 @@ const Statistics = () => {
                                     id="bottomInfo11"
                                     group="bottomInfo1"
                                 />
-                            </div>
+                            )
+                            }
                         </div>
                     </section>
                     {/* Parte da Direita */}
                     <section className="rightArea">
                         {/* Item 1 */}
                         <div className="gridItem">
-                            <IconTitle title="Quilograma Líquido" variant="lineChart" size='textLight' />
-                            <div className="componentWrapper">
+                            <IconTitle title="Quilograma Líquido" variant="lineChart" size='light' />
+                            {kgLiq.length > 0 && (
                                 <LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={kgLiq.map(value => Number(value.total))}
@@ -337,12 +653,14 @@ const Statistics = () => {
                                     id="bottomInfo12"
                                     group="bottomInfo1"
                                 />
-                            </div>
+                            )
+                            }
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
-                            <IconTitle title="Valor FOB" variant="lineChart" size='textLight' />
-                            <div className="componentWrapper">
+                            <IconTitle title="Valor FOB" variant="lineChart" size="light" />
+
+                            {vlFob.length > 0 && (
                                 <LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={vlFob.map(value => Number(value.total))}
@@ -351,7 +669,8 @@ const Statistics = () => {
                                     id="bottomInfo13"
                                     group="bottomInfo1"
                                 />
-                            </div>
+                            )
+                            }
                         </div>
                     </section>
                 </section>
