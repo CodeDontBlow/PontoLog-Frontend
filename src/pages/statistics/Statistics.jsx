@@ -41,23 +41,14 @@ const Statistics = () => {
     const [opcoesDeProduto, setOpcoesDeProduto] = useState([]);
     const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
 
-    // states para valores retornados pelo back
-    const [fatAgregado, setFatAgregado] = useState(null)
-    const [produtoPopular, setProdutoPopular] = useState('')
-    const [vias, setVias] = useState([])
-    const [urfs, setUrfs] = useState([])
-    const [vlAgregado, setVlAgregado] = useState([])
-    const [kgLiq, setKgLiq] = useState([])
-    const [vlFob, setVlFob] = useState([])
-    const [countries, setCountries] = useState([])
-
-    const [balancoData, setBalancoData] = useState()
-    const [exportProduct, setExportProduct] = useState()
-    const [importProduct, setImportProduct] = useState()
-    const [exportFat, setExportFat] = useState()
-    const [importFat, setImportFat] = useState()
-    const [exportData, setExportData] = useState()
-    const [importData, setImportData] = useState()
+    const [balancoData, setBalancoData] = useState();
+    const [exportProduct, setExportProduct] = useState();
+    const [importProduct, setImportProduct] = useState();
+    const [exportFat, setExportFat] = useState();
+    const [importFat, setImportFat] = useState();
+    const [exportData, setExportData] = useState();
+    const [importData, setImportData] = useState();
+    const [mainData, SetMainData] = useState();
 
     // Opções de descrição para o mapa do Brasil (para estatísticas)
     const getDescriptionText = () => {
@@ -69,7 +60,6 @@ const Statistics = () => {
             return "Para ver estatísticas de um estado, escolha uma das regiões do mapa abaixo.";
         }
     };
-    const [balanca, setBalanca] = useState([])
 
     const debounce = (func, delay) => {
         let timer;
@@ -79,58 +69,13 @@ const Statistics = () => {
         };
     };
 
-    // const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 50), [sh]);
-
-    // useEffect(() => {
-    //     const fetchAllData = async () => {
-    //         try {
-    //             console.time("fetchAllData");
-
-    //             const params = {
-    //                 initYear,
-    //                 region,
-    //                 uf,
-    //                 product,
-    //                 sh,
-    //                 finalYear,
-    //                 periodoUnico
-    //             };
-
-    //             const [balancoData, importFat, exportFat, exportProduct, importProduct, exportData, importData] = await Promise.all([
-    //                 fetchData({ ...params, endpoint: 'balanco' }),
-    //                 fetchData({ ...params, tradeType: 'exportacao', endpoint: 'fat' }),
-    //                 fetchData({ ...params, tradeType: 'importacao', endpoint: 'fat' }),
-    //                 fetchData({ ...params, tradeType: 'exportacao', endpoint: 'product' }),
-    //                 fetchData({ ...params, tradeType: 'importacao', endpoint: 'product' }),
-    //                 fetchData({ ...params, tradeType: 'exportacao' }),
-    //                 fetchData({ ...params, tradeType: 'importacao', })
-    //             ]);
-
-    //             console.timeEnd("fetchAllData");
-
-    //             setBalancoData(balancoData);
-    //             setExportFat(exportFat);
-    //             setImportFat(importFat);
-    //             setExportProduct(exportProduct);
-    //             setImportProduct(importProduct);
-    //             setExportData(exportData);
-    //             setImportData(importData);
-
-    //         } catch (error) {
-    //             console.log('Error fetching data: ', error)
-    //         }
-    //     }
-
-    //     fetchAllData();
-    // }, [product, initYear, finalYear, tradeType, periodoUnico, sh, uf]);
+    const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 50), [sh]);
 
     useEffect(() => {
         const controller = new AbortController();
 
         const fetchAllData = async () => {
             try {
-                console.time("fetchAllData");
-
                 const params = {
                     initYear,
                     region,
@@ -139,7 +84,7 @@ const Statistics = () => {
                     sh,
                     finalYear,
                     periodoUnico,
-                    signal: controller.signal
+                    signal: controller.signal // <-- aqui!
                 };
 
                 const [
@@ -160,8 +105,6 @@ const Statistics = () => {
                     fetchData({ ...params, tradeType: 'importacao' })
                 ]);
 
-                console.timeEnd("fetchAllData");
-
                 setBalancoData(balancoData);
                 setExportFat(exportFat);
                 setImportFat(importFat);
@@ -172,6 +115,7 @@ const Statistics = () => {
 
             } catch (error) {
                 if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
+                    console.log('oi')
                     return;
                 }
                 console.log('Error fetching data: ', error)
@@ -183,7 +127,7 @@ const Statistics = () => {
         return () => {
             controller.abort();
         };
-    }, [product, initYear, finalYear, tradeType, periodoUnico, sh, uf]);
+    }, [product, initYear, finalYear, periodoUnico, sh, uf]);
 
     useEffect(() => {
         if (product.length > 0) {
@@ -192,9 +136,29 @@ const Statistics = () => {
     }, [product, sh]);
 
     useEffect(() => {
+        if (tradeType === 'exportacao' && exportData) {
+            SetMainData(exportData);
+        }
+    }, [tradeType, exportData]);
+
+    useEffect(() => {
+        if (tradeType === 'importacao' && importData) {
+            SetMainData(importData);
+        }
+    }, [tradeType, importData]);
+
+    useEffect(() => {
+        console.log(tradeType)
+    }, [tradeType])
+
+    useEffect(() => {
+        console.log(mainData)
+    }, [mainData])
+
+    useEffect(() => {
         if (balancoData) {
-            console.log("exportFat", exportFat)
-            console.log("importFat", importFat)
+            console.log("exportData", exportData)
+            console.log("importData", importData)
         }
 
     }, [exportData, importData])
@@ -354,20 +318,22 @@ const Statistics = () => {
                         <div className="gridItem">
                             <IconTitle variant="map" title="Principais Países" size='textMedium' />
                             <div className="componentWrapper">
-                                <WorldMap
-                                    selectedRegion="Norte"
-                                    tradeType="exportacao"
-                                    colorPalette={["#B81D4E", "#D92B66", "#F5A4C3", "#F1A1B5"]}
-                                    countryDatas={{
-                                        exportacao: countries.map(c => ({
-                                            country: c.NO_PAIS,
-                                            quantidade: Number(c.TOTAL_REGISTROS),
-                                            vl: Number(c.TOTAL_VL_AGREGADO),
-                                            kg: Number(c.TOTAL_KG_LIQUIDO),
-                                        })),
-                                        importacao: [],
-                                    }}
-                                />
+                                {mainData && (
+                                    <WorldMap
+                                        selectedRegion="Norte"
+                                        tradeType="exportacao"
+                                        colorPalette={["#B81D4E", "#D92B66", "#F5A4C3", "#F1A1B5"]}
+                                        countryDatas={{
+                                            exportacao: mainData.overallCountries.map(c => ({
+                                                country: c.NO_PAIS,
+                                                quantidade: Number(c.TOTAL_REGISTROS),
+                                                vl: Number(c.TOTAL_VL_AGREGADO),
+                                                kg: Number(c.TOTAL_KG_LIQUIDO),
+                                            })),
+                                            importacao: [],
+                                        }}
+                                    />
+                                )}
                             </div>
                         </div>
                     </section>
@@ -379,21 +345,22 @@ const Statistics = () => {
                             <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight' />
 
                             <div className="componentWrapper">
-                                <BarChart
-                                    items={vias.map(via => via.NO_VIA)}
-                                    values={vias.map(via => Number(via.total))}
+                                {mainData && (<BarChart
+                                    items={mainData.via.map(via => via.NO_VIA)}
+                                    values={mainData.via.map(via => Number(via.total))}
                                     colorPalette={["#D92B66"]}
-                                />
+                                />)
+                                }
                             </div>
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
                             <IconTitle variant="barChart" title="Principais URFs" size='light' />
                             <div className="componentWrapper">
-                                {urfs.length > 0 && (
+                                {mainData && (
                                     <BarChart
-                                        items={urfs.map(urf => urf.NO_URF)}
-                                        values={urfs.map(urf => Number(urf.total))}
+                                        items={mainData.urf.map(urf => urf.NO_URF)}
+                                        values={mainData.urf.map(urf => Number(urf.total))}
                                         colorPalette={["#D92B66"]}
                                     />
                                 )}
@@ -409,14 +376,14 @@ const Statistics = () => {
                         <div className="gridItem">
                             <IconTitle title="Valor Agregado" variant="lineChart" size='textMedium' />
                             <div className="componentWrapper">
-                                <LineChart
+                                {mainData && (<LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={vlAgregado.map(value => Number(value.total))}
+                                    values={mainData.vlAgregado.map(value => Number(value.total))}
                                     dataName="Balança Comercial"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo11"
                                     group="bottomInfo1"
-                                />
+                                />)}
                             </div>
                         </div>
                     </section>
@@ -426,28 +393,28 @@ const Statistics = () => {
                         <div className="gridItem">
                             <IconTitle title="Quilograma Líquido" variant="lineChart" size='textLight' />
                             <div className="componentWrapper">
-                                <LineChart
+                                {mainData && (<LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={kgLiq.map(value => Number(value.total))}
+                                    values={mainData.kgLiquido.map(value => Number(value.total))}
                                     dataName="kg_liquido"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo12"
                                     group="bottomInfo1"
-                                />
+                                />)}
                             </div>
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
                             <IconTitle title="Valor FOB" variant="lineChart" size='textLight' />
                             <div className="componentWrapper">
-                                <LineChart
+                                {mainData && (<LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={vlFob.map(value => Number(value.total))}
+                                    values={mainData.vlFob.map(value => Number(value.total))}
                                     dataName="vl_fob"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo13"
                                     group="bottomInfo1"
-                                />
+                                />)}
                             </div>
                         </div>
                     </section>

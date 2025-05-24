@@ -56,10 +56,11 @@ const fetchData = async ({ endpoint = null, initYear, tradeType, region, uf, pro
         const response = await api.get(url, { signal });
         const responseData = response.data;
         const data = responseData.data;
-        console.log(url);
+        console.log(url)
         return data;
     } catch (error) {
         if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
+            console.log('Operação cancelada pelo Usuário')
             return;
         }
         console.error(`Erro fetching ${endpoint}:`, error.response?.data || error.message);
