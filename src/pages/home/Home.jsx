@@ -81,6 +81,32 @@ const Home = () => {
                     </div>
                 </section>
 
+                {/* ferramenta de comparação */}
+                <div className={styles.comparisonCard}>
+                  <div className={styles.titleContainer}>
+                    <h2 className={styles.subtopicTitle}>
+                      <IconTitle variant="barChart" size="large" />
+                      Ferramenta de Comparação
+                    </h2>
+                  </div>
+                  <div className={styles.conteudoLinha}>
+                    <div className={styles.textContainer}>
+                      <p className={styles.text}>
+                        Os preços e condições dos produtos variam entre estados devido a impostos, disponibilidade e regulamentações locais. Com nossa ferramenta de comparação, você pode avaliar produtos em diferentes estados, facilitando decisões informadas. Selecione um produto e os estados desejados para obter um panorama completo do mercado.
+                        <br /><br />
+                      </p>
+                      <Button label="Comparar" onClick={() => window.location.href = '/comparison'} />
+                    </div>
+                    <div className={styles.imagemLado}>
+                      <img
+                        src="src/assets/img/comparison-example.png"
+                        alt="Exemplo de Comparação"
+                        className={styles.image}
+                      />
+                    </div>
+                  </div>
+                </div>
+
                 {/* últimas notícias */}
                 <section className={styles.section}>
                     <div className={styles.titleContainer}>

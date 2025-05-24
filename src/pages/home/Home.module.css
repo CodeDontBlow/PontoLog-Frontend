@@ -211,9 +211,9 @@
 .subtopic {
   flex: 1 1 350px;
   min-width: 320px;
-  background: var(--white);
+  background: var(--white-700); 
   border-radius: 1rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10); 
   padding: 2rem 1.5rem;
   box-sizing: border-box;
   display: flex;
@@ -229,3 +229,19 @@
   align-items: center;
   gap: 0.5rem;
 }
+
+.comparisonCard {
+  background: var(--white-700);
+  border-radius: 1rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  padding: 2rem 1.5rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+
+
