@@ -3,9 +3,8 @@ body{
 }
 
 .aboutContainer {
-    max-width: 1000px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 0 4.2rem;
     font-family: 'Inter', sans-serif;
 }
 
@@ -49,14 +48,22 @@ body{
 }
 
 .text {
-    font-size: 1.1rem;
+    font: var(--text-medium);
     color: var(--black-500);
     line-height: 1.6;
+    text-align: justify;
     flex: 1;
     margin-right: 2rem;
 }
 
-.imageRight, .imageLeft {
+.imageRight {
+    max-width: 250px; 
+    height: auto;
+    margin-right: 2rem;
+    transition: transform 0.3s ease; 
+}
+
+.imageLeft {
     max-width: 300px; 
     height: auto;
     margin-right: 2rem;
@@ -70,6 +77,7 @@ body{
 
 .link {
     color: var(--navy-500);
+    font: var(--text-medium);
     text-decoration: none;
     margin-top: 1rem;
     
