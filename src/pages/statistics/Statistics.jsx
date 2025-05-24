@@ -107,6 +107,16 @@ const Statistics = () => {
         { id: 2, label: "Importações" , tradeType: "importacao"},
     ]
 
+    const regiaoFormatada = () => {
+        const prefixRemoved = region.replace("REGIAO ", '');
+
+        const finalRegionStr = prefixRemoved[0] + prefixRemoved.slice(1).toLowerCase();
+
+        if (finalRegionStr === 'Centro oeste') return 'Centro-Oeste';
+
+        return finalRegionStr;
+    }
+
     return (
         <div id={styles.statisticsPage}>
 
@@ -197,7 +207,7 @@ const Statistics = () => {
                     {state ? (
                     <h2 className={styles.mapCurrentState}>{state}</h2>
                     ) : region ? (
-                    <h2 className={styles.mapCurrentState}>Região {region}</h2>
+                    <h2 className={styles.mapCurrentState}>Região {regiaoFormatada()}</h2>
                     ) : null}
                     <BrazilMap onRegionChange={ ({ regiao, estado , uf }) => {
                         setRegion(`REGIAO ${regiao.toUpperCase().replace('-', ' ')}`); 
