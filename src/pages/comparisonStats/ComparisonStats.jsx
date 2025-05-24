@@ -157,17 +157,17 @@ const ComparisonStats = () => {
         setPeriodo([initYear, finalYear])
     }, [initYear, finalYear])
 
-        // Criando objetos TAB
+    // Criando objetos TAB
     const tab = [
-        { id: 1, label: "Exportações" , tradeType: "exportacao"},
-        { id: 2, label: "Importações" , tradeType: "importacao"},
+        { id: 1, label: "Exportações", tradeType: "exportacao" },
+        { id: 2, label: "Importações", tradeType: "importacao" },
     ]
 
     // Teste para verificar a troca de exportação e importação na TAB
-    useEffect (() => {
+    useEffect(() => {
         console.log(`Stats: ${tradeType}`)
         console.log(`/${tradeType}/countries/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`)
-        
+
     }, [tradeType])
 
     return (
@@ -217,11 +217,23 @@ const ComparisonStats = () => {
                     {/* Botões SH's */}
                     <div className={styles.productOptions}>
                         {/* SH4 */}
-                        <input type="radio" name="sh-selection" id="sh4" defaultChecked onClick={() => setSh('sh4')} />
+                        <input type="radio" name="sh-selection" id="sh4"
+                            defaultChecked onClick={() => {
+                                setSh('sh4');
+                                setProduct('');
+                                setOpcoesDeProduto([]);
+                            }}
+                        />
                         <label htmlFor="sh4"> SH4 </label>
 
                         {/* SH6 */}
-                        <input type="radio" name="sh-selection" id="sh6" onClick={() => setSh('sh6')} />
+                        <input type="radio" name="sh-selection" id="sh6"
+                            onClick={() => {
+                                setSh('sh6');
+                                setProduct('');
+                                setOpcoesDeProduto([]);
+                            }}
+                        />
                         <label htmlFor="sh6"> SH6 </label>
                     </div>
 
