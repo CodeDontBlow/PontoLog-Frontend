@@ -28,25 +28,44 @@ const Carrossel = () => {
     dots: false,
     infinite: true,
     speed: 800,
-    slidesToShow: 3,
+    slidesToShow: 3, // valor padrão para médias
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 5000,
     responsive: [
       {
-        breakpoint: 1024,
+        breakpoint: 1600, // telas muito grandes
+        settings: {
+          slidesToShow: 5,
+        },
+      },
+      {
+        breakpoint: 1280, // desktops grandes
+        settings: {
+          slidesToShow: 4,
+        },
+      },
+      {
+        breakpoint: 1024, // notebooks
+        settings: {
+          slidesToShow: 3,
+        },
+      },
+      {
+        breakpoint: 768, // tablets
         settings: {
           slidesToShow: 2,
         },
       },
       {
-        breakpoint: 600,
+        breakpoint: 480, // celulares
         settings: {
           slidesToShow: 1,
         },
       },
     ],
   };
+
 
   if (loading) return <p>Carregando notícias...</p>;
 

@@ -243,5 +243,15 @@
   margin-bottom: 2rem;
 }
 
+@media (max-width: 600px) {
+  .subtopicsRow {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
 
-
+  .subtopic {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+}
