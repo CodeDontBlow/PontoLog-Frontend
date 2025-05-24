@@ -37,6 +37,7 @@
 
 .titleContainer {
   margin-bottom: 1rem;
+  
 }
 
 .title {
@@ -156,7 +157,7 @@
 }
 
 .noticiaConteudo h3 {
-  font: var(--title-small);
+  font-family: 'Roboto', sans-serif;
   color: var(--navy-700);
   margin: 0.5rem 0 0.25rem 0;
   font-size: 1rem;
@@ -165,6 +166,7 @@
 
 .noticiaConteudo p {
   font-size: 0.9rem;
+  font-family: 'Roboto', sans-serif;
   color: var(--black-500);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -186,12 +188,14 @@
 
 .noticiaData {
   font-size: 0.9rem;
+  font-family: 'Roboto', sans-serif;
   color: #666;
   margin: 0;
 }
 
 .noticiaLink {
   font-size: 0.9rem;
+  font-family: 'Roboto', sans-serif;
   color: var(--base-pink);
   text-decoration: none;
   font-weight: bold;
@@ -223,6 +227,7 @@
 
 .subtopicTitle {
   font-size: 1.25rem; 
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: var(--navy-700);
   display: flex;

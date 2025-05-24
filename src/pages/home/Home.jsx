@@ -95,7 +95,7 @@ const Home = () => {
                         Os preços e condições dos produtos variam entre estados devido a impostos, disponibilidade e regulamentações locais. Com nossa ferramenta de comparação, você pode avaliar produtos em diferentes estados, facilitando decisões informadas. Selecione um produto e os estados desejados para obter um panorama completo do mercado.
                         <br /><br />
                       </p>
-                      <Button label="Comparar" onClick={() => window.location.href = '/comparison'} />
+                      <Button label="Comparar" onClick={() => window.location.href = '/comparison/statistics'} />
                     </div>
                     <div className={styles.imagemLado}>
                       <img
