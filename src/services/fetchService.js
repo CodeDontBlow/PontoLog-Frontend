@@ -9,6 +9,7 @@ const buildQueryParams = (region, estado, product, sh, finalYear, periodoUnico) 
     if (sh) params.append('sh', `no_${sh}_por`);
     if (!periodoUnico) params.append('endYear', finalYear);
 
+
     return params.toString();
 }
 
@@ -42,7 +43,10 @@ const fetchData = async (endpoint, setter, initYear, tradeType, region, estado, 
         const responseData = response.data
         const data = responseData.data
 
-        setter(data)
+        if (setter) setter(data);
+        if (region) console.log(url)
+
+        return data
     } catch (error) {
         console.error(`Erro fetching ${endpoint}:`, error.response?.data || error.message)
     }
