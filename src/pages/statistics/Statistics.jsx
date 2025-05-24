@@ -33,10 +33,10 @@ const Statistics = () => {
     // Estado
     const [region, setRegion] = useState('');
     const [state, setState] = useState('');
-    const [uf , setUf] = useState('');
+    const [uf, setUf] = useState('');
 
     const [tradeType, setTradeType] = useState('exportacao');
-    
+
     // state de opções dos inputs
     const [opcoesDeProduto, setOpcoesDeProduto] = useState([]);
     const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
@@ -50,6 +50,14 @@ const Statistics = () => {
     const [kgLiq, setKgLiq] = useState([])
     const [vlFob, setVlFob] = useState([])
     const [countries, setCountries] = useState([])
+
+    const [balancoData, setBalancoData] = useState()
+    const [exportProduct, setExportProduct] = useState()
+    const [importProduct, setImportProduct] = useState()
+    const [exporFat, setExportFat] = useState()
+    const [importFat, setImportFat] = useState()
+    const [exportData, setExportData] = useState()
+    const [importData, setImportData] = useState()
 
     // Opções de descrição para o mapa do Brasil (para estatísticas)
     const getDescriptionText = () => {
@@ -74,25 +82,62 @@ const Statistics = () => {
     const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 50), [sh]);
 
     useEffect(() => {
+        // const fetchAllData = async () => {
+        //     try {
+        //         await Promise.all([
+        //             fetchData('fat', setFatAgregado, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+        //             fetchData(`product/no_${sh}_por`, setProdutoPopular, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+        //             fetchData('via', setVias, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+        //             fetchData('urf', setUrfs, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+        //             fetchData('vl_agregado', setVlAgregado, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+        //             fetchData('vl_fob', setVlFob, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+        //             fetchData('kg_liquido', setKgLiq, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+        //             fetchData('balanco', setBalanca, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+        //             fetchData('countries', setCountries, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+        //         ]);
+        //     } catch (error) {
+        //         console.error("Erro ao buscar dados", error);
+        //     }
+        // };
+
+        // fetchAllData()
+
         const fetchAllData = async () => {
             try {
-                await Promise.all([
-                    fetchData('fat', setFatAgregado, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData(`product/no_${sh}_por`, setProdutoPopular, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData('via', setVias, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData('urf', setUrfs, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData('vl_agregado', setVlAgregado, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData('vl_fob', setVlFob, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData('kg_liquido', setKgLiq, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData('balanco', setBalanca, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData('countries', setCountries, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                ]);
-            } catch (error) {
-                console.error("Erro ao buscar dados", error);
-            }
-        };
+                const params = {
+                    initYear,
+                    region,
+                    estado: uf,
+                    product,
+                    sh,
+                    finalYear,
+                    periodoUnico
+                };
 
-        fetchAllData()
+                const [balancoData, importFat, exportFat, exportProduct, importProduct, exportData, importData] = await Promise.all([
+                    fetchData({ ...params, endpoint: 'balanco' }),
+                    fetchData({ ...params, tradeType: 'exportacao', endpoint: 'fat' }),
+                    fetchData({ ...params, tradeType: 'importacao', endpoint: 'fat' }),
+                    fetchData({ ...params, tradeType: 'exportacao', endpoint: 'product' }),
+                    fetchData({ ...params, tradeType: 'importacao', endpoint: 'product' }),
+                    fetchData({ ...params, tradeType: 'exportacao' }),
+                    fetchData({ ...params, tradeType: 'importacao', })
+                ]);
+
+                setBalancoData(balancoData);
+                setExportFat(exportFat);
+                setImportFat(importFat);
+                setExportProduct(exportProduct);
+                setImportProduct(importProduct);
+                setExportData(exportData);
+                setImportData(importData);
+
+            } catch (error) {
+                console.log('Error fetching data: ', error)
+            }
+        }
+
+        fetchAllData();
     }, [product, initYear, finalYear, tradeType, periodoUnico, sh, state]);
 
     useEffect(() => {
@@ -103,8 +148,8 @@ const Statistics = () => {
 
     // Criando objetos TAB
     const tab = [
-        { id: 1, label: "Exportações" , tradeType: "exportacao"},
-        { id: 2, label: "Importações" , tradeType: "importacao"},
+        { id: 1, label: "Exportações", tradeType: "exportacao" },
+        { id: 2, label: "Importações", tradeType: "importacao" },
     ]
 
     const regiaoFormatada = () => {
@@ -135,12 +180,12 @@ const Statistics = () => {
                     {/* Input do Produto */}
                     <div className={styles.productInput}>
                         {/* <Input label="Nome do Produto" type="text" placeholder="Produto" id="product"/> */}
-                        <Dropdown search={true} placeholder={"Pesquisar..."} options={opcoesDeProduto.length > 0 ? opcoesDeProduto : ['...']} value={product} onChange={ (e) => {
+                        <Dropdown search={true} placeholder={"Pesquisar..."} options={opcoesDeProduto.length > 0 ? opcoesDeProduto : ['...']} value={product} onChange={(e) => {
                             const value = e.target.value;
                             setProduct(value);
                             debouncedGetProductByLetter(value);
                         }}
-                        onSelect={ (produto) => setProduct(produto)} />
+                            onSelect={(produto) => setProduct(produto)} />
                     </div>
 
                     {/* Input dos Anos */}
@@ -153,7 +198,7 @@ const Statistics = () => {
                         {/* Último Ano do Período */}
                         {periodoUnico &&
                             <div className={styles.lastYear}>
-                            {/* <Input label="..." placeholder="Ano de Término" type="Number" id="lastYear" / */}
+                                {/* <Input label="..." placeholder="Ano de Término" type="Number" id="lastYear" / */}
                                 <Dropdown label={"Ano de Término"} options={years} placeholder={"Ano de Término"} value={finalYear} onSelect={(year) => setFinalYear(year)} disable={periodoUnico} />
                             </div>
                         }
@@ -165,21 +210,21 @@ const Statistics = () => {
                     {/* Botões SH's */}
                     <div className={styles.productOptions}>
                         {/* SH4 */}
-                        <input type="radio" name="sh-selection" id="sh4" defaultChecked 
-                        onClick={ () => {
-                            setSh('sh4');
-                            setProduct('');
-                            setOpcoesDeProduto([])
-                        }}/>
+                        <input type="radio" name="sh-selection" id="sh4" defaultChecked
+                            onClick={() => {
+                                setSh('sh4');
+                                setProduct('');
+                                setOpcoesDeProduto([])
+                            }} />
                         <label htmlFor="sh4"> SH4 </label>
-                        
+
                         {/* SH6 */}
-                        <input type="radio" name="sh-selection" id="sh6" 
-                        onClick={ () => {
-                            setSh('sh6');
-                            setProduct('');
-                            setOpcoesDeProduto('')
-                        }}/>
+                        <input type="radio" name="sh-selection" id="sh6"
+                            onClick={() => {
+                                setSh('sh6');
+                                setProduct('');
+                                setOpcoesDeProduto('')
+                            }} />
                         <label htmlFor="sh6"> SH6 </label>
                     </div>
 
@@ -205,13 +250,13 @@ const Statistics = () => {
 
                     {/* Região/Estado selecionado */}
                     {state ? (
-                    <h2 className={styles.mapCurrentState}>{state}</h2>
+                        <h2 className={styles.mapCurrentState}>{state}</h2>
                     ) : region ? (
-                    <h2 className={styles.mapCurrentState}>Região {regiaoFormatada()}</h2>
+                        <h2 className={styles.mapCurrentState}>Região {regiaoFormatada()}</h2>
                     ) : null}
-                    <BrazilMap onRegionChange={ ({ regiao, estado , uf }) => {
-                        setRegion(`REGIAO ${regiao.toUpperCase().replace('-', ' ')}`); 
-                        setState(estado || ''); 
+                    <BrazilMap onRegionChange={({ regiao, estado, uf }) => {
+                        setRegion(`REGIAO ${regiao.toUpperCase().replace('-', ' ')}`);
+                        setState(estado || '');
                         setUf(uf || '');
                     }} />
                 </div>
@@ -226,7 +271,7 @@ const Statistics = () => {
                                 {balanca.length > 0 && (
                                     <LineChart
                                         period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                        values={balanca.map(bal => Number(bal.total))}
+                                        values={balancoData.map(bal => Number(bal.total))}
                                         dataName="Balança Comercial"
                                         colorPalette={["#D92B66"]}
                                     />
@@ -251,8 +296,8 @@ const Statistics = () => {
 
             {/* Informação completas de Exportação ou Importação */}
             <section id={styles.ExpImpInfos}>
-            {/* Deve-se definir melhor o uso do tab navigation!!! */}
-            <TabNavigation tab={tab} onTabClick={(tabTradeType) => (setTradeType(tabTradeType))} />
+                {/* Deve-se definir melhor o uso do tab navigation!!! */}
+                <TabNavigation tab={tab} onTabClick={(tabTradeType) => (setTradeType(tabTradeType))} />
                 {/* Molde de Grid Horizontal Reutilizável */}
                 <section className="infoGridHorizontal">
                     {/* Parte da Esquerda (Mapa do Mundo) */}
