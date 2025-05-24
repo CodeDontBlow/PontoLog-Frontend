@@ -1,13 +1,16 @@
 import api from "../api/api";
 
-const buildQueryParams = ({ region, estado, product, sh, finalYear, periodoUnico }) => {
+const buildQueryParams = ({ endpoint, region, uf, product, sh, finalYear, periodoUnico }) => {
     const params = new URLSearchParams()
 
-    if (region) params.append('region', region);
-    if (estado) params.append('uf', estado);
+    // Só adiciona region se NÃO for balanco
+    if (region && endpoint !== 'balanco') params.append('region', region);
+
+    // Só adiciona uf se NÃO for fat
+    if (uf && endpoint !== 'fat') params.append('uf', uf);
     if (product) params.append('productName', product);
     if (sh) params.append('sh', `no_${sh}_por`);
-    if (!periodoUnico && finalYear) params.append('endYear', finalYear);
+    if (periodoUnico) params.append('endYear', finalYear);
 
     return params.toString();
 }
@@ -30,17 +33,11 @@ const getProductByLetter = async (searchTerm, setter, sh) => {
     }
 }
 
-
-const fetchData = async ({ endpoint = null, initYear, tradeType, region, estado, product, sh, finalYear, periodoUnico }) => {
+const fetchData = async ({ endpoint = null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico, signal }) => {
     try {
-        const params = buildQueryParams({ region, estado, product, sh, finalYear, periodoUnico })
-
-        // const url = endpoint === "balanco"
-        //     ? `/${endpoint}/${initYear}?${params}`
-        //     : `/${tradeType}/${endpoint}/${initYear}?${params}`
+        const params = buildQueryParams({ endpoint, region, uf, product, sh, finalYear, periodoUnico });
 
         let url;
-
         switch (endpoint) {
             case 'balanco':
                 url = `/balanco/${initYear}?${params}`;
@@ -56,17 +53,16 @@ const fetchData = async ({ endpoint = null, initYear, tradeType, region, estado,
                 break;
         }
 
-        const response = await api.get(url)
-        const responseData = response.data
-        const data = responseData.data
-        // if (setter) setter(data);
-        // if (region) console.log(url)
-        // console.log('url', url)
-        // console.log('data', data)
-
-        return data
+        const response = await api.get(url, { signal });
+        const responseData = response.data;
+        const data = responseData.data;
+        console.log(url);
+        return data;
     } catch (error) {
-        console.error(`Erro fetching ${endpoint}:`, error.response?.data || error.message)
+        if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
+            return;
+        }
+        console.error(`Erro fetching ${endpoint}:`, error.response?.data || error.message);
     }
 }
 

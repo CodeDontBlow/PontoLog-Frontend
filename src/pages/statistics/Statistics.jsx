@@ -54,7 +54,7 @@ const Statistics = () => {
     const [balancoData, setBalancoData] = useState()
     const [exportProduct, setExportProduct] = useState()
     const [importProduct, setImportProduct] = useState()
-    const [exporFat, setExportFat] = useState()
+    const [exportFat, setExportFat] = useState()
     const [importFat, setImportFat] = useState()
     const [exportData, setExportData] = useState()
     const [importData, setImportData] = useState()
@@ -79,50 +79,88 @@ const Statistics = () => {
         };
     };
 
-    const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 50), [sh]);
+    // const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 50), [sh]);
+
+    // useEffect(() => {
+    //     const fetchAllData = async () => {
+    //         try {
+    //             console.time("fetchAllData");
+
+    //             const params = {
+    //                 initYear,
+    //                 region,
+    //                 uf,
+    //                 product,
+    //                 sh,
+    //                 finalYear,
+    //                 periodoUnico
+    //             };
+
+    //             const [balancoData, importFat, exportFat, exportProduct, importProduct, exportData, importData] = await Promise.all([
+    //                 fetchData({ ...params, endpoint: 'balanco' }),
+    //                 fetchData({ ...params, tradeType: 'exportacao', endpoint: 'fat' }),
+    //                 fetchData({ ...params, tradeType: 'importacao', endpoint: 'fat' }),
+    //                 fetchData({ ...params, tradeType: 'exportacao', endpoint: 'product' }),
+    //                 fetchData({ ...params, tradeType: 'importacao', endpoint: 'product' }),
+    //                 fetchData({ ...params, tradeType: 'exportacao' }),
+    //                 fetchData({ ...params, tradeType: 'importacao', })
+    //             ]);
+
+    //             console.timeEnd("fetchAllData");
+
+    //             setBalancoData(balancoData);
+    //             setExportFat(exportFat);
+    //             setImportFat(importFat);
+    //             setExportProduct(exportProduct);
+    //             setImportProduct(importProduct);
+    //             setExportData(exportData);
+    //             setImportData(importData);
+
+    //         } catch (error) {
+    //             console.log('Error fetching data: ', error)
+    //         }
+    //     }
+
+    //     fetchAllData();
+    // }, [product, initYear, finalYear, tradeType, periodoUnico, sh, uf]);
 
     useEffect(() => {
-        // const fetchAllData = async () => {
-        //     try {
-        //         await Promise.all([
-        //             fetchData('fat', setFatAgregado, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-        //             fetchData(`product/no_${sh}_por`, setProdutoPopular, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-        //             fetchData('via', setVias, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-        //             fetchData('urf', setUrfs, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-        //             fetchData('vl_agregado', setVlAgregado, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-        //             fetchData('vl_fob', setVlFob, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-        //             fetchData('kg_liquido', setKgLiq, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-        //             fetchData('balanco', setBalanca, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-        //             fetchData('countries', setCountries, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-        //         ]);
-        //     } catch (error) {
-        //         console.error("Erro ao buscar dados", error);
-        //     }
-        // };
-
-        // fetchAllData()
+        const controller = new AbortController();
 
         const fetchAllData = async () => {
             try {
+                console.time("fetchAllData");
+
                 const params = {
                     initYear,
                     region,
-                    estado: uf,
+                    uf,
                     product,
                     sh,
                     finalYear,
-                    periodoUnico
+                    periodoUnico,
+                    signal: controller.signal
                 };
 
-                const [balancoData, importFat, exportFat, exportProduct, importProduct, exportData, importData] = await Promise.all([
+                const [
+                    balancoData,
+                    importFat,
+                    exportFat,
+                    exportProduct,
+                    importProduct,
+                    exportData,
+                    importData
+                ] = await Promise.all([
                     fetchData({ ...params, endpoint: 'balanco' }),
                     fetchData({ ...params, tradeType: 'exportacao', endpoint: 'fat' }),
                     fetchData({ ...params, tradeType: 'importacao', endpoint: 'fat' }),
                     fetchData({ ...params, tradeType: 'exportacao', endpoint: 'product' }),
                     fetchData({ ...params, tradeType: 'importacao', endpoint: 'product' }),
                     fetchData({ ...params, tradeType: 'exportacao' }),
-                    fetchData({ ...params, tradeType: 'importacao', })
+                    fetchData({ ...params, tradeType: 'importacao' })
                 ]);
+
+                console.timeEnd("fetchAllData");
 
                 setBalancoData(balancoData);
                 setExportFat(exportFat);
@@ -133,18 +171,33 @@ const Statistics = () => {
                 setImportData(importData);
 
             } catch (error) {
+                if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
+                    return;
+                }
                 console.log('Error fetching data: ', error)
             }
         }
 
         fetchAllData();
-    }, [product, initYear, finalYear, tradeType, periodoUnico, sh, state]);
+
+        return () => {
+            controller.abort();
+        };
+    }, [product, initYear, finalYear, tradeType, periodoUnico, sh, uf]);
 
     useEffect(() => {
         if (product.length > 0) {
             getProductByLetter(product, setOpcoesDeProduto, sh);
         }
     }, [product, sh]);
+
+    useEffect(() => {
+        if (balancoData) {
+            console.log("exportFat", exportFat)
+            console.log("importFat", importFat)
+        }
+
+    }, [exportData, importData])
 
     // Criando objetos TAB
     const tab = [
@@ -268,7 +321,7 @@ const Statistics = () => {
                         <div className="gridItem">
                             <IconTitle title="Balança Comercial" variant="lineChart" size='textMedium' />
                             <div className="componentWrapper">
-                                {balanca.length > 0 && (
+                                {balancoData && (
                                     <LineChart
                                         period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                         values={balancoData.map(bal => Number(bal.total))}
@@ -283,16 +336,12 @@ const Statistics = () => {
                     {/* Parte de Baixo */}
                     <section className="bottomArea">
                         {/* Item 1 */}
-                        <InfoCard title="Exportação" fatorAgregado={fatAgregado} produto={produtoPopular} />
+                        <InfoCard title="Exportação" fatorAgregado={exportFat} produto={exportProduct} />
                         {/* Item 2 */}
-                        <InfoCard title="Importação" fatorAgregado="Pouco manufaturado" produto="Grãos de Arroz" />
+                        <InfoCard title="Importação" fatorAgregado={importFat} produto={importProduct} />
                     </section>
                 </section>
             </section>
-
-
-
-
 
             {/* Informação completas de Exportação ou Importação */}
             <section id={styles.ExpImpInfos}>
