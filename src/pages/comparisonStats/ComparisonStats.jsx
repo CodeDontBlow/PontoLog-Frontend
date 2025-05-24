@@ -137,21 +137,11 @@ const ComparisonStats = () => {
         }
     }, [product, sh, periodoUnico, initYear, finalYear, JSON.stringify(statesList), tradeType]);
 
-
-    useEffect(() => {
-
-        console.log(statesData)
-    }, [statesData]);
-
     useEffect(() => {
         if (product.length > 0) {
             getProductByLetter(product, setOpcoesDeProduto, sh);
         }
     }, [product, sh]);
-
-    useEffect(() => {
-        console.log("statesData", statesData)
-    }, [statesData])
 
     useEffect(() => {
         setPeriodo([initYear, finalYear])
@@ -163,12 +153,15 @@ const ComparisonStats = () => {
         { id: 2, label: "Importações" , tradeType: "importacao"},
     ]
 
-    // Teste para verificar a troca de exportação e importação na TAB
-    useEffect (() => {
-        console.log(`Stats: ${tradeType}`)
-        console.log(`/${tradeType}/countries/${initYear}?sh=no_${sh}_por&productName=Cenouras e nabos, frescos ou refrigerados`)
-        
-    }, [tradeType])
+    const regiaoFormatada = () => {
+        const prefixRemoved = region.replace("REGIAO ", '');
+
+        const finalRegionStr = prefixRemoved[0] + prefixRemoved.slice(1).toLowerCase();
+
+        if (finalRegionStr === 'Centro oeste') return 'Centro-Oeste';
+
+        return finalRegionStr;
+    }
 
     return (
         <div id={styles.statisticsPage}>
@@ -255,12 +248,14 @@ const ComparisonStats = () => {
                     </div>
 
                     {/* Exibir região selecionada */}
-                    {(region && !state) && (
-                        <h2 className={styles.mapCurrentState}>Região {region}</h2>
+                    {(region && !state) &&
+
+                    (
+                        <h2 className={styles.mapCurrentState}>Região {regiaoFormatada()}</h2>
                     )}
 
                     <MultiBrazilMap onRegionChange={({ regiao, estado, uf }) => {
-                        setRegion(`REGIAO ${regiao.toUpperCase()}`)
+                        setRegion(`REGIAO ${regiao.toUpperCase().replace('-', ' ')}`)
                         setState(estado || '');
                         setUf(uf || '');
                     }} />
