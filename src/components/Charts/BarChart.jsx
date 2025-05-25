@@ -1,8 +1,9 @@
 import Chart from "react-apexcharts"
 import { useEffect, useState } from "react";
+import Skeleton from "../Skeleton/Skeleton";
 
 //GRÁFICO DE BARRA
-function BarChart({ items, values, chartDescription, colorPalette , isQuarter = false }) {
+function BarChart({ items, values, chartDescription, colorPalette , isQuarter = false, skeleton }) {
 
 
     //PROPS
@@ -260,7 +261,10 @@ function BarChart({ items, values, chartDescription, colorPalette , isQuarter = 
             data: values
         }])
     }, [values, items])
-
+    
+    if (skeleton) {
+        return <Skeleton />
+    }
     //Componente de gráfico do ApexCharts recebendo os valores definidos acima
     return (
         <Chart
