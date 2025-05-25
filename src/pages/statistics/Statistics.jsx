@@ -283,9 +283,9 @@ const Statistics = () => {
                     {/* Parte de Baixo */}
                     <section className="bottomArea">
                         {/* Item 1 */}
-                        <InfoCard title="Exportação" fatorAgregado={exportFat} produto={exportProduct} />
+                        <InfoCard skeleton={false} title="Exportação" fatorAgregado={exportFat} produto={exportProduct} />
                         {/* Item 2 */}
-                        <InfoCard title="Importação" fatorAgregado={importFat} produto={importProduct} />
+                        <InfoCard skeleton={false} title="Importação" fatorAgregado={importFat} produto={importProduct} />
                     </section>
                 </section>
             </section>
@@ -303,6 +303,7 @@ const Statistics = () => {
                             <div className="componentWrapper">
                                 {mainData && (
                                     <WorldMap
+                                        loading={false}
                                         selectedRegion="Norte"
                                         tradeType="exportacao"
                                         colorPalette={["#B81D4E", "#D92B66", "#F5A4C3", "#F1A1B5"]}
@@ -329,6 +330,7 @@ const Statistics = () => {
 
                             <div className="componentWrapper">
                                 {mainData && (<BarChart
+                                    skeleton={false}
                                     items={mainData.via.map(via => via.NO_VIA)}
                                     values={mainData.via.map(via => Number(via.total))}
                                     colorPalette={["#D92B66"]}
@@ -342,6 +344,7 @@ const Statistics = () => {
                             <div className="componentWrapper">
                                 {mainData && (
                                     <BarChart
+                                        skeleton={false}
                                         items={mainData.urf.map(urf => urf.NO_URF)}
                                         values={mainData.urf.map(urf => Number(urf.total))}
                                         colorPalette={["#D92B66"]}
@@ -360,6 +363,7 @@ const Statistics = () => {
                             <IconTitle title="Valor Agregado" variant="lineChart" size='textMedium' />
                             <div className="componentWrapper">
                                 {mainData && (<LineChart
+                                    loading={false}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={mainData.vlAgregado.map(value => Number(value.total))}
                                     dataName="Balança Comercial"
@@ -377,6 +381,7 @@ const Statistics = () => {
                             <IconTitle title="Quilograma Líquido" variant="lineChart" size='textLight' />
                             <div className="componentWrapper">
                                 {mainData && (<LineChart
+                                    loading={false}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={mainData.kgLiquido.map(value => Number(value.total))}
                                     dataName="kg_liquido"
@@ -391,6 +396,7 @@ const Statistics = () => {
                             <IconTitle title="Valor FOB" variant="lineChart" size='textLight' />
                             <div className="componentWrapper">
                                 {mainData && (<LineChart
+                                    loading={false}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={mainData.vlFob.map(value => Number(value.total))}
                                     dataName="vl_fob"
