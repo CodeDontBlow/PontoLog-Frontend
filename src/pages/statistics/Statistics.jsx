@@ -17,6 +17,7 @@ import IconTitle from '../../components/IconTitle/IconTitle'
 import TabNavigation from '../../components/Tab/TabNavigation'
 
 import styles from './Statistics.module.css'
+import Alert from '../../components/Alert/Alert'
 
 const Statistics = () => {
     // STATES DOS FILTROS
@@ -50,6 +51,9 @@ const Statistics = () => {
     const [importData, setImportData] = useState();
     const [mainData, SetMainData] = useState();
     const [isLoading, setIsLoading] = useState(true);
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertVariant, setAlertVariant] = useState('');
 
     // Opções de descrição para o mapa do Brasil (para estatísticas)
     const getDescriptionText = () => {
@@ -125,6 +129,11 @@ const Statistics = () => {
                 console.error('Error fetching data: ', error);
             } finally {
                 if (!isCancelled) {
+                    setAlertMessage(
+                        `Dados atualizados! ${uf ? `Exibindo informações para ${state}. ` : ''}Os resultados refletem os parâmetros escolhidos na pesquisa.`
+                    )        ;            
+                    setAlertVariant('success')
+                    setShowAlert(true)
                     setIsLoading(false);
                 }
             }
@@ -413,9 +422,18 @@ const Statistics = () => {
                         </div>
                     </section>
                 </section>
-
-
             </section>
+
+            {showAlert &&
+                (
+                    <Alert
+                        type={alertVariant}
+                        message={alertMessage}
+                        onClose={() => setShowAlert(false)}
+                    />
+                )
+            };
+
         </div>
     )
 }

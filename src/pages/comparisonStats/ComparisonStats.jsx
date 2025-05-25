@@ -15,6 +15,7 @@ import Checkbox from '../../components/Buttons/Checkbox/Checkbox'
 import IconTitle from '../../components/IconTitle/IconTitle'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import TabNavigation from '../../components/Tab/TabNavigation'
+import Alert from '../../components/Alert/Alert'
 
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 import { faX } from "@fortawesome/free-solid-svg-icons"
@@ -49,7 +50,12 @@ const ComparisonStats = () => {
     const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
     const [tradeType, setTradeType] = useState('exportacao');
     const [statesData, setStatesData] = useState([]);
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(true);
+
+    // states do alert
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertVariant, setAlertVariant] = useState('');
 
     // Mudando a lista de estados quando um estado novo for selecionado
     useEffect(() => {
@@ -162,6 +168,11 @@ const ComparisonStats = () => {
                 }
             } finally {
                 if (!isCancelled) {
+                    setAlertMessage(
+                        `Dados atualizados para ${statesList[0]?.state || 'Estado 1'} e ${statesList[1]?.state || 'Estado 2'} estão sendo exibidos conforme os parâmetros selecionados.`
+                    )
+                    setAlertVariant('success')
+                    setShowAlert(true)
                     setIsLoading(false);
                 }
             }
@@ -171,6 +182,9 @@ const ComparisonStats = () => {
             fetchAllStatesData();
         } else {
             setIsLoading(true)
+            setAlertMessage("Por favor, selecione dois estados para visualizar os dados. Caso seja necessário visualizar apenas um, utilize a página de estatísticas.")
+            setAlertVariant('warning')
+            setShowAlert(true)
             setStatesData([]);
         }
 
@@ -512,6 +526,15 @@ const ComparisonStats = () => {
                     </section>
                 </section>
             </section>
+
+            {showAlert &&
+                <Alert
+                    type={alertVariant}
+                    message={alertMessage}
+                    onClose={() => setShowAlert(false)}
+                />
+            }
+
         </div>
     );
 };
