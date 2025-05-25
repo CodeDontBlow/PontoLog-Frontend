@@ -27,7 +27,7 @@ const Statistics = () => {
     // Período
     const [initYear, setInitYear] = useState(2014);
     const [finalYear, setFinalYear] = useState(2024);
-    const [periodoUnico, setPeriodoUnico] = useState(true);
+    const [periodoUnico, setPeriodoUnico] = useState(false);
     const [period, setPeriod] = useState([initYear, finalYear]);
 
     // Estado

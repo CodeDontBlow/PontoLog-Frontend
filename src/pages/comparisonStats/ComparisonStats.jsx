@@ -25,7 +25,7 @@ const ComparisonStats = () => {
     // STATES DOS FILTROS
     const [product, setProduct] = useState('')
     const [sh, setSh] = useState('sh4');
-    const [periodoUnico, setPeriodoUnico] = useState(true);
+    const [periodoUnico, setPeriodoUnico] = useState(false);
     const [initYear, setInitYear] = useState(2014)
     const [finalYear, setFinalYear] = useState(2024)
     const [perido, setPeriodo] = useState([])
