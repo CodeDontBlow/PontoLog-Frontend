@@ -124,6 +124,15 @@ const ComparisonStats = () => {
 
                 colorsObject[key] = hexCode
             }
+
+        // tons diferentes para estados com regiões iguais
+        if (statesList.length === 1 && statesList[0].region === region) {
+            colorsObject = {
+                ...colorsObject,
+                700: colorsObject[500],
+                base: colorsObject[500],
+            };
+        }
             
             setHexColors(previewState => {
                 if (previewState.some(s => s.state === state)) {

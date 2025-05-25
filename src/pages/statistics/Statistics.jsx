@@ -91,7 +91,13 @@ const Statistics = () => {
     
         setHexColors(colorsArray)
 
-    }, [pageColors])
+    // reset de cor ao trocar de página
+        return () => {
+            for (let key of arrayOrder) {
+                element.style.setProperty(`--highlight-${key}`, '');
+            }
+        };
+    }, [pageColors]);
 
     // state de opções dos inputs
     const [opcoesDeProduto, setOpcoesDeProduto] = useState([]);
