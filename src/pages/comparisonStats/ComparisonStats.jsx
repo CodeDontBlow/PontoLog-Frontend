@@ -45,6 +45,11 @@ const ComparisonStats = () => {
         }
     ]);
     const [mainData, SetMainData] = useState('exportData')
+    const [opcoesDeProduto, setOpcoesDeProduto] = useState([])
+    const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
+    const [tradeType, setTradeType] = useState('exportacao');
+    const [statesData, setStatesData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true)
 
     // Mudando a lista de estados quando um estado novo for selecionado
     useEffect(() => {
@@ -77,6 +82,10 @@ const ComparisonStats = () => {
         ])
     }
 
+    useEffect(() => {
+        console.log(isLoading)
+    }, [isLoading])
+
     // Opções de descrição para o mapa do Brasil (para comparação)
     const getDescriptionText = () => {
         if (statesList.length >= 2) { //Selecionou dois estados
@@ -90,15 +99,6 @@ const ComparisonStats = () => {
         }
     };
 
-    const [opcoesDeProduto, setOpcoesDeProduto] = useState([])
-    const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
-    // const [state, setState] = useState('');
-    const [tradeType, setTradeType] = useState('exportacao');
-
-    // ...existing code...
-
-    const [statesData, setStatesData] = useState([]);
-
     const debounce = (func, delay) => {
         let timer;
         return (...args) => {
@@ -111,19 +111,20 @@ const ComparisonStats = () => {
 
     useEffect(() => {
         const controller = new AbortController();
+        let isCancelled = false;
 
         const fetchStateData = async (uf, region) => {
             try {
                 const params = {
                     initYear,
-                    region: region,
-                    uf: uf,
+                    region,
+                    uf,
                     product,
                     sh,
                     finalYear,
                     periodoUnico,
                     signal: controller.signal
-                }
+                };
 
                 const [
                     balancoData,
@@ -134,37 +135,51 @@ const ComparisonStats = () => {
                     fetchData({ ...params, tradeType: 'exportacao' }),
                     fetchData({ ...params, tradeType: 'importacao' })
                 ]);
+
                 return {
                     estado: uf,
                     balancoData,
                     exportData,
-                    importData,
+                    importData
                 };
             } catch (error) {
                 if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
+                    console.warn(`Requisições do estado ${uf} canceladas.`);
                     return;
                 }
-                console.error('Error fetching data: ', error)
+                console.error('Error fetching data: ', error);
             }
-        }
-
-        const fetchAllStatesData = async () => {
-            const results = await Promise.all(
-                statesList.map((state) => fetchStateData(state.uf, state.region))
-            );
-            setStatesData(results);
         };
 
-        if (!statesList.length <= 1) {
+        const fetchAllStatesData = async () => {
+            setIsLoading(true);
+            try {
+                const results = await Promise.all(
+                    statesList.map((state) => fetchStateData(state.uf, state.region))
+                );
+                if (!isCancelled) {
+                    setStatesData(results);
+                }
+            } finally {
+                if (!isCancelled) {
+                    setIsLoading(false);
+                }
+            }
+        };
+
+        if (statesList.length > 1) {
             fetchAllStatesData();
         } else {
-            setStatesData([])
+            setIsLoading(true)
+            setStatesData([]);
         }
 
         return () => {
+            isCancelled = true;
             controller.abort();
         };
-    }, [product, sh, periodoUnico, initYear, finalYear, statesList])
+    }, [product, sh, periodoUnico, initYear, finalYear, statesList]);
+
 
     useEffect(() => {
         {
@@ -310,7 +325,7 @@ const ComparisonStats = () => {
                             <IconTitle title="Balança Comercial" variant="lineChart" />
                             <div className="componentWrapper">
                                 <DoubleLineChart
-                                    loading={false}
+                                    loading={isLoading}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={statesData.map(state => state.balancoData?.map(item => item.total))}
                                     dataName={statesList.map((state) => state.state)}
@@ -344,7 +359,7 @@ const ComparisonStats = () => {
                                 <IconTitle variant="map" title="Principais Países" />
                                 <div className="componentWrapper">
                                     <WorldMap
-                                        loading={false}
+                                        loading={isLoading}
                                         selectedRegion="Norte"
                                         tradeType="exportacao"
                                         colorPalette={["#B81D4E", "#D92B66", "#F5A4C3", "#F1A1B5"]}
@@ -369,7 +384,7 @@ const ComparisonStats = () => {
                                 <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight' />
                                 <div className="componentWrapper" style={{ padding: 0 }}>
                                     <BarChart
-                                        skeleton={false}
+                                        skeleton={isLoading}
                                         items={statesData[0]?.[mainData]?.via?.map(item => item.NO_VIA)}
                                         values={statesData[0]?.exportData?.via?.map(item => item.total)}
                                         colorPalette={["#D92B66"]}
@@ -381,7 +396,7 @@ const ComparisonStats = () => {
                                 <IconTitle variant="barChart" title="Principais URF's Usadas" size='textLight' />
                                 <div className="componentWrapper" style={{ padding: 0 }}>
                                     <BarChart
-                                        skeleton={false}
+                                        skeleton={isLoading}
                                         items={statesData[0]?.[mainData]?.urf?.map(item => item.NO_URF)}
                                         values={statesData[0]?.[mainData]?.urf?.map(item => item.total)}
                                         colorPalette={["#D92B66"]}
@@ -402,7 +417,7 @@ const ComparisonStats = () => {
                                 <IconTitle variant="map" title="Principais Países" />
                                 <div className="componentWrapper">
                                     <WorldMap
-                                        loading={false}
+                                        loading={isLoading}
                                         selectedRegion="Norte"
                                         tradeType="exportacao"
                                         colorPalette={["#16707A", "#028391", "#80B8B8", "#A0D0D0"]}
@@ -428,7 +443,7 @@ const ComparisonStats = () => {
                                 <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight' />
                                 <div className="componentWrapper" style={{ padding: 0 }}>
                                     <BarChart
-                                        skeleton={false}
+                                        skeleton={isLoading}
                                         items={statesData[1]?.[mainData]?.via?.map(item => item.NO_VIA)}
                                         values={statesData[1]?.[mainData]?.via?.map(item => item.total)}
                                         colorPalette={["#028391"]}
@@ -440,7 +455,7 @@ const ComparisonStats = () => {
                                 <IconTitle variant="barChart" title="Principais URF's Usadas" size='textLight' />
                                 <div className="componentWrapper" style={{ padding: 0 }}>
                                     <BarChart
-                                        skeleton={false}
+                                        skeleton={isLoading}
                                         items={statesData[1]?.[mainData]?.urf?.map(item => item.NO_URF)}
                                         values={statesData[1]?.[mainData]?.urf?.map(item => item.total)}
                                         colorPalette={["#028391"]}
@@ -458,7 +473,7 @@ const ComparisonStats = () => {
                             <IconTitle title="Valor Agregado" variant="lineChart" />
                             <div className="componentWrapper">
                                 <DoubleLineChart
-                                    loading={false}
+                                    loading={isLoading}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={statesData.map(state => state[mainData]?.vlAgregado?.map(item => item.total))}
                                     dataName={statesList.map((state) => state.state)}
@@ -472,7 +487,7 @@ const ComparisonStats = () => {
                             <IconTitle title="Quilograma Líquido" variant="lineChart" size='textLight' />
                             <div className="componentWrapper">
                                 <DoubleLineChart
-                                    loading={false}
+                                    loading={isLoading}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={statesData.map(state => state[mainData]?.kgLiquido?.map(item => item.total))}
                                     dataName={statesList.map((state) => state.state)}
@@ -485,7 +500,7 @@ const ComparisonStats = () => {
                             <IconTitle title="Valor FOB" variant="lineChart" size="textLight" />
                             <div className="componentWrapper">
                                 <DoubleLineChart
-                                    loading={false}
+                                    loading={isLoading}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={statesData.map(state => state[mainData]?.vlFob?.map(item => item.total))}
                                     dataName={statesList.map((state) => state.state)}
