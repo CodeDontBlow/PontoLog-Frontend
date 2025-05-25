@@ -59,6 +59,7 @@ const fetchData = async ({ endpoint = null, initYear, tradeType, region, uf, pro
         return data;
     } catch (error) {
         if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
+            console.warn('Operação cancelada por troca de paramêtros...')
             return;
         }
         console.error(`Erro fetching ${endpoint}:`, error.response?.data || error.message);
