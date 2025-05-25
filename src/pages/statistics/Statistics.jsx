@@ -84,7 +84,7 @@ const Statistics = () => {
                     sh,
                     finalYear,
                     periodoUnico,
-                    signal: controller.signal // <-- aqui!
+                    signal: controller.signal
                 };
 
                 const [
@@ -115,10 +115,9 @@ const Statistics = () => {
 
             } catch (error) {
                 if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
-                    console.log('oi')
                     return;
                 }
-                console.log('Error fetching data: ', error)
+                console.error('Error fetching data: ', error)
             }
         }
 
@@ -146,22 +145,6 @@ const Statistics = () => {
             SetMainData(importData);
         }
     }, [tradeType, importData]);
-
-    useEffect(() => {
-        console.log(tradeType)
-    }, [tradeType])
-
-    useEffect(() => {
-        console.log(mainData)
-    }, [mainData])
-
-    useEffect(() => {
-        if (balancoData) {
-            console.log("exportData", exportData)
-            console.log("importData", importData)
-        }
-
-    }, [exportData, importData])
 
     // Criando objetos TAB
     const tab = [
