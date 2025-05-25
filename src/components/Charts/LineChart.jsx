@@ -1,8 +1,9 @@
-import Chart from "react-apexcharts"
-import React , {useState , useEffect} from 'react'
+import Chart from "react-apexcharts";
+import React , {useState , useEffect} from 'react';
+import Loading from "../Loading/Loading";
 
 //GRÁFICO DE LINHA
-const LineChart = ({period , values , dataName , chartDescription , colorPalette , id , group}) => {
+const LineChart = ({period , values , dataName , chartDescription , colorPalette , id , group, loading}) => {
 
     //PROPS
     //period: Periodo de tempo (eixo x) [lista]
@@ -100,6 +101,10 @@ const LineChart = ({period , values , dataName , chartDescription , colorPalette
             },
         ])
     }, [values])
+
+    if(loading) {
+        return <Loading />
+    }
 
     //Componente de gráfico do ApexCharts recebendo os valores definidos acima
     return(
