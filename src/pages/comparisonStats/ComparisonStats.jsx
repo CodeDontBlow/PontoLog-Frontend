@@ -34,6 +34,7 @@ const ComparisonStats = () => {
     const [state, setState] = useState('');
     const [uf, setUf] = useState('');
     const [statesList, setStatesList] = useState([]);
+    const [hasTwo , setHasTwo] = useState(false)
 
     // Mudando a lista de estados quando um estado novo for selecionado
     useEffect(() => {
@@ -47,6 +48,7 @@ const ComparisonStats = () => {
                 if (currentList.length >= 2) {
                     currentList.pop()
                 }
+
                 // Adiciona o novo estado selecionado no BrazilMap
                 let newStateObject = {
                     state: state,
@@ -58,6 +60,10 @@ const ComparisonStats = () => {
             })
         }
     }, [state])
+
+    useEffect( () => {
+        setHasTwo(statesList.length >= 2)
+    } , [statesList])
 
     const removeStateByIndex = (index) => {
         setStatesList(previewList => [
@@ -336,15 +342,49 @@ const ComparisonStats = () => {
                     </section>
 
                     <section className="midArea">
-                        <AlertCard variant='comparisonInfo' icon={faCircleInfo} region={["Brasil", "São Paulo"]} />
+                        <AlertCard 
+                            variant='comparisonInfo' 
+                            icon={faCircleInfo} 
+                            region={
+                                hasTwo
+                                ? [statesList[0]?.state, statesList[1]?.state]
+                                : ['Estado 1' , 'Estado 2']
+                            }
+                            colorPalette={
+                                hasTwo
+                                ? [hexColors[0]?.base , hexColors[1]?.base]
+                                : ['var(--base-pink)' , 'var(--base-pink)']
+                            }
+                        />
                     </section>
 
                     <section className="bottomArea">
-                        {/* Estado 2 */}
-                        <ColorCard color={hexColors[0]?.base} title={statesList[0] ? statesList[0].uf : 'UF 1'} region={statesList[0] ? statesList[0].state : 'Estado 1'} />
-
                         {/* Estado 1 */}
-                        <ColorCard color={hexColors[1]?.base} title={statesList[1] ? statesList[1].uf : 'UF 2'} region={statesList[1] ? statesList[1].state : 'Estado 2'} />
+                        <ColorCard 
+                            color={
+                                hasTwo
+                                ? hexColors[0]?.base
+                                : 'currentColor'
+                            } 
+                            title={
+                                hasTwo
+                                ? statesList[0].uf
+                                : 'UF 1'
+                            } 
+                            region={
+                                hasTwo ? 
+                                statesList[0].state
+                                : 'Estado 1'
+                            } 
+                        />
+
+                        {/* Estado 2 */}
+                        <ColorCard 
+                            color={hexColors[1]?.base || 'currentColor'} 
+                            title={statesList[1]?.uf || 'UF 2'} 
+                            region={statesList[1]?.state || 'Estado 2'} 
+                        />
+
                     </section>
                 </section>
             </section>
@@ -361,12 +401,12 @@ const ComparisonStats = () => {
                     <section 
                         className="infoGridVertical" 
                         style={{
-                            color: hexColors[0]?.base
+                            color: `${hasTwo ? hexColors[0]?.base : 'currentColor'}`
                         }}
                     >
                         <section className="topArea">
                             <h3 className={styles.stateTitle}>
-                                {statesList[0] ? statesList[0].state : 'Estado 1'}
+                                {hasTwo ? statesList[0]?.state : 'Estado 1'}
                             </h3>
                         </section>
                         <section className="midArea">
@@ -380,7 +420,7 @@ const ComparisonStats = () => {
                                     <WorldMap
                                         selectedRegion="Norte"
                                         tradeType="exportacao"
-                                        colorPalette={hexColors[0] ? hexColors[0] : ['#f00']}
+                                        colorPalette={['#f00']}
                                         countryDatas={{
                                             exportacao: statesData[0]?.countries
                                                 ? statesData[0].countries.map((country) => ({
@@ -429,7 +469,9 @@ const ComparisonStats = () => {
                         }}
                     >
                         <section className="topArea">
-                            <h3 className={styles.stateTitle}> {statesList[1] ? statesList[1].state : 'Estado 2'}</h3>
+                            <h3 className={styles.stateTitle}> 
+                                {hasTwo ? statesList[1]?.state : 'Estado 2'}
+                            </h3>
                         </section>
                         <section className="midArea">
                             <div className="gridItem">
