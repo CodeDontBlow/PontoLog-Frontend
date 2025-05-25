@@ -15,7 +15,7 @@ import WorldMap from '../../components/Maps/WorldMap'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import IconTitle from '../../components/IconTitle/IconTitle'
 import TabNavigation from '../../components/Tab/TabNavigation'
-
+import { getURFCode } from '../../utils/formatUrf'
 import styles from './Statistics.module.css'
 
 const Statistics = () => {
@@ -340,12 +340,12 @@ const Statistics = () => {
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
-                            <IconTitle variant="barChart" title="Principais URFs" size='light' />
+                            <IconTitle variant="barChart" title="Principais URFs" size='textLight' />
                             <div className="componentWrapper">
                                 {mainData && (
                                     <BarChart
                                         skeleton={false}
-                                        items={mainData.urf.map(urf => urf.NO_URF)}
+                                        items={mainData.urf.map(urf => getURFCode(urf.NO_URF))}
                                         values={mainData.urf.map(urf => Number(urf.total))}
                                         colorPalette={["#D92B66"]}
                                     />
