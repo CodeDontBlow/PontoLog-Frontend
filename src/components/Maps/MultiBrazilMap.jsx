@@ -14,11 +14,11 @@ const regionMap = {
 };
 
 export const regionColors = {
-  Norte: "#14A538",
-  Nordeste: "#EB641C",
-  "Centro-Oeste": "#F79F44",
-  Sudeste: "#028391",
-  Sul: "#731CA5",
+  Norte: "green",
+  Nordeste: "orange",
+  "Centro-Oeste": "sun",
+  Sudeste: "teal",
+  Sul: "purple",
 };
 
 // Componente que ajusta o zoom automaticamente
@@ -84,9 +84,9 @@ const BrazilMap = ({ onRegionChange }) => {
           key={index}
           data={{ type: "FeatureCollection", features }}
           style={{
-            color: regionColors[regionName],
+            color: `var(--base-${regionColors[regionName]})`,
             weight: 1,
-            fillColor: regionColors[regionName],
+            fillColor: `var(--base-${regionColors[regionName]})`,
             fillOpacity: 1,
             cursor: "pointer",
           }}
@@ -114,7 +114,7 @@ const BrazilMap = ({ onRegionChange }) => {
         style={{
           color: "var(--white-500)",
           weight: 2,
-          fillColor: regionColors[selectedRegion],
+          fillColor: `var(--base-${regionColors[selectedRegion]})`,
           fillOpacity: 1,
           cursor: "pointer",
         }}

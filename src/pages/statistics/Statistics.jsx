@@ -131,17 +131,20 @@ const Statistics = () => {
 
     useEffect(() => {
         const fetchAllData = async () => {
+            const routeRegion = region
+                ? `REGIAO ${region.toUpperCase().replace('-', ' ')}`
+                : ''
             try {
                 await Promise.all([
-                    fetchData('fat', setFatAgregado, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData(`product/no_${sh}_por`, setProdutoPopular, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData('via', setVias, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData('urf', setUrfs, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData('vl_agregado', setVlAgregado, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData('vl_fob', setVlFob, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData('kg_liquido', setKgLiq, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData('balanco', setBalanca, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData('countries', setCountries, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+                    fetchData('fat', setFatAgregado, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
+                    fetchData(`product/no_${sh}_por`, setProdutoPopular, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
+                    fetchData('via', setVias, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
+                    fetchData('urf', setUrfs, initYear, tradeType, routeRegion , uf, product, sh, finalYear, periodoUnico),
+                    fetchData('vl_agregado', setVlAgregado, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
+                    fetchData('vl_fob', setVlFob, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
+                    fetchData('kg_liquido', setKgLiq, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
+                    fetchData('balanco', setBalanca, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
+                    fetchData('countries', setCountries, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
                 ]);
             } catch (error) {
                 console.error("Erro ao buscar dados", error);
@@ -162,16 +165,6 @@ const Statistics = () => {
         { id: 1, label: "Exportações" , tradeType: "exportacao"},
         { id: 2, label: "Importações" , tradeType: "importacao"},
     ]
-
-    const regiaoFormatada = () => {
-        const prefixRemoved = region.replace("REGIAO ", '');
-
-        const finalRegionStr = prefixRemoved[0] + prefixRemoved.slice(1).toLowerCase();
-
-        if (finalRegionStr === 'Centro oeste') return 'Centro-Oeste';
-
-        return finalRegionStr;
-    }
 
     return (
         <div id={styles.statisticsPage} style={{color:"var(--highlight-base)"}}>
@@ -263,10 +256,10 @@ const Statistics = () => {
                     {state ? (
                     <h2 className={styles.mapCurrentState}>{state}</h2>
                     ) : region ? (
-                    <h2 className={styles.mapCurrentState}>Região {regiaoFormatada()}</h2>
+                    <h2 className={styles.mapCurrentState}>Região {region}</h2>
                     ) : null}
                     <BrazilMap onRegionChange={ ({ regiao, estado , uf }) => {
-                        setRegion(`REGIAO ${regiao.toUpperCase().replace('-', ' ')}`); 
+                        setRegion(regiao || ''); 
                         setState(estado || ''); 
                         setUf(uf || '');
                     }} />

@@ -5,7 +5,9 @@ import styles from "./Maps.module.css"
 export default function WorldMap({ selectedRegion, countryDatas, tradeType, setTradeType , colorPalette}) {
   const showData = Boolean(selectedRegion);
 
+  console.log(colorPalette)
   let colors = colorPalette.slice(0).reverse()
+
 
   const dadosSelecionados = countryDatas[tradeType];
 

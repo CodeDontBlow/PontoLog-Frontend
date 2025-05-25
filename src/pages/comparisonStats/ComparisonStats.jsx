@@ -16,6 +16,7 @@ import IconTitle from '../../components/IconTitle/IconTitle'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import TabNavigation from '../../components/Tab/TabNavigation'
 
+import { regionColors } from '../../components/Maps/BrazilMap'
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 import { faX } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -37,10 +38,10 @@ const ComparisonStats = () => {
     // Mudando a lista de estados quando um estado novo for selecionado
     useEffect(() => {
         if (state) {
-            if (statesList[0] == state) {
-                return
-            }
             setStatesList(previewList => {
+                if (previewList.some(s => s.state === state)) {
+                    return previewList
+                }
                 const currentList = [...previewList] //Cópia de segurança do conteúdo da lista anterior
                 // Caso a lista já tenha 2 elementos, remove o último
                 if (currentList.length >= 2) {
@@ -63,6 +64,15 @@ const ComparisonStats = () => {
             ...previewList.slice(0, index),
             ...previewList.slice(index + 1)
         ])
+
+        removeColorByIndex(index)
+    }
+
+    const removeColorByIndex = (index) => {
+        setHexColors(previewList => [
+            ...previewList.slice(0 , index),
+            ...previewList.slice(index + 1)
+        ])
     }
 
     // Opções de descrição para o mapa do Brasil (para comparação)
@@ -78,6 +88,54 @@ const ComparisonStats = () => {
         }
     };
 
+    
+    // TROCA DINAMICA DE CORES
+    // Lista com o código das cores atuais
+    const [hexColors , setHexColors] = useState([
+    ])
+
+    // Muda a variável CSS highlight, que recebe o valor da cor atual
+    useEffect( () => {
+        if(state){
+            let colorName
+            let colorsObject = 
+                {
+                    state: state,
+                    toArray: function () {
+                        console.log( Object.values(this))
+                    }
+                }
+            let objectKeys = [700 , "base" , 500 , 300]   
+
+            colorName = regionColors[region];
+                
+            let computed = getComputedStyle(document.documentElement)
+
+            for(let key of objectKeys){
+                let hexCode = key == "base"
+                    ? computed.getPropertyValue(`--${key}-${colorName}`).trim()
+                    : computed.getPropertyValue(`--${colorName}-${key}`).trim()
+
+                colorsObject[key] = hexCode
+            }
+            
+            setHexColors(previewState => {
+                if (previewState.some(s => s.state === state)) {
+                    return previewState
+                }
+
+                let prev = [...previewState]
+                if(prev.length >= 2){
+                    prev.pop()
+                }
+
+                return[...prev , colorsObject]
+            })
+        }
+
+        
+    }, [state])
+    
     const [opcoesDeProduto, setOpcoesDeProduto] = useState([])
     const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
     // const [state, setState] = useState('');
@@ -89,14 +147,17 @@ const ComparisonStats = () => {
 
     // Função para buscar todos os dados de um estado
     const fetchStateData = async (uf, region) => {
+        const routeRegion = region    
+            ? `REGIAO ${region.toUpperCase().replace('-', ' ')}`
+            : ''
         const [vias, urfs, vlAgregado, kgLiq, vlFob, balanca, countries] = await Promise.all([
-            fetchData('via', null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-            fetchData('urf', null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-            fetchData('vl_agregado', null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-            fetchData('kg_liquido', null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-            fetchData('vl_fob', null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-            fetchData('balanco', null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-            fetchData('countries', null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
+            fetchData('via', null, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
+            fetchData('urf', null, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
+            fetchData('vl_agregado', null, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
+            fetchData('kg_liquido', null, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
+            fetchData('vl_fob', null, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
+            fetchData('balanco', null, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
+            fetchData('countries', null, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
         ]);
         return {
             estado: uf,
@@ -152,19 +213,8 @@ const ComparisonStats = () => {
         { id: 1, label: "Exportações" , tradeType: "exportacao"},
         { id: 2, label: "Importações" , tradeType: "importacao"},
     ]
-
-    const regiaoFormatada = () => {
-        const prefixRemoved = region.replace("REGIAO ", '');
-
-        const finalRegionStr = prefixRemoved[0] + prefixRemoved.slice(1).toLowerCase();
-
-        if (finalRegionStr === 'Centro oeste') return 'Centro-Oeste';
-
-        return finalRegionStr;
-    }
-
     return (
-        <div id={styles.statisticsPage} style={{color:"var(--highlight-base)"}}>
+        <div id={styles.statisticsPage} style={{color:"var(--base-pink)"}}>
 
 
         {/* Área dos Inputs */}
@@ -240,23 +290,31 @@ const ComparisonStats = () => {
                             <p className={styles.statesList}>
                                 [
                                 {statesList[0] && <>
-                                    <span onClick={() => { removeStateByIndex(0) }} style={{ color: 'var(--base-green)' }}> <FontAwesomeIcon icon={faX} className={styles.icon} /> {statesList[0].state} </span> </>}
+                                    <span 
+                                        onClick={() => { removeStateByIndex(0) }} 
+                                        style={{ color:hexColors[0].base}}> 
+                                        <FontAwesomeIcon icon={faX} className={styles.icon} /> {statesList[0].state} 
+                                    </span> </>
+                                }
                                 {statesList[1] && <> |
-                                    <span onClick={() => { removeStateByIndex(1) }} style={{ color: 'var(--base-teal)' }}> <FontAwesomeIcon icon={faX} className={styles.icon} /> {statesList[1].state} </span> </>}
-                                ]
+                                    <span 
+                                        onClick={() => { removeStateByIndex(1) }}
+                                        style={{ color: hexColors[1].base}}> 
+                                        <FontAwesomeIcon icon={faX} className={styles.icon} /> {statesList[1].state}
+                                    </span> </>
+                                }]
                             </p>
                         }
                     </div>
 
                     {/* Exibir região selecionada */}
                     {(region && !state) &&
-
                     (
-                        <h2 className={styles.mapCurrentState}>Região {regiaoFormatada()}</h2>
+                        <h2 className={styles.mapCurrentState}>Região {region}</h2>
                     )}
 
                     <MultiBrazilMap onRegionChange={({ regiao, estado, uf }) => {
-                        setRegion(`REGIAO ${regiao.toUpperCase().replace('-', ' ')}`)
+                        setRegion(regiao || '')
                         setState(estado || '');
                         setUf(uf || '');
                     }} />
@@ -282,28 +340,47 @@ const ComparisonStats = () => {
                     </section>
 
                     <section className="bottomArea">
-                        <ColorCard color="#D92B66" title={statesList[0] ? statesList[0].uf : 'UF 1'} region={statesList[0] ? statesList[0].state : 'Estado 1'} />
-                        <ColorCard color="#028391" title={statesList[1] ? statesList[1].uf : 'UF 2'} region={statesList[1] ? statesList[1].state : 'Estado 2'} />
+                        {/* Estado 2 */}
+                        <ColorCard color={hexColors[0]?.base} title={statesList[0] ? statesList[0].uf : 'UF 1'} region={statesList[0] ? statesList[0].state : 'Estado 1'} />
+
+                        {/* Estado 1 */}
+                        <ColorCard color={hexColors[1]?.base} title={statesList[1] ? statesList[1].uf : 'UF 2'} region={statesList[1] ? statesList[1].state : 'Estado 2'} />
                     </section>
                 </section>
             </section>
 
             <section id={styles.ExpImpInfos}>
-                <TabNavigation tab={tab} onTabClick={(tabTradeType) => (setTradeType(tabTradeType))} />
+
+                <TabNavigation 
+                    tab={tab} 
+                    onTabClick={(tabTradeType) => (setTradeType(tabTradeType))} 
+                />
+
                 <section id={styles.mainInfosArea}>
                     {/* Estado 1 */}
-                    <section className="infoGridVertical">
+                    <section 
+                        className="infoGridVertical" 
+                        style={{
+                            color: hexColors[0]?.base
+                        }}
+                    >
                         <section className="topArea">
-                            <h3 className={styles.stateTitle}>{statesList[0] ? statesList[0].state : 'Estado 1'}</h3>
+                            <h3 className={styles.stateTitle}>
+                                {statesList[0] ? statesList[0].state : 'Estado 1'}
+                            </h3>
                         </section>
                         <section className="midArea">
                             <div className="gridItem">
-                                <IconTitle variant="map" title="Principais Países" />
+                                <IconTitle variant="map" title={
+                                    tradeType == 'exportacao'
+                                    ? 'Principais Países Exportadores'
+                                    : 'Principais Países Importadores'
+                                } />
                                 <div className="componentWrapper">
                                     <WorldMap
                                         selectedRegion="Norte"
                                         tradeType="exportacao"
-                                        colorPalette={["#B81D4E", "#D92B66", "#F5A4C3", "#F1A1B5"]}
+                                        colorPalette={hexColors[0] ? hexColors[0] : ['#f00']}
                                         countryDatas={{
                                             exportacao: statesData[0]?.countries
                                                 ? statesData[0].countries.map((country) => ({
@@ -345,13 +422,22 @@ const ComparisonStats = () => {
                     </section>
 
                     {/* Estado 2 */}
-                    <section className="infoGridVertical" style={{color:"var(--base-teal)"}}>
+                    <section 
+                        className="infoGridVertical" 
+                        style={{
+                            color: hexColors[1]?.base
+                        }}
+                    >
                         <section className="topArea">
                             <h3 className={styles.stateTitle}> {statesList[1] ? statesList[1].state : 'Estado 2'}</h3>
                         </section>
                         <section className="midArea">
                             <div className="gridItem">
-                                <IconTitle variant="map" title="Principais Países" color="currentColor"/>
+                                <IconTitle variant="map" title={
+                                    tradeType == 'exportacao'
+                                    ? 'Principais Países Exportadores'
+                                    : 'Principais Países Importadores'
+                                } />
                                 <div className="componentWrapper">
                                     <WorldMap
                                         selectedRegion="Norte"
