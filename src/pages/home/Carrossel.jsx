@@ -5,7 +5,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import styles from './Home.module.css';
 
 const Carrossel = () => {
-  const query = `"economia" OR "geopolítica" OR "exportações" OR "importações"`;
+  const query = `"importações de produtos" OR "Exportações de produtos"`;
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
 

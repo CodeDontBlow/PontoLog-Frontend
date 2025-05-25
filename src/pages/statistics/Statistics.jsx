@@ -49,6 +49,7 @@ const Statistics = () => {
     const [exportData, setExportData] = useState();
     const [importData, setImportData] = useState();
     const [mainData, SetMainData] = useState();
+    const [isLoading, setIsLoading] = useState(true);
 
     // Opções de descrição para o mapa do Brasil (para estatísticas)
     const getDescriptionText = () => {
@@ -73,8 +74,10 @@ const Statistics = () => {
 
     useEffect(() => {
         const controller = new AbortController();
+        let isCancelled = false; // flag de cancelamento
 
         const fetchAllData = async () => {
+            setIsLoading(true);
             try {
                 const params = {
                     initYear,
@@ -105,28 +108,36 @@ const Statistics = () => {
                     fetchData({ ...params, tradeType: 'importacao' })
                 ]);
 
-                setBalancoData(balancoData);
-                setExportFat(exportFat);
-                setImportFat(importFat);
-                setExportProduct(exportProduct);
-                setImportProduct(importProduct);
-                setExportData(exportData);
-                setImportData(importData);
-
+                if (!isCancelled) {
+                    setBalancoData(balancoData);
+                    setExportFat(exportFat);
+                    setImportFat(importFat);
+                    setExportProduct(exportProduct);
+                    setImportProduct(importProduct);
+                    setExportData(exportData);
+                    setImportData(importData);
+                }
             } catch (error) {
                 if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
-                    return;
+                    console.warn('Requisições canceladas.');
+                    return; // apenas ignora o erro de cancelamento
                 }
-                console.error('Error fetching data: ', error)
+                console.error('Error fetching data: ', error);
+            } finally {
+                if (!isCancelled) {
+                    setIsLoading(false);
+                }
             }
-        }
+        };
 
         fetchAllData();
 
         return () => {
+            isCancelled = true; // não finaliza loading nem atualiza estado após o cancelamento
             controller.abort();
         };
     }, [product, initYear, finalYear, periodoUnico, sh, uf]);
+
 
     useEffect(() => {
         if (product.length > 0) {
@@ -268,14 +279,13 @@ const Statistics = () => {
                         <div className="gridItem">
                             <IconTitle title="Balança Comercial" variant="lineChart" size='textMedium' />
                             <div className="componentWrapper">
-                                {balancoData && (
-                                    <LineChart
-                                        period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                        values={balancoData.map(bal => Number(bal.total))}
-                                        dataName="Balança Comercial"
-                                        colorPalette={["#D92B66"]}
-                                    />
-                                )}
+                                <LineChart
+                                    loading={isLoading}
+                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                    values={balancoData?.map(bal => Number(bal.total))}
+                                    dataName="Balança Comercial"
+                                    colorPalette={["#D92B66"]}
+                                />
                             </div>
                         </div>
                     </section>
@@ -283,9 +293,9 @@ const Statistics = () => {
                     {/* Parte de Baixo */}
                     <section className="bottomArea">
                         {/* Item 1 */}
-                        <InfoCard skeleton={false} title="Exportação" fatorAgregado={exportFat} produto={exportProduct} />
+                        <InfoCard skeleton={isLoading} title="Exportação" fatorAgregado={exportFat} produto={exportProduct} />
                         {/* Item 2 */}
-                        <InfoCard skeleton={false} title="Importação" fatorAgregado={importFat} produto={importProduct} />
+                        <InfoCard skeleton={isLoading} title="Importação" fatorAgregado={importFat} produto={importProduct} />
                     </section>
                 </section>
             </section>
@@ -301,23 +311,21 @@ const Statistics = () => {
                         <div className="gridItem">
                             <IconTitle variant="map" title="Principais Países" size='textMedium' />
                             <div className="componentWrapper">
-                                {mainData && (
-                                    <WorldMap
-                                        loading={false}
-                                        selectedRegion="Norte"
-                                        tradeType="exportacao"
-                                        colorPalette={["#B81D4E", "#D92B66", "#F5A4C3", "#F1A1B5"]}
-                                        countryDatas={{
-                                            exportacao: mainData.overallCountries.map(c => ({
-                                                country: c.NO_PAIS,
-                                                quantidade: Number(c.TOTAL_REGISTROS),
-                                                vl: Number(c.TOTAL_VL_AGREGADO),
-                                                kg: Number(c.TOTAL_KG_LIQUIDO),
-                                            })),
-                                            importacao: [],
-                                        }}
-                                    />
-                                )}
+                                <WorldMap
+                                    loading={isLoading}
+                                    selectedRegion="Norte"
+                                    tradeType="exportacao"
+                                    colorPalette={["#B81D4E", "#D92B66", "#F5A4C3", "#F1A1B5"]}
+                                    countryDatas={{
+                                        exportacao: (mainData?.overallCountries ?? []).map(c => ({
+                                            country: c.NO_PAIS,
+                                            quantidade: Number(c.TOTAL_REGISTROS),
+                                            vl: Number(c.TOTAL_VL_AGREGADO),
+                                            kg: Number(c.TOTAL_KG_LIQUIDO),
+                                        })),
+                                        importacao: [],
+                                    }}
+                                />
                             </div>
                         </div>
                     </section>
@@ -329,27 +337,24 @@ const Statistics = () => {
                             <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight' />
 
                             <div className="componentWrapper">
-                                {mainData && (<BarChart
-                                    skeleton={false}
-                                    items={mainData.via.map(via => via.NO_VIA)}
-                                    values={mainData.via.map(via => Number(via.total))}
+                                <BarChart
+                                    skeleton={isLoading}
+                                    items={mainData?.via?.map(via => via.NO_VIA)}
+                                    values={mainData?.via?.map(via => Number(via.total))}
                                     colorPalette={["#D92B66"]}
-                                />)
-                                }
+                                />
                             </div>
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
                             <IconTitle variant="barChart" title="Principais URFs" size='light' />
                             <div className="componentWrapper">
-                                {mainData && (
-                                    <BarChart
-                                        skeleton={false}
-                                        items={mainData.urf.map(urf => urf.NO_URF)}
-                                        values={mainData.urf.map(urf => Number(urf.total))}
-                                        colorPalette={["#D92B66"]}
-                                    />
-                                )}
+                                <BarChart
+                                    skeleton={isLoading}
+                                    items={mainData?.urf?.map(urf => urf.NO_URF)}
+                                    values={mainData?.urf?.map(urf => Number(urf.total))}
+                                    colorPalette={["#D92B66"]}
+                                />
                             </div>
                         </div>
                     </section>
@@ -362,15 +367,15 @@ const Statistics = () => {
                         <div className="gridItem">
                             <IconTitle title="Valor Agregado" variant="lineChart" size='textMedium' />
                             <div className="componentWrapper">
-                                {mainData && (<LineChart
-                                    loading={false}
+                                <LineChart
+                                    loading={isLoading}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={mainData.vlAgregado.map(value => Number(value.total))}
+                                    values={mainData?.vlAgregado?.map(value => Number(value.total))}
                                     dataName="Balança Comercial"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo11"
                                     group="bottomInfo1"
-                                />)}
+                                />
                             </div>
                         </div>
                     </section>
@@ -380,30 +385,30 @@ const Statistics = () => {
                         <div className="gridItem">
                             <IconTitle title="Quilograma Líquido" variant="lineChart" size='textLight' />
                             <div className="componentWrapper">
-                                {mainData && (<LineChart
-                                    loading={false}
+                                <LineChart
+                                    loading={isLoading}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={mainData.kgLiquido.map(value => Number(value.total))}
+                                    values={mainData?.kgLiquido?.map(value => Number(value.total))}
                                     dataName="kg_liquido"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo12"
                                     group="bottomInfo1"
-                                />)}
+                                />
                             </div>
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
                             <IconTitle title="Valor FOB" variant="lineChart" size='textLight' />
                             <div className="componentWrapper">
-                                {mainData && (<LineChart
-                                    loading={false}
+                                <LineChart
+                                    loading={isLoading}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={mainData.vlFob.map(value => Number(value.total))}
+                                    values={mainData?.vlFob?.map(value => Number(value.total))}
                                     dataName="vl_fob"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo13"
                                     group="bottomInfo1"
-                                />)}
+                                />
                             </div>
                         </div>
                     </section>
