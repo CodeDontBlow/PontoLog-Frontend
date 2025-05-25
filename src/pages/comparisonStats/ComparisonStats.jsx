@@ -279,6 +279,7 @@ const ComparisonStats = () => {
                             <IconTitle title="Balança Comercial" variant="lineChart" />
                             <div className="componentWrapper">
                                 <DoubleLineChart
+                                    loading={false}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={statesData.map(state => state.balanca?.map(item => item.total))}
                                     dataName={statesList.map((state) => state.state)}
@@ -312,6 +313,7 @@ const ComparisonStats = () => {
                                 <IconTitle variant="map" title="Principais Países" />
                                 <div className="componentWrapper">
                                     <WorldMap
+                                        loading={false}
                                         selectedRegion="Norte"
                                         tradeType="exportacao"
                                         colorPalette={["#B81D4E", "#D92B66", "#F5A4C3", "#F1A1B5"]}
@@ -334,6 +336,7 @@ const ComparisonStats = () => {
                                 <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight' />
                                 <div className="componentWrapper" style={{ padding: 0 }}>
                                     <BarChart
+                                        skeleton={false}
                                         items={statesData[0]?.vias?.map(item => item.NO_VIA)}
                                         values={statesData[0]?.vias?.map(item => item.total)}
                                         colorPalette={["#D92B66"]}
@@ -345,6 +348,7 @@ const ComparisonStats = () => {
                                 <IconTitle variant="barChart" title="Principais URF's Usadas" size='textLight' />
                                 <div className="componentWrapper" style={{ padding: 0 }}>
                                     <BarChart
+                                        skeleton={false}
                                         items={statesData[0]?.urfs?.map(item => item.NO_URF)}
                                         values={statesData[0]?.urfs?.map(item => item.total)}
                                         colorPalette={["#D92B66"]}
@@ -365,6 +369,7 @@ const ComparisonStats = () => {
                                 <IconTitle variant="map" title="Principais Países" />
                                 <div className="componentWrapper">
                                     <WorldMap
+                                        loading={false}
                                         selectedRegion="Norte"
                                         tradeType="exportacao"
                                         colorPalette={["#16707A", "#028391", "#80B8B8", "#A0D0D0"]}
@@ -388,6 +393,7 @@ const ComparisonStats = () => {
                                 <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight' />
                                 <div className="componentWrapper" style={{ padding: 0 }}>
                                     <BarChart
+                                        skeleton={false}
                                         items={statesData[1]?.vias?.map(item => item.NO_VIA)}
                                         values={statesData[1]?.vias?.map(item => item.total)}
                                         colorPalette={["#028391"]}
@@ -399,6 +405,7 @@ const ComparisonStats = () => {
                                 <IconTitle variant="barChart" title="Principais URF's Usadas" size='textLight' />
                                 <div className="componentWrapper" style={{ padding: 0 }}>
                                     <BarChart
+                                        skeleton={false}
                                         items={statesData[1]?.urfs?.map(item => item.NO_URF)}
                                         values={statesData[1]?.urfs?.map(item => item.total)}
                                         colorPalette={["#028391"]}
@@ -416,6 +423,7 @@ const ComparisonStats = () => {
                             <IconTitle title="Valor Agregado" variant="lineChart" />
                             <div className="componentWrapper">
                                 <DoubleLineChart
+                                    loading={false}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={statesData.map(state => state.vlAgregado?.map(item => item.total))}
                                     dataName={statesList.map((state) => state.state)}
@@ -429,6 +437,7 @@ const ComparisonStats = () => {
                             <IconTitle title="Quilograma Líquido" variant="lineChart" size='textLight' />
                             <div className="componentWrapper">
                                 <DoubleLineChart
+                                    loading={false}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={statesData.map(state => state.kgLiq?.map(item => item.total))}
                                     dataName={statesList.map((state) => state.state)}
@@ -441,6 +450,7 @@ const ComparisonStats = () => {
                             <IconTitle title="Valor FOB" variant="lineChart" size="textLight" />
                             <div className="componentWrapper">
                                 <DoubleLineChart
+                                    loading={false}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={statesData.map(state => state.vlFob?.map(item => item.total))}
                                     dataName={statesList.map((state) => state.state)}
