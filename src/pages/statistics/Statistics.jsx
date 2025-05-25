@@ -33,23 +33,22 @@ const Statistics = () => {
     // Estado
     const [region, setRegion] = useState('');
     const [state, setState] = useState('');
-    const [uf , setUf] = useState('');
+    const [uf, setUf] = useState('');
 
     const [tradeType, setTradeType] = useState('exportacao');
-    
+
     // state de opções dos inputs
     const [opcoesDeProduto, setOpcoesDeProduto] = useState([]);
     const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
 
-    // states para valores retornados pelo back
-    const [fatAgregado, setFatAgregado] = useState(null)
-    const [produtoPopular, setProdutoPopular] = useState('')
-    const [vias, setVias] = useState([])
-    const [urfs, setUrfs] = useState([])
-    const [vlAgregado, setVlAgregado] = useState([])
-    const [kgLiq, setKgLiq] = useState([])
-    const [vlFob, setVlFob] = useState([])
-    const [countries, setCountries] = useState([])
+    const [balancoData, setBalancoData] = useState();
+    const [exportProduct, setExportProduct] = useState();
+    const [importProduct, setImportProduct] = useState();
+    const [exportFat, setExportFat] = useState();
+    const [importFat, setImportFat] = useState();
+    const [exportData, setExportData] = useState();
+    const [importData, setImportData] = useState();
+    const [mainData, SetMainData] = useState();
 
     // Opções de descrição para o mapa do Brasil (para estatísticas)
     const getDescriptionText = () => {
@@ -61,7 +60,6 @@ const Statistics = () => {
             return "Para ver estatísticas de um estado, escolha uma das regiões do mapa abaixo.";
         }
     };
-    const [balanca, setBalanca] = useState([])
 
     const debounce = (func, delay) => {
         let timer;
@@ -74,26 +72,61 @@ const Statistics = () => {
     const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 50), [sh]);
 
     useEffect(() => {
+        const controller = new AbortController();
+
         const fetchAllData = async () => {
             try {
-                await Promise.all([
-                    fetchData('fat', setFatAgregado, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData(`product/no_${sh}_por`, setProdutoPopular, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData('via', setVias, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData('urf', setUrfs, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData('vl_agregado', setVlAgregado, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData('vl_fob', setVlFob, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData('kg_liquido', setKgLiq, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData('balanco', setBalanca, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                    fetchData('countries', setCountries, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-                ]);
-            } catch (error) {
-                console.error("Erro ao buscar dados", error);
-            }
-        };
+                const params = {
+                    initYear,
+                    region,
+                    uf,
+                    product,
+                    sh,
+                    finalYear,
+                    periodoUnico,
+                    signal: controller.signal
+                };
 
-        fetchAllData()
-    }, [product, initYear, finalYear, tradeType, periodoUnico, sh, state]);
+                const [
+                    balancoData,
+                    importFat,
+                    exportFat,
+                    exportProduct,
+                    importProduct,
+                    exportData,
+                    importData
+                ] = await Promise.all([
+                    fetchData({ ...params, endpoint: 'balanco' }),
+                    fetchData({ ...params, tradeType: 'exportacao', endpoint: 'fat' }),
+                    fetchData({ ...params, tradeType: 'importacao', endpoint: 'fat' }),
+                    fetchData({ ...params, tradeType: 'exportacao', endpoint: 'product' }),
+                    fetchData({ ...params, tradeType: 'importacao', endpoint: 'product' }),
+                    fetchData({ ...params, tradeType: 'exportacao' }),
+                    fetchData({ ...params, tradeType: 'importacao' })
+                ]);
+
+                setBalancoData(balancoData);
+                setExportFat(exportFat);
+                setImportFat(importFat);
+                setExportProduct(exportProduct);
+                setImportProduct(importProduct);
+                setExportData(exportData);
+                setImportData(importData);
+
+            } catch (error) {
+                if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
+                    return;
+                }
+                console.error('Error fetching data: ', error)
+            }
+        }
+
+        fetchAllData();
+
+        return () => {
+            controller.abort();
+        };
+    }, [product, initYear, finalYear, periodoUnico, sh, uf]);
 
     useEffect(() => {
         if (product.length > 0) {
@@ -101,10 +134,22 @@ const Statistics = () => {
         }
     }, [product, sh]);
 
+    useEffect(() => {
+        if (tradeType === 'exportacao' && exportData) {
+            SetMainData(exportData);
+        }
+    }, [tradeType, exportData]);
+
+    useEffect(() => {
+        if (tradeType === 'importacao' && importData) {
+            SetMainData(importData);
+        }
+    }, [tradeType, importData]);
+
     // Criando objetos TAB
     const tab = [
-        { id: 1, label: "Exportações" , tradeType: "exportacao"},
-        { id: 2, label: "Importações" , tradeType: "importacao"},
+        { id: 1, label: "Exportações", tradeType: "exportacao" },
+        { id: 2, label: "Importações", tradeType: "importacao" },
     ]
 
     const regiaoFormatada = () => {
@@ -135,12 +180,12 @@ const Statistics = () => {
                     {/* Input do Produto */}
                     <div className={styles.productInput}>
                         {/* <Input label="Nome do Produto" type="text" placeholder="Produto" id="product"/> */}
-                        <Dropdown search={true} placeholder={"Pesquisar..."} options={opcoesDeProduto.length > 0 ? opcoesDeProduto : ['...']} value={product} onChange={ (e) => {
+                        <Dropdown search={true} placeholder={"Pesquisar..."} options={opcoesDeProduto.length > 0 ? opcoesDeProduto : ['...']} value={product} onChange={(e) => {
                             const value = e.target.value;
                             setProduct(value);
                             debouncedGetProductByLetter(value);
                         }}
-                        onSelect={ (produto) => setProduct(produto)} />
+                            onSelect={(produto) => setProduct(produto)} />
                     </div>
 
                     {/* Input dos Anos */}
@@ -153,7 +198,7 @@ const Statistics = () => {
                         {/* Último Ano do Período */}
                         {periodoUnico &&
                             <div className={styles.lastYear}>
-                            {/* <Input label="..." placeholder="Ano de Término" type="Number" id="lastYear" / */}
+                                {/* <Input label="..." placeholder="Ano de Término" type="Number" id="lastYear" / */}
                                 <Dropdown label={"Ano de Término"} options={years} placeholder={"Ano de Término"} value={finalYear} onSelect={(year) => setFinalYear(year)} disable={periodoUnico} />
                             </div>
                         }
@@ -165,21 +210,21 @@ const Statistics = () => {
                     {/* Botões SH's */}
                     <div className={styles.productOptions}>
                         {/* SH4 */}
-                        <input type="radio" name="sh-selection" id="sh4" defaultChecked 
-                        onClick={ () => {
-                            setSh('sh4');
-                            setProduct('');
-                            setOpcoesDeProduto([])
-                        }}/>
+                        <input type="radio" name="sh-selection" id="sh4" defaultChecked
+                            onClick={() => {
+                                setSh('sh4');
+                                setProduct('');
+                                setOpcoesDeProduto([])
+                            }} />
                         <label htmlFor="sh4"> SH4 </label>
-                        
+
                         {/* SH6 */}
-                        <input type="radio" name="sh-selection" id="sh6" 
-                        onClick={ () => {
-                            setSh('sh6');
-                            setProduct('');
-                            setOpcoesDeProduto('')
-                        }}/>
+                        <input type="radio" name="sh-selection" id="sh6"
+                            onClick={() => {
+                                setSh('sh6');
+                                setProduct('');
+                                setOpcoesDeProduto('')
+                            }} />
                         <label htmlFor="sh6"> SH6 </label>
                     </div>
 
@@ -205,13 +250,13 @@ const Statistics = () => {
 
                     {/* Região/Estado selecionado */}
                     {state ? (
-                    <h2 className={styles.mapCurrentState}>{state}</h2>
+                        <h2 className={styles.mapCurrentState}>{state}</h2>
                     ) : region ? (
-                    <h2 className={styles.mapCurrentState}>Região {regiaoFormatada()}</h2>
+                        <h2 className={styles.mapCurrentState}>Região {regiaoFormatada()}</h2>
                     ) : null}
-                    <BrazilMap onRegionChange={ ({ regiao, estado , uf }) => {
-                        setRegion(`REGIAO ${regiao.toUpperCase().replace('-', ' ')}`); 
-                        setState(estado || ''); 
+                    <BrazilMap onRegionChange={({ regiao, estado, uf }) => {
+                        setRegion(`REGIAO ${regiao.toUpperCase().replace('-', ' ')}`);
+                        setState(estado || '');
                         setUf(uf || '');
                     }} />
                 </div>
@@ -223,10 +268,10 @@ const Statistics = () => {
                         <div className="gridItem">
                             <IconTitle title="Balança Comercial" variant="lineChart" size='textMedium' />
                             <div className="componentWrapper">
-                                {balanca.length > 0 && (
+                                {balancoData && (
                                     <LineChart
                                         period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                        values={balanca.map(bal => Number(bal.total))}
+                                        values={balancoData.map(bal => Number(bal.total))}
                                         dataName="Balança Comercial"
                                         colorPalette={["#D92B66"]}
                                     />
@@ -238,21 +283,17 @@ const Statistics = () => {
                     {/* Parte de Baixo */}
                     <section className="bottomArea">
                         {/* Item 1 */}
-                        <InfoCard title="Exportação" fatorAgregado={fatAgregado} produto={produtoPopular} />
+                        <InfoCard title="Exportação" fatorAgregado={exportFat} produto={exportProduct} />
                         {/* Item 2 */}
-                        <InfoCard title="Importação" fatorAgregado="Pouco manufaturado" produto="Grãos de Arroz" />
+                        <InfoCard title="Importação" fatorAgregado={importFat} produto={importProduct} />
                     </section>
                 </section>
             </section>
 
-
-
-
-
             {/* Informação completas de Exportação ou Importação */}
             <section id={styles.ExpImpInfos}>
-            {/* Deve-se definir melhor o uso do tab navigation!!! */}
-            <TabNavigation tab={tab} onTabClick={(tabTradeType) => (setTradeType(tabTradeType))} />
+                {/* Deve-se definir melhor o uso do tab navigation!!! */}
+                <TabNavigation tab={tab} onTabClick={(tabTradeType) => (setTradeType(tabTradeType))} />
                 {/* Molde de Grid Horizontal Reutilizável */}
                 <section className="infoGridHorizontal">
                     {/* Parte da Esquerda (Mapa do Mundo) */}
@@ -260,20 +301,22 @@ const Statistics = () => {
                         <div className="gridItem">
                             <IconTitle variant="map" title="Principais Países" size='textMedium' />
                             <div className="componentWrapper">
-                                <WorldMap
-                                    selectedRegion="Norte"
-                                    tradeType="exportacao"
-                                    colorPalette={["#B81D4E", "#D92B66", "#F5A4C3", "#F1A1B5"]}
-                                    countryDatas={{
-                                        exportacao: countries.map(c => ({
-                                            country: c.NO_PAIS,
-                                            quantidade: Number(c.TOTAL_REGISTROS),
-                                            vl: Number(c.TOTAL_VL_AGREGADO),
-                                            kg: Number(c.TOTAL_KG_LIQUIDO),
-                                        })),
-                                        importacao: [],
-                                    }}
-                                />
+                                {mainData && (
+                                    <WorldMap
+                                        selectedRegion="Norte"
+                                        tradeType="exportacao"
+                                        colorPalette={["#B81D4E", "#D92B66", "#F5A4C3", "#F1A1B5"]}
+                                        countryDatas={{
+                                            exportacao: mainData.overallCountries.map(c => ({
+                                                country: c.NO_PAIS,
+                                                quantidade: Number(c.TOTAL_REGISTROS),
+                                                vl: Number(c.TOTAL_VL_AGREGADO),
+                                                kg: Number(c.TOTAL_KG_LIQUIDO),
+                                            })),
+                                            importacao: [],
+                                        }}
+                                    />
+                                )}
                             </div>
                         </div>
                     </section>
@@ -285,21 +328,22 @@ const Statistics = () => {
                             <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight' />
 
                             <div className="componentWrapper">
-                                <BarChart
-                                    items={vias.map(via => via.NO_VIA)}
-                                    values={vias.map(via => Number(via.total))}
+                                {mainData && (<BarChart
+                                    items={mainData.via.map(via => via.NO_VIA)}
+                                    values={mainData.via.map(via => Number(via.total))}
                                     colorPalette={["#D92B66"]}
-                                />
+                                />)
+                                }
                             </div>
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
                             <IconTitle variant="barChart" title="Principais URFs" size='light' />
                             <div className="componentWrapper">
-                                {urfs.length > 0 && (
+                                {mainData && (
                                     <BarChart
-                                        items={urfs.map(urf => urf.NO_URF)}
-                                        values={urfs.map(urf => Number(urf.total))}
+                                        items={mainData.urf.map(urf => urf.NO_URF)}
+                                        values={mainData.urf.map(urf => Number(urf.total))}
                                         colorPalette={["#D92B66"]}
                                     />
                                 )}
@@ -315,14 +359,14 @@ const Statistics = () => {
                         <div className="gridItem">
                             <IconTitle title="Valor Agregado" variant="lineChart" size='textMedium' />
                             <div className="componentWrapper">
-                                <LineChart
+                                {mainData && (<LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={vlAgregado.map(value => Number(value.total))}
+                                    values={mainData.vlAgregado.map(value => Number(value.total))}
                                     dataName="Balança Comercial"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo11"
                                     group="bottomInfo1"
-                                />
+                                />)}
                             </div>
                         </div>
                     </section>
@@ -332,28 +376,28 @@ const Statistics = () => {
                         <div className="gridItem">
                             <IconTitle title="Quilograma Líquido" variant="lineChart" size='textLight' />
                             <div className="componentWrapper">
-                                <LineChart
+                                {mainData && (<LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={kgLiq.map(value => Number(value.total))}
+                                    values={mainData.kgLiquido.map(value => Number(value.total))}
                                     dataName="kg_liquido"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo12"
                                     group="bottomInfo1"
-                                />
+                                />)}
                             </div>
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
                             <IconTitle title="Valor FOB" variant="lineChart" size='textLight' />
                             <div className="componentWrapper">
-                                <LineChart
+                                {mainData && (<LineChart
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={vlFob.map(value => Number(value.total))}
+                                    values={mainData.vlFob.map(value => Number(value.total))}
                                     dataName="vl_fob"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo13"
                                     group="bottomInfo1"
-                                />
+                                />)}
                             </div>
                         </div>
                     </section>
