@@ -99,30 +99,6 @@ const ComparisonStats = () => {
 
     const [statesData, setStatesData] = useState([]);
 
-    // Função para buscar todos os dados de um estado
-    // const fetchStateData = async (uf, region) => {
-
-    //     const [vias, urfs, vlAgregado, kgLiq, vlFob, balanca, countries] = await Promise.all([
-    //         fetchData('via', null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-    //         fetchData('urf', null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-    //         fetchData('vl_agregado', null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-    //         fetchData('kg_liquido', null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-    //         fetchData('vl_fob', null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-    //         fetchData('balanco', null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-    //         fetchData('countries', null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico),
-    //     ]);
-    //     return {
-    //         estado: uf,
-    //         vias,
-    //         urfs,
-    //         vlAgregado,
-    //         kgLiq,
-    //         vlFob,
-    //         balanca,
-    //         countries,
-    //     };
-    // };
-
     const debounce = (func, delay) => {
         let timer;
         return (...args) => {
