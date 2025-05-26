@@ -281,8 +281,7 @@ const Statistics = () => {
                                 {/* {balanca.length > 0 && ( */}
                                     <LineChart
                                         period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                        // values={balanca.map(bal => Number(bal.total))}
-                                        values={[1,2,3,4,5,6]}
+                                        values={balanca.map(bal => Number(bal.total))}
                                         dataName="Balança Comercial"
                                         colorPalette={hexColors}
                                     />

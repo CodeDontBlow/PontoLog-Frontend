@@ -104,14 +104,8 @@ const ComparisonStats = () => {
     useEffect( () => {
         if(state){
             let colorName
-            let colorsObject = 
-                {
-                    state: state,
-                    toArray: function () {
-                        console.log( Object.values(this))
-                    }
-                }
             let objectKeys = [700 , "base" , 500 , 300]   
+            let colorsObject = { state: state }
 
             colorName = regionColors[region];
                 
@@ -125,15 +119,28 @@ const ComparisonStats = () => {
                 colorsObject[key] = hexCode
             }
 
-        // tons diferentes para estados com regiões iguais
-        if (statesList.length === 1 && statesList[0].region === region) {
-            colorsObject = {
-                ...colorsObject,
-                700: colorsObject[500],
-                base: colorsObject[500],
-            };
-        }
-            
+            // Definindo a cor principal (caso os estados sejam da mesma regiao, a cor principal deve mudar)
+            if (statesList.length === 1 && statesList[0].region === region) {
+                // Paleta 0
+                hexColors[0].main = hexColors[0][700]
+                
+                // Paleta 1
+                colorsObject = {
+                    ...colorsObject,
+                    main: colorsObject[500],
+                };
+            }
+            else {
+                // Paleta 1
+                colorsObject = {
+                    ...colorsObject,
+                    main: colorsObject.base,
+                };
+
+                hexColors.length > 0 && (hexColors[0].main = hexColors[0].base)
+
+            }
+                
             setHexColors(previewState => {
                 if (previewState.some(s => s.state === state)) {
                     return previewState
@@ -307,14 +314,14 @@ const ComparisonStats = () => {
                                 {statesList[0] && <>
                                     <span 
                                         onClick={() => { removeStateByIndex(0) }} 
-                                        style={{ color:hexColors[0].base}}> 
+                                        style={{ color:hexColors[0]?.main}}> 
                                         <FontAwesomeIcon icon={faX} className={styles.icon} /> {statesList[0].state} 
                                     </span> </>
                                 }
                                 {statesList[1] && <> |
                                     <span 
                                         onClick={() => { removeStateByIndex(1) }}
-                                        style={{ color: hexColors[1].base}}> 
+                                        style={{ color: hexColors[1]?.main}}> 
                                         <FontAwesomeIcon icon={faX} className={styles.icon} /> {statesList[1].state}
                                     </span> </>
                                 }]
@@ -344,7 +351,11 @@ const ComparisonStats = () => {
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={statesData.map(state => state.balanca?.map(item => item.total))}
                                     dataName={statesList.map((state) => state.state)}
-                                    colorPalette={["#D92B66", "#028391"]}
+                                    colorPalette={
+                                        hasTwo && hexColors[1]
+                                        ? [hexColors[0].main , hexColors[1].main]
+                                        : ['#F79F44' , '#028391']
+                                    }
                                 />
                             </div>
                         </div>
@@ -361,7 +372,7 @@ const ComparisonStats = () => {
                             }
                             colorPalette={
                                 hasTwo
-                                ? [hexColors[0]?.base , hexColors[1]?.base]
+                                ? [hexColors[0]?.main , hexColors[1]?.main]
                                 : ['var(--base-pink)' , 'var(--base-pink)']
                             }
                         />
@@ -372,8 +383,8 @@ const ComparisonStats = () => {
                         <ColorCard 
                             color={
                                 hasTwo
-                                ? hexColors[0]?.base
-                                : 'currentColor'
+                                ? hexColors[0]?.main
+                                : 'var(--base-sun)'
                             } 
                             title={
                                 hasTwo
@@ -389,7 +400,7 @@ const ComparisonStats = () => {
 
                         {/* Estado 2 */}
                         <ColorCard 
-                            color={hexColors[1]?.base || 'currentColor'} 
+                            color={hexColors[1]?.main || 'var(--base-teal)'} 
                             title={statesList[1]?.uf || 'UF 2'} 
                             region={statesList[1]?.state || 'Estado 2'} 
                         />
@@ -410,7 +421,7 @@ const ComparisonStats = () => {
                     <section 
                         className="infoGridVertical" 
                         style={{
-                            color: `${hasTwo ? hexColors[0]?.base : 'currentColor'}`
+                            color: `${hasTwo ? hexColors[0]?.main : 'var(--base-sun)'}`
                         }}
                     >
                         <section className="topArea">
@@ -429,7 +440,16 @@ const ComparisonStats = () => {
                                     <WorldMap
                                         selectedRegion="Norte"
                                         tradeType="exportacao"
-                                        colorPalette={['#f00']}
+                                        colorPalette={
+                                            hasTwo 
+                                            ? [
+                                                hexColors[0][700] , 
+                                                hexColors[0]['base'] , 
+                                                hexColors[0][500] , 
+                                                hexColors[0][300] 
+                                            ]
+                                            : ['#D88938', '#F79F44', '#FDD080', '#EBD29B']
+                                        }
                                         countryDatas={{
                                             exportacao: statesData[0]?.countries
                                                 ? statesData[0].countries.map((country) => ({
@@ -451,7 +471,11 @@ const ComparisonStats = () => {
                                     <BarChart
                                         items={statesData[0]?.vias?.map(item => item.NO_VIA)}
                                         values={statesData[0]?.vias?.map(item => item.total)}
-                                        colorPalette={["#D92B66"]}
+                                        colorPalette= {
+                                            (hasTwo && hexColors[1])
+                                            ? [hexColors[0][700] , hexColors[0].base , hexColors[0][500]]
+                                            : ['#D88938', '#F79F44', '#FDD080']
+                                        }
                                         isQuarter={true}
                                     />
                                 </div>
@@ -462,7 +486,11 @@ const ComparisonStats = () => {
                                     <BarChart
                                         items={statesData[0]?.urfs?.map(item => item.NO_URF)}
                                         values={statesData[0]?.urfs?.map(item => item.total)}
-                                        colorPalette={["#D92B66"]}
+                                        colorPalette={
+                                            (hasTwo && hexColors[1])
+                                            ? [hexColors[0][700] , hexColors[0].base , hexColors[0][500]]
+                                            : ['#D88938', '#F79F44', '#FDD080']
+                                        }
                                         isQuarter={true}
                                     />
                                 </div>
@@ -474,7 +502,7 @@ const ComparisonStats = () => {
                     <section 
                         className="infoGridVertical" 
                         style={{
-                            color: hexColors[1]?.base
+                            color: `${hasTwo ? hexColors[1]?.main : 'var(--base-teal)'}`
                         }}
                     >
                         <section className="topArea">
@@ -493,7 +521,16 @@ const ComparisonStats = () => {
                                     <WorldMap
                                         selectedRegion="Norte"
                                         tradeType="exportacao"
-                                        colorPalette={["#16707A", "#028391", "#80B8B8", "#A0D0D0"]}
+                                        colorPalette={
+                                            (hasTwo && hexColors[1])
+                                            ? [
+                                                hexColors[1][700] , 
+                                                hexColors[1]['base'] , 
+                                                hexColors[1][500] , 
+                                                hexColors[1][300] 
+                                            ]
+                                            : ['#16707A', '#028391', '#80B8B8', '#A0D0D0']
+                                        }
                                         countryDatas={{
                                             exportacao: statesData[1]?.countries
                                                 ? statesData[1].countries.map((country) => ({
@@ -516,7 +553,11 @@ const ComparisonStats = () => {
                                     <BarChart
                                         items={statesData[1]?.vias?.map(item => item.NO_VIA)}
                                         values={statesData[1]?.vias?.map(item => item.total)}
-                                        colorPalette={["#028391"]}
+                                        colorPalette={
+                                            (hasTwo && hexColors[1])
+                                            ? [hexColors[1][700] , hexColors[1].base , hexColors[1][500]]
+                                            : ['#16707A', '#028391', '#80B8B8']
+                                        }
                                         isQuarter={true}
                                     />
                                 </div>
@@ -527,7 +568,11 @@ const ComparisonStats = () => {
                                     <BarChart
                                         items={statesData[1]?.urfs?.map(item => item.NO_URF)}
                                         values={statesData[1]?.urfs?.map(item => item.total)}
-                                        colorPalette={["#028391"]}
+                                        colorPalette={
+                                            (hasTwo && hexColors[1])
+                                            ? [hexColors[1][700] , hexColors[1].base , hexColors[1][500]]
+                                            : ['#16707A', '#028391', '#80B8B8']
+                                        }
                                         isQuarter={true}
                                     />
                                 </div>
@@ -553,7 +598,11 @@ const ComparisonStats = () => {
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={statesData.map(state => state.vlAgregado?.map(item => item.total))}
                                     dataName={statesList.map((state) => state.state)}
-                                    colorPalette={["#D92B66", "#028391"]}
+                                    colorPalette={
+                                        hasTwo && hexColors[1]
+                                        ? [hexColors[0].main , hexColors[1].main]
+                                        : ['#F79F44' , '#028391']
+                                    }
                                 />
                             </div>
                         </div>
@@ -566,7 +615,11 @@ const ComparisonStats = () => {
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={statesData.map(state => state.kgLiq?.map(item => item.total))}
                                     dataName={statesList.map((state) => state.state)}
-                                    colorPalette={["#D92B66", "#028391"]}
+                                    colorPalette={
+                                        hasTwo && hexColors[1]
+                                        ? [hexColors[0].main , hexColors[1].main]
+                                        : ['#F79F44' , '#028391']
+                                    }
                                     legends="false"
                                 />
                             </div>
@@ -578,7 +631,11 @@ const ComparisonStats = () => {
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={statesData.map(state => state.vlFob?.map(item => item.total))}
                                     dataName={statesList.map((state) => state.state)}
-                                    colorPalette={["#D92B66", "#028391"]}
+                                    colorPalette={
+                                        hasTwo && hexColors[1]
+                                        ? [hexColors[0].main , hexColors[1].main]
+                                        : ['#F79F44' , '#028391']
+                                    }
                                     legends="false"
                                 />
                             </div>
