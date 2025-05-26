@@ -1,8 +1,9 @@
-import Chart from "react-apexcharts"
-import React , {useState , useEffect} from 'react'
+import Chart from "react-apexcharts";
+import React , {useState , useEffect} from 'react';
+import Loading from "../Loading/Loading";
 
 //GRÁFICO DE LINHA
-const LineChart = ({period , values , dataName , chartDescription , colorPalette , id , group}) => {
+const LineChart = ({period , values , dataName , chartDescription , colorPalette , id , group, loading}) => {
 
     //PROPS
     //period: Periodo de tempo (eixo x) [lista]
@@ -15,9 +16,10 @@ const LineChart = ({period , values , dataName , chartDescription , colorPalette
     //Ex.: <LineChart values={[20,10,20,10,-10]} period={[2014,2015,2016,2017,2018]} dataName={"Valor Agregado"} colorPalette="#ff0011" id="id" group="grupo"/>
 
     //Opções de customização do gráfico
-    const [options] = useState(
-        {
-            colors: colorPalette,
+   const [options, setOptions] = useState({})
+
+    useEffect(() => {
+        setOptions({
             chart:{
                 id: id,
                 group: group,
@@ -75,14 +77,21 @@ const LineChart = ({period , values , dataName , chartDescription , colorPalette
                 curve: "smooth",
                 width: "3",
             },
+            colors: [colorPalette[1]],
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    gradientToColors: [colorPalette[0]],
+                    stops: [0 , 100]
+                }
+            },
             markers: {
                 size: 3,
-                colors: colorPalette,
                 strokeColors: "var(--white-300)",
                 strokeWidth: 2,
             }
-        }
-    )
+        })
+    }, [colorPalette, period, chartDescription, id, group])
 
     //Valores do gráfico
     const [series, setSeries] = useState([
@@ -100,6 +109,10 @@ const LineChart = ({period , values , dataName , chartDescription , colorPalette
             },
         ])
     }, [values])
+
+    if(loading) {
+        return <Loading />
+    }
 
     //Componente de gráfico do ApexCharts recebendo os valores definidos acima
     return(

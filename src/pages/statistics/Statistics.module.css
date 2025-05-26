@@ -104,8 +104,8 @@ div.optionsContainer{
     transform: scale(1.05);
 }
 
-.productOptions>input[type="radio"]:checked+label {
-    background-color: var(--base-pink);
+.inputOptions>input[type="radio"]:checked+label {
+    background-color: var(--highlight-base);
 
     color: var(--white-500);
     font-weight: 500;
@@ -131,12 +131,15 @@ section#primaryInfos .navMap {
         margin-top: 0.875rem;
         color: var(--black-500);
         font: var(--title-regular);
+        font-size: 2.1em;
         text-align: center;
     }
 
     .navMap .mapDescription {
         color: var(--black-500);
         font: var(--text-medium);
+        font-size: 1.1em;
+        line-height: 1.3em;
         text-align: center;
     }
 

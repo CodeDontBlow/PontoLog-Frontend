@@ -15,7 +15,9 @@ import Checkbox from '../../components/Buttons/Checkbox/Checkbox'
 import IconTitle from '../../components/IconTitle/IconTitle'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import TabNavigation from '../../components/Tab/TabNavigation'
+import Alert from '../../components/Alert/Alert'
 
+import { regionColors } from '../../components/Maps/BrazilMap'
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 import { faX } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -25,7 +27,7 @@ const ComparisonStats = () => {
     // STATES DOS FILTROS
     const [product, setProduct] = useState('')
     const [sh, setSh] = useState('sh4');
-    const [periodoUnico, setPeriodoUnico] = useState(true);
+    const [periodoUnico, setPeriodoUnico] = useState(false);
     const [initYear, setInitYear] = useState(2014)
     const [finalYear, setFinalYear] = useState(2024)
     const [perido, setPeriodo] = useState([])
@@ -45,19 +47,33 @@ const ComparisonStats = () => {
         }
     ]);
     const [mainData, SetMainData] = useState('exportData')
+    const [opcoesDeProduto, setOpcoesDeProduto] = useState([])
+    const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
+    const [tradeType, setTradeType] = useState('exportacao');
+    const [statesData, setStatesData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    // states do alert
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertVariant, setAlertVariant] = useState('');
+
+
+    const [hasTwo , setHasTwo] = useState(false)
 
     // Mudando a lista de estados quando um estado novo for selecionado
     useEffect(() => {
         if (state) {
-            if (statesList[0] == state) {
-                return
-            }
             setStatesList(previewList => {
+                if (previewList.some(s => s.state === state)) {
+                    return previewList
+                }
                 const currentList = [...previewList] //Cópia de segurança do conteúdo da lista anterior
                 // Caso a lista já tenha 2 elementos, remove o último
                 if (currentList.length >= 2) {
                     currentList.pop()
                 }
+
                 // Adiciona o novo estado selecionado no BrazilMap
                 let newStateObject = {
                     state: state,
@@ -70,12 +86,29 @@ const ComparisonStats = () => {
         }
     }, [state])
 
+    useEffect( () => {
+        setHasTwo(statesList.length >= 2)
+    } , [statesList])
+
     const removeStateByIndex = (index) => {
         setStatesList(previewList => [
             ...previewList.slice(0, index),
             ...previewList.slice(index + 1)
         ])
+    
+        removeColorByIndex(index)
     }
+
+    const removeColorByIndex = (index) => {
+        setHexColors(previewList => [
+            ...previewList.slice(0 , index),
+            ...previewList.slice(index + 1)
+        ])
+    }
+
+    useEffect(() => {
+        console.log(isLoading)
+    }, [isLoading])
 
     // Opções de descrição para o mapa do Brasil (para comparação)
     const getDescriptionText = () => {
@@ -90,14 +123,70 @@ const ComparisonStats = () => {
         }
     };
 
-    const [opcoesDeProduto, setOpcoesDeProduto] = useState([])
-    const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
-    // const [state, setState] = useState('');
-    const [tradeType, setTradeType] = useState('exportacao');
+    
+    // TROCA DINAMICA DE CORES
+    // Lista com o código das cores atuais
+    const [hexColors , setHexColors] = useState([
+    ])
 
-    // ...existing code...
+    // Muda a variável CSS highlight, que recebe o valor da cor atual
+    useEffect( () => {
+        if(state){
+            let regiao = regiaoFormatada()
+            let colorName
+            let objectKeys = [700 , "base" , 500 , 300]   
+            let colorsObject = { state: state }
 
-    const [statesData, setStatesData] = useState([]);
+            colorName = regionColors[regiao];
+                
+            let computed = getComputedStyle(document.documentElement)
+
+            for(let key of objectKeys){
+                let hexCode = key == "base"
+                    ? computed.getPropertyValue(`--${key}-${colorName}`).trim()
+                    : computed.getPropertyValue(`--${colorName}-${key}`).trim()
+
+                colorsObject[key] = hexCode
+            }
+
+            // Definindo a cor principal (caso os estados sejam da mesma regiao, a cor principal deve mudar)
+            if (statesList.length === 1 && statesList[0].region === region) {
+                // Paleta 0
+                hexColors[0].main = hexColors[0][700]
+                
+                // Paleta 1
+                colorsObject = {
+                    ...colorsObject,
+                    main: colorsObject[500],
+                };
+            }
+            else {
+                // Paleta 1
+                colorsObject = {
+                    ...colorsObject,
+                    main: colorsObject.base,
+                };
+
+                hexColors.length > 0 && (hexColors[0].main = hexColors[0].base)
+
+            }
+                
+            setHexColors(previewState => {
+                if (previewState.some(s => s.state === state)) {
+                    return previewState
+                }
+
+                let prev = [...previewState]
+                if(prev.length >= 2){
+                    prev.pop()
+                }
+
+                return[...prev , colorsObject]
+            })
+        }
+
+        
+    }, [state])
 
     const debounce = (func, delay) => {
         let timer;
@@ -111,19 +200,20 @@ const ComparisonStats = () => {
 
     useEffect(() => {
         const controller = new AbortController();
+        let isCancelled = false;
 
         const fetchStateData = async (uf, region) => {
             try {
                 const params = {
                     initYear,
-                    region: region,
-                    uf: uf,
+                    region,
+                    uf,
                     product,
                     sh,
                     finalYear,
                     periodoUnico,
                     signal: controller.signal
-                }
+                };
 
                 const [
                     balancoData,
@@ -134,37 +224,59 @@ const ComparisonStats = () => {
                     fetchData({ ...params, tradeType: 'exportacao' }),
                     fetchData({ ...params, tradeType: 'importacao' })
                 ]);
+
                 return {
                     estado: uf,
                     balancoData,
                     exportData,
-                    importData,
+                    importData
                 };
             } catch (error) {
                 if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
+                    console.warn(`Requisições do estado ${uf} canceladas.`);
                     return;
                 }
-                console.error('Error fetching data: ', error)
+                console.error('Error fetching data: ', error);
             }
-        }
-
-        const fetchAllStatesData = async () => {
-            const results = await Promise.all(
-                statesList.map((state) => fetchStateData(state.uf, state.region))
-            );
-            setStatesData(results);
         };
 
-        if (!statesList.length <= 1) {
+        const fetchAllStatesData = async () => {
+            setIsLoading(true);
+            try {
+                const results = await Promise.all(
+                    statesList.map((state) => fetchStateData(state.uf, state.region))
+                );
+                if (!isCancelled) {
+                    setStatesData(results);
+                }
+            } finally {
+                if (!isCancelled) {
+                    setAlertMessage(
+                        `Dados atualizados para ${statesList[0]?.state || 'Estado 1'} e ${statesList[1]?.state || 'Estado 2'} estão sendo exibidos conforme os parâmetros selecionados.`
+                    )
+                    setAlertVariant('success')
+                    setShowAlert(true)
+                    setIsLoading(false);
+                }
+            }
+        };
+
+        if (statesList.length > 1) {
             fetchAllStatesData();
         } else {
-            setStatesData([])
+            setIsLoading(true)
+            setAlertMessage("Por favor, selecione dois estados para visualizar os dados. Caso seja necessário visualizar apenas um, utilize a página de estatísticas.")
+            setAlertVariant('warning')
+            setShowAlert(true)
+            setStatesData([]);
         }
 
         return () => {
+            isCancelled = true;
             controller.abort();
         };
-    }, [product, sh, periodoUnico, initYear, finalYear, statesList])
+    }, [product, sh, periodoUnico, initYear, finalYear, statesList]);
+
 
     useEffect(() => {
         {
@@ -195,23 +307,24 @@ const ComparisonStats = () => {
         { id: 1, label: "Exportações", tradeType: "exportacao" },
         { id: 2, label: "Importações", tradeType: "importacao" },
     ]
-
+    
     const regiaoFormatada = () => {
-        const prefixRemoved = region.replace("REGIAO ", '');
+        const prefixRemoved = region.replace("REGIAO ", '').toLowerCase();
+        if (prefixRemoved == 'centro-oeste') {
+            return 'Centro-Oeste';
+        }
 
-        const finalRegionStr = prefixRemoved[0] + prefixRemoved.slice(1).toLowerCase();
-
-        if (finalRegionStr === 'Centro oeste') return 'Centro-Oeste';
-
-        return finalRegionStr;
+        return prefixRemoved[0].toUpperCase() + prefixRemoved.slice(1);
     }
 
-    return (
-        <div id={styles.statisticsPage}>
 
-            {/* Área dos Inputs */}
-            {/* Labels */}
+    return (
+        <div id={styles.statisticsPage} style={{color:"var(--base-pink)"}}>
+
+
+        {/* Área dos Inputs */}
             <section id={styles.inputArea}>
+                {/* Labels */}
                 <div className={styles.labelsContainer}>
                     <label className={styles.productLabel} htmlFor="">Produtos</label>
 
@@ -282,10 +395,19 @@ const ComparisonStats = () => {
                             <p className={styles.statesList}>
                                 [
                                 {statesList[0] && <>
-                                    <span onClick={() => { removeStateByIndex(0) }} style={{ color: 'var(--base-green)' }}> <FontAwesomeIcon icon={faX} className={styles.icon} /> {statesList[0].state} </span> </>}
+                                    <span 
+                                        onClick={() => { removeStateByIndex(0) }} 
+                                        style={{ color:hexColors[0]?.main}}> 
+                                        <FontAwesomeIcon icon={faX} className={styles.icon} /> {statesList[0].state} 
+                                    </span> </>
+                                }
                                 {statesList[1] && <> |
-                                    <span onClick={() => { removeStateByIndex(1) }} style={{ color: 'var(--base-teal)' }}> <FontAwesomeIcon icon={faX} className={styles.icon} /> {statesList[1].state} </span> </>}
-                                ]
+                                    <span 
+                                        onClick={() => { removeStateByIndex(1) }}
+                                        style={{ color: hexColors[1]?.main}}> 
+                                        <FontAwesomeIcon icon={faX} className={styles.icon} /> {statesList[1].state}
+                                    </span> </>
+                                }]
                             </p>
                         }
                     </div>
@@ -298,7 +420,7 @@ const ComparisonStats = () => {
                         )}
 
                     <MultiBrazilMap onRegionChange={({ regiao, estado, uf }) => {
-                        setRegion(`REGIAO ${regiao.toUpperCase().replace('-', ' ')}`)
+                        setRegion(regiao || '')
                         setState(estado || '');
                         setUf(uf || '');
                     }} />
@@ -310,44 +432,110 @@ const ComparisonStats = () => {
                             <IconTitle title="Balança Comercial" variant="lineChart" />
                             <div className="componentWrapper">
                                 <DoubleLineChart
-                                    loading={false}
+                                    loading={isLoading}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={statesData.map(state => state.balancoData?.map(item => item.total))}
                                     dataName={statesList.map((state) => state.state)}
-                                    colorPalette={["#D92B66", "#028391"]}
+                                    colorPalette={
+                                        hasTwo && hexColors[1]
+                                        ? [hexColors[0].main , hexColors[1].main]
+                                        : ['#028391' , '#F79F44']
+                                    }
                                 />
                             </div>
                         </div>
                     </section>
 
                     <section className="midArea">
-                        <AlertCard variant='comparisonInfo' icon={faCircleInfo} region={["Brasil", "São Paulo"]} />
+                        <AlertCard 
+                            variant='comparisonInfo' 
+                            icon={faCircleInfo} 
+                            region={
+                                hasTwo
+                                ? [statesList[0]?.state, statesList[1]?.state]
+                                : ['Estado 1' , 'Estado 2']
+                            }
+                            colorPalette={
+                                hasTwo
+                                ? [hexColors[0]?.main , hexColors[1]?.main]
+                                : ['var(--base-pink)' , 'var(--base-pink)']
+                            }
+                        />
                     </section>
 
                     <section className="bottomArea">
-                        <ColorCard color="#D92B66" title={statesList[0] ? statesList[0].uf : 'UF 1'} region={statesList[0] ? statesList[0].state : 'Estado 1'} />
-                        <ColorCard color="#028391" title={statesList[1] ? statesList[1].uf : 'UF 2'} region={statesList[1] ? statesList[1].state : 'Estado 2'} />
+                        {/* Estado 1 */}
+                        <ColorCard 
+                            color={
+                                hasTwo && hexColors[1]
+                                ? hexColors[0]?.main
+                                : 'var(--base-teal)'
+                            } 
+                            title={
+                                hasTwo && statesList[0]
+                                ? statesList[0].uf
+                                : 'UF 1'
+                            } 
+                            region={
+                                hasTwo && statesList[0]
+                                ? statesList[0].state
+                                : 'Estado 1'
+                            } 
+                        />
+
+                        {/* Estado 2 */}
+                        <ColorCard 
+                            color={hexColors[1]?.main || 'var(--base-sun)'} 
+                            title={statesList[1]?.uf || 'UF 2'} 
+                            region={statesList[1]?.state || 'Estado 2'} 
+                        />
+
                     </section>
                 </section>
             </section>
 
             <section id={styles.ExpImpInfos}>
-                <TabNavigation tab={tab} onTabClick={(tabTradeType) => (setTradeType(tabTradeType))} />
+
+                <TabNavigation 
+                    tab={tab} 
+                    onTabClick={(tabTradeType) => (setTradeType(tabTradeType))} 
+                />
+
                 <section id={styles.mainInfosArea}>
                     {/* Estado 1 */}
-                    <section className="infoGridVertical">
+                    <section 
+                        className="infoGridVertical" 
+                        style={{
+                            color: `${hasTwo ? hexColors[0]?.main : 'var(--base-teal)'}`
+                        }}
+                    >
                         <section className="topArea">
-                            <h3 className={styles.stateTitle}>{statesList[0] ? statesList[0].state : 'Estado 1'}</h3>
+                            <h3 className={styles.stateTitle}>
+                                {hasTwo ? statesList[0]?.state : 'Estado 1'}
+                            </h3>
                         </section>
                         <section className="midArea">
                             <div className="gridItem">
-                                <IconTitle variant="map" title="Principais Países" />
+                                <IconTitle variant="map" title={
+                                    tradeType == 'exportacao'
+                                    ? 'Principais Países Exportadores'
+                                    : 'Principais Países Importadores'
+                                } />
                                 <div className="componentWrapper">
                                     <WorldMap
-                                        loading={false}
+                                        loading={isLoading}
                                         selectedRegion="Norte"
                                         tradeType="exportacao"
-                                        colorPalette={["#B81D4E", "#D92B66", "#F5A4C3", "#F1A1B5"]}
+                                        colorPalette={
+                                            hasTwo && hexColors[0]
+                                            ? [
+                                                hexColors[0][700] , 
+                                                hexColors[0]['base'] , 
+                                                hexColors[0][500] , 
+                                                hexColors[0][300] 
+                                            ]
+                                            : ['#16707A', '#028391', '#80B8B8', '#A0D0D0']
+                                        }
                                         countryDatas={{
                                             exportacao: statesData[0]?.[mainData]
                                                 ? statesData[0][mainData]
@@ -369,10 +557,14 @@ const ComparisonStats = () => {
                                 <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight' />
                                 <div className="componentWrapper" style={{ padding: 0 }}>
                                     <BarChart
-                                        skeleton={false}
+                                        skeleton={isLoading}
                                         items={statesData[0]?.[mainData]?.via?.map(item => item.NO_VIA)}
                                         values={statesData[0]?.exportData?.via?.map(item => item.total)}
-                                        colorPalette={["#D92B66"]}
+                                        colorPalette= {
+                                            (hasTwo && hexColors[1])
+                                            ? [hexColors[0][700] , hexColors[0].base , hexColors[0][500]]
+                                            : ['#D88938', '#F79F44', '#FDD080']
+                                        }
                                         isQuarter={true}
                                     />
                                 </div>
@@ -381,10 +573,14 @@ const ComparisonStats = () => {
                                 <IconTitle variant="barChart" title="Principais URF's Usadas" size='textLight' />
                                 <div className="componentWrapper" style={{ padding: 0 }}>
                                     <BarChart
-                                        skeleton={false}
+                                        skeleton={isLoading}
                                         items={statesData[0]?.[mainData]?.urf?.map(item => item.NO_URF)}
                                         values={statesData[0]?.[mainData]?.urf?.map(item => item.total)}
-                                        colorPalette={["#D92B66"]}
+                                        colorPalette={
+                                            (hasTwo && hexColors[1])
+                                            ? [hexColors[0][700] , hexColors[0].base , hexColors[0][500]]
+                                            : ['#D88938', '#F79F44', '#FDD080']
+                                        }
                                         isQuarter={true}
                                     />
                                 </div>
@@ -393,19 +589,39 @@ const ComparisonStats = () => {
                     </section>
 
                     {/* Estado 2 */}
-                    <section className="infoGridVertical">
+                    <section 
+                        className="infoGridVertical" 
+                        style={{
+                            color: `${hasTwo ? hexColors[1]?.main : 'var(--base-sun)'}`
+                        }}
+                    >
                         <section className="topArea">
-                            <h3 className={styles.stateTitle}> {statesList[1] ? statesList[1].state : 'Estado 2'}</h3>
+                            <h3 className={styles.stateTitle}> 
+                                {hasTwo ? statesList[1]?.state : 'Estado 2'}
+                            </h3>
                         </section>
                         <section className="midArea">
                             <div className="gridItem">
-                                <IconTitle variant="map" title="Principais Países" />
+                                <IconTitle variant="map" title={
+                                    tradeType == 'exportacao'
+                                    ? 'Principais Países Exportadores'
+                                    : 'Principais Países Importadores'
+                                } />
                                 <div className="componentWrapper">
                                     <WorldMap
-                                        loading={false}
+                                        loading={isLoading}
                                         selectedRegion="Norte"
                                         tradeType="exportacao"
-                                        colorPalette={["#16707A", "#028391", "#80B8B8", "#A0D0D0"]}
+                                        colorPalette={
+                                            (hasTwo && hexColors[1])
+                                            ? [
+                                                hexColors[1][700] , 
+                                                hexColors[1]['base'] , 
+                                                hexColors[1][500] , 
+                                                hexColors[1][300] 
+                                            ]
+                                            : ['#D88938', '#F79F44', '#FDD080', '#EBD29B']
+                                        }
                                         countryDatas={{
                                             exportacao: statesData[1]?.[mainData]
                                                 ? statesData[1][mainData]
@@ -428,10 +644,14 @@ const ComparisonStats = () => {
                                 <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight' />
                                 <div className="componentWrapper" style={{ padding: 0 }}>
                                     <BarChart
-                                        skeleton={false}
+                                        skeleton={isLoading}
                                         items={statesData[1]?.[mainData]?.via?.map(item => item.NO_VIA)}
                                         values={statesData[1]?.[mainData]?.via?.map(item => item.total)}
-                                        colorPalette={["#028391"]}
+                                        colorPalette={
+                                            (hasTwo && hexColors[1])
+                                            ? [hexColors[1][700] , hexColors[1].base , hexColors[1][500]]
+                                            : ['#16707A', '#028391', '#80B8B8']
+                                        }
                                         isQuarter={true}
                                     />
                                 </div>
@@ -440,10 +660,14 @@ const ComparisonStats = () => {
                                 <IconTitle variant="barChart" title="Principais URF's Usadas" size='textLight' />
                                 <div className="componentWrapper" style={{ padding: 0 }}>
                                     <BarChart
-                                        skeleton={false}
+                                        skeleton={isLoading}
                                         items={statesData[1]?.[mainData]?.urf?.map(item => item.NO_URF)}
                                         values={statesData[1]?.[mainData]?.urf?.map(item => item.total)}
-                                        colorPalette={["#028391"]}
+                                        colorPalette={
+                                            (hasTwo && hexColors[1])
+                                            ? [hexColors[1][700] , hexColors[1].base , hexColors[1][500]]
+                                            : ['#16707A', '#028391', '#80B8B8']
+                                        }
                                         isQuarter={true}
                                     />
                                 </div>
@@ -452,17 +676,29 @@ const ComparisonStats = () => {
                     </section>
                 </section>
 
-                <section className="infoGridHorizontal lineChartsArea" id={styles.halfGrid}>
+
+
+
+
+
+
+
+
+                <section className="infoGridHorizontal lineChartsArea">
                     <section className="leftArea">
                         <div className="gridItem">
                             <IconTitle title="Valor Agregado" variant="lineChart" />
                             <div className="componentWrapper">
                                 <DoubleLineChart
-                                    loading={false}
+                                    loading={isLoading}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={statesData.map(state => state[mainData]?.vlAgregado?.map(item => item.total))}
                                     dataName={statesList.map((state) => state.state)}
-                                    colorPalette={["#D92B66", "#028391"]}
+                                    colorPalette={
+                                        hasTwo && hexColors[1]
+                                        ? [hexColors[0].main , hexColors[1].main]
+                                        : ['#028391' , '#F79F44']
+                                    }
                                 />
                             </div>
                         </div>
@@ -472,11 +708,15 @@ const ComparisonStats = () => {
                             <IconTitle title="Quilograma Líquido" variant="lineChart" size='textLight' />
                             <div className="componentWrapper">
                                 <DoubleLineChart
-                                    loading={false}
+                                    loading={isLoading}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={statesData.map(state => state[mainData]?.kgLiquido?.map(item => item.total))}
                                     dataName={statesList.map((state) => state.state)}
-                                    colorPalette={["#D92B66", "#028391"]}
+                                    colorPalette={
+                                        hasTwo && hexColors[1]
+                                        ? [hexColors[0].main , hexColors[1].main]
+                                        : ['#028391' , '#F79F44']
+                                    }
                                     legends="false"
                                 />
                             </div>
@@ -485,11 +725,15 @@ const ComparisonStats = () => {
                             <IconTitle title="Valor FOB" variant="lineChart" size="textLight" />
                             <div className="componentWrapper">
                                 <DoubleLineChart
-                                    loading={false}
+                                    loading={isLoading}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={statesData.map(state => state[mainData]?.vlFob?.map(item => item.total))}
                                     dataName={statesList.map((state) => state.state)}
-                                    colorPalette={["#D92B66", "#028391"]}
+                                    colorPalette={
+                                        hasTwo && hexColors[1]
+                                        ? [hexColors[0].main , hexColors[1].main]
+                                        : ['#028391' , '#F79F44']
+                                    }
                                     legends="false"
                                 />
                             </div>
@@ -497,6 +741,15 @@ const ComparisonStats = () => {
                     </section>
                 </section>
             </section>
+
+            {showAlert &&
+                <Alert
+                    type={alertVariant}
+                    message={alertMessage}
+                    onClose={() => setShowAlert(false)}
+                />
+            }
+
         </div>
     );
 };

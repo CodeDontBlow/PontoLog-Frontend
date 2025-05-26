@@ -14,11 +14,11 @@ const regionMap = {
 };
 
 export const regionColors = {
-  Norte: "#14A538",
-  Nordeste: "#EB641C",
-  "Centro-Oeste": "#F79F44",
-  Sudeste: "#028391",
-  Sul: "#731CA5",
+  Norte: "green",
+  Nordeste: "orange",
+  "Centro-Oeste": "sun",
+  Sudeste: "teal",
+  Sul: "purple",
 };
 
 const FitBoundsToRegion = ({ features }) => {
@@ -63,13 +63,13 @@ const BrazilMap = ({ onRegionChange }) => {
     if (selectedState) {
       const feature = getSelectedStateFeature();
       const region = regionMap[parseInt(feature.properties.regiao_id)];
-      const color = regionColors[region];
+      const color = `var(--base-${regionColors[region]})`;
 
       return (
         <GeoJSON
           key={`state-${selectedState}`}
           data={feature}
-          style={{
+          style={{color: `var(--base-${regionColors[selectedRegion]})`,
             weight: 1,
             fillColor: color,
             fillOpacity: 1,
@@ -92,7 +92,7 @@ const BrazilMap = ({ onRegionChange }) => {
     }
 
     if (selectedRegion) {
-      const regionColor = regionColors[selectedRegion];
+      const regionColor = `var(--base-${regionColors[selectedRegion]})`;
 
       return (
         <GeoJSON
@@ -133,9 +133,9 @@ const BrazilMap = ({ onRegionChange }) => {
           features,
         }}
         style={{
-          color: regionColors[regionName],
+          color: `var(--base-${regionColors[regionName]})`,
           weight: 1,
-          fillColor: regionColors[regionName],
+          fillColor: `var(--base-${regionColors[regionName]})`,
           fillOpacity: 1,
           cursor: "pointer",
         }}
@@ -166,10 +166,10 @@ const BrazilMap = ({ onRegionChange }) => {
 
       <MapContainer
         center={[-14.235, -51.9253]}
-        zoomSnap={0.1}
-        zoom={6}
+        zoomSnap={0.0001}
+        zoom={70}
         style={{
-          height: "40em",
+          height: "35em",
           width: "100%",
           borderRadius: "12px",
         }}
