@@ -219,7 +219,7 @@ const Statistics = () => {
                         {periodoUnico &&
                             <div className={styles.lastYear}>
                                 {/* <Input label="..." placeholder="Ano de Término" type="Number" id="lastYear" / */}
-                                <Dropdown label={"Ano de Término"} options={years} placeholder={"Ano de Término"} value={finalYear} onSelect={(year) => setFinalYear(year)} disable={periodoUnico} />
+                                <Dropdown label={"Ano de Término"} options={years} placeholder={"Ano de Término"} value={finalYear} onSelect={(year) => setFinalYear(year)}/>
                             </div>
                         }
                     </div>
@@ -356,7 +356,7 @@ const Statistics = () => {
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
-                            <IconTitle variant="barChart" title="Principais URFs" size='light' />
+                            <IconTitle variant="barChart" title="Principais URFs" size='textLight' />
                             <div className="componentWrapper">
                                 <BarChart
                                     skeleton={isLoading}

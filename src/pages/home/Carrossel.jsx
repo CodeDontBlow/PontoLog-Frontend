@@ -36,7 +36,7 @@ const Carrossel = () => {
       {
         breakpoint: 1600, // telas muito grandes
         settings: {
-          slidesToShow: 5,
+          slidesToShow: 4,
         },
       },
       {
