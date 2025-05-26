@@ -93,8 +93,6 @@ const LineChart = ({period , values , dataName , chartDescription , colorPalette
         })
     }, [colorPalette, period, chartDescription, id, group])
 
-    console.log(colorPalette)
-
     //Valores do gráfico
     const [series, setSeries] = useState([
         { 

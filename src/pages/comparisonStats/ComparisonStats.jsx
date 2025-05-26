@@ -132,11 +132,12 @@ const ComparisonStats = () => {
     // Muda a variável CSS highlight, que recebe o valor da cor atual
     useEffect( () => {
         if(state){
+            let regiao = regiaoFormatada()
             let colorName
             let objectKeys = [700 , "base" , 500 , 300]   
             let colorsObject = { state: state }
 
-            colorName = regionColors[region];
+            colorName = regionColors[regiao];
                 
             let computed = getComputedStyle(document.documentElement)
 
@@ -186,41 +187,6 @@ const ComparisonStats = () => {
 
         
     }, [state])
-    
-    const [opcoesDeProduto, setOpcoesDeProduto] = useState([])
-    const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
-    // const [state, setState] = useState('');
-    const [tradeType, setTradeType] = useState('exportacao');
-
-    // ...existing code...
-
-    const [statesData, setStatesData] = useState([]);
-
-    // Função para buscar todos os dados de um estado
-    const fetchStateData = async (uf, region) => {
-        const routeRegion = region    
-            ? `REGIAO ${region.toUpperCase().replace('-', ' ')}`
-            : ''
-        const [vias, urfs, vlAgregado, kgLiq, vlFob, balanca, countries] = await Promise.all([
-            fetchData('via', null, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
-            fetchData('urf', null, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
-            fetchData('vl_agregado', null, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
-            fetchData('kg_liquido', null, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
-            fetchData('vl_fob', null, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
-            fetchData('balanco', null, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
-            fetchData('countries', null, initYear, tradeType, routeRegion, uf, product, sh, finalYear, periodoUnico),
-        ]);
-        return {
-            estado: uf,
-            vias,
-            urfs,
-            vlAgregado,
-            kgLiq,
-            vlFob,
-            balanca,
-            countries,
-        };
-    };
 
     const debounce = (func, delay) => {
         let timer;
@@ -341,6 +307,17 @@ const ComparisonStats = () => {
         { id: 1, label: "Exportações", tradeType: "exportacao" },
         { id: 2, label: "Importações", tradeType: "importacao" },
     ]
+    
+    const regiaoFormatada = () => {
+        const prefixRemoved = region.replace("REGIAO ", '').toLowerCase();
+        if (prefixRemoved == 'centro-oeste') {
+            return 'Centro-Oeste';
+        }
+
+        return prefixRemoved[0].toUpperCase() + prefixRemoved.slice(1);
+    }
+
+
     return (
         <div id={styles.statisticsPage} style={{color:"var(--base-pink)"}}>
 
@@ -462,7 +439,7 @@ const ComparisonStats = () => {
                                     colorPalette={
                                         hasTwo && hexColors[1]
                                         ? [hexColors[0].main , hexColors[1].main]
-                                        : ['#F79F44' , '#028391']
+                                        : ['#028391' , '#F79F44']
                                     }
                                 />
                             </div>
@@ -490,25 +467,25 @@ const ComparisonStats = () => {
                         {/* Estado 1 */}
                         <ColorCard 
                             color={
-                                hasTwo
+                                hasTwo && hexColors[1]
                                 ? hexColors[0]?.main
-                                : 'var(--base-sun)'
+                                : 'var(--base-teal)'
                             } 
                             title={
-                                hasTwo
+                                hasTwo && statesList[0]
                                 ? statesList[0].uf
                                 : 'UF 1'
                             } 
                             region={
-                                hasTwo ? 
-                                statesList[0].state
+                                hasTwo && statesList[0]
+                                ? statesList[0].state
                                 : 'Estado 1'
                             } 
                         />
 
                         {/* Estado 2 */}
                         <ColorCard 
-                            color={hexColors[1]?.main || 'var(--base-teal)'} 
+                            color={hexColors[1]?.main || 'var(--base-sun)'} 
                             title={statesList[1]?.uf || 'UF 2'} 
                             region={statesList[1]?.state || 'Estado 2'} 
                         />
@@ -529,7 +506,7 @@ const ComparisonStats = () => {
                     <section 
                         className="infoGridVertical" 
                         style={{
-                            color: `${hasTwo ? hexColors[0]?.main : 'var(--base-sun)'}`
+                            color: `${hasTwo ? hexColors[0]?.main : 'var(--base-teal)'}`
                         }}
                     >
                         <section className="topArea">
@@ -550,14 +527,14 @@ const ComparisonStats = () => {
                                         selectedRegion="Norte"
                                         tradeType="exportacao"
                                         colorPalette={
-                                            hasTwo 
+                                            hasTwo && hexColors[0]
                                             ? [
                                                 hexColors[0][700] , 
                                                 hexColors[0]['base'] , 
                                                 hexColors[0][500] , 
                                                 hexColors[0][300] 
                                             ]
-                                            : ['#D88938', '#F79F44', '#FDD080', '#EBD29B']
+                                            : ['#16707A', '#028391', '#80B8B8', '#A0D0D0']
                                         }
                                         countryDatas={{
                                             exportacao: statesData[0]?.[mainData]
@@ -615,7 +592,7 @@ const ComparisonStats = () => {
                     <section 
                         className="infoGridVertical" 
                         style={{
-                            color: `${hasTwo ? hexColors[1]?.main : 'var(--base-teal)'}`
+                            color: `${hasTwo ? hexColors[1]?.main : 'var(--base-sun)'}`
                         }}
                     >
                         <section className="topArea">
@@ -643,7 +620,7 @@ const ComparisonStats = () => {
                                                 hexColors[1][500] , 
                                                 hexColors[1][300] 
                                             ]
-                                            : ['#16707A', '#028391', '#80B8B8', '#A0D0D0']
+                                            : ['#D88938', '#F79F44', '#FDD080', '#EBD29B']
                                         }
                                         countryDatas={{
                                             exportacao: statesData[1]?.[mainData]
@@ -720,7 +697,7 @@ const ComparisonStats = () => {
                                     colorPalette={
                                         hasTwo && hexColors[1]
                                         ? [hexColors[0].main , hexColors[1].main]
-                                        : ['#F79F44' , '#028391']
+                                        : ['#028391' , '#F79F44']
                                     }
                                 />
                             </div>
@@ -738,7 +715,7 @@ const ComparisonStats = () => {
                                     colorPalette={
                                         hasTwo && hexColors[1]
                                         ? [hexColors[0].main , hexColors[1].main]
-                                        : ['#F79F44' , '#028391']
+                                        : ['#028391' , '#F79F44']
                                     }
                                     legends="false"
                                 />
@@ -755,7 +732,7 @@ const ComparisonStats = () => {
                                     colorPalette={
                                         hasTwo && hexColors[1]
                                         ? [hexColors[0].main , hexColors[1].main]
-                                        : ['#F79F44' , '#028391']
+                                        : ['#028391' , '#F79F44']
                                     }
                                     legends="false"
                                 />

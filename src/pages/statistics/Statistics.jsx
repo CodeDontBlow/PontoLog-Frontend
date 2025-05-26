@@ -37,7 +37,7 @@ const Statistics = () => {
     const [state, setState] = useState('');
     const [uf, setUf] = useState('');
 
-    // const [tradeType, setTradeType] = useState('exportacao');
+    const [tradeType, setTradeType] = useState('exportacao');
     
     // TROCA DINAMICA DE CORES
     // Objeto com as cores atuais
@@ -54,8 +54,9 @@ const Statistics = () => {
 
     // Mudando o objeto pageColors
     useEffect(() => {
+        let regiao = regiaoFormatada()
         // Pega o nome da cor de acordo com a região || ou define como rosa
-        let colorName = regionColors[region] || 'pink' 
+        let colorName = (state && region) ? regionColors[regiao] : 'pink'
 
         // Muda o objeto pageColors para a cor da região
         setPageColors(
@@ -68,11 +69,10 @@ const Statistics = () => {
         )
     }, [state]);
 
-
-
     // Muda a variável CSS highlight, que recebe o valor da cor atual
     useEffect( () => {
-        let colorName = regionColors[region] || 'pink'
+        let regiao = regiaoFormatada()
+        let colorName = state ? regionColors[regiao] : 'pink'
         let colorsArray = []
         let arrayOrder = [700 , "base" , 500 , 300]
 
@@ -233,6 +233,16 @@ const Statistics = () => {
         { id: 1, label: "Exportações", tradeType: "exportacao" },
         { id: 2, label: "Importações", tradeType: "importacao" },
     ]
+
+    const regiaoFormatada = () => {
+        const prefixRemoved = region.replace("REGIAO ", '');
+
+        const finalRegionStr = prefixRemoved[0] + prefixRemoved.slice(1).toLowerCase();
+
+        if (finalRegionStr === 'Centro oeste') return 'Centro-Oeste';
+
+        return finalRegionStr;
+    }
 
     return (
         <div id={styles.statisticsPage} style={{color:"var(--highlight-base)"}}>
