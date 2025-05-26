@@ -15,6 +15,7 @@ import WorldMap from '../../components/Maps/WorldMap'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import IconTitle from '../../components/IconTitle/IconTitle'
 import TabNavigation from '../../components/Tab/TabNavigation'
+import { regionColors } from '../../components/Maps/BrazilMap'
 
 import styles from './Statistics.module.css'
 import Alert from '../../components/Alert/Alert'
@@ -37,6 +38,67 @@ const Statistics = () => {
     const [uf, setUf] = useState('');
 
     const [tradeType, setTradeType] = useState('exportacao');
+    
+    // TROCA DINAMICA DE CORES
+    // Objeto com as cores atuais
+    const [pageColors , setPageColors] = useState(
+        {
+            700: "var(--pink-700)",
+            base: "var(--base-pink)",
+            500: "var(--pink-500)",
+            300: "var(--pink-300)",
+        }
+    )
+
+    const [hexColors , setHexColors] = useState(['#B81D4E' , '#D92B66' , '#F5A4C3' , '#F1A1B5'])
+
+    // Mudando o objeto pageColors
+    useEffect(() => {
+        let regiao = regiaoFormatada()
+        // Pega o nome da cor de acordo com a região || ou define como rosa
+        let colorName = (state && region) ? regionColors[regiao] : 'pink'
+
+        // Muda o objeto pageColors para a cor da região
+        setPageColors(
+            {
+                700: `var(--${colorName}-700)`,
+                base: `var(--base-${colorName})`,
+                500: `var(--${colorName}-500)`,
+                300: `var(--${colorName}-300)`,
+            }
+        )
+    }, [state]);
+
+    // Muda a variável CSS highlight, que recebe o valor da cor atual
+    useEffect( () => {
+        let regiao = regiaoFormatada()
+        let colorName = state ? regionColors[regiao] : 'pink'
+        let colorsArray = []
+        let arrayOrder = [700 , "base" , 500 , 300]
+
+        let element = document.documentElement
+        let computed = getComputedStyle(element)
+
+        for(let key of arrayOrder){
+            let value = pageColors[key]
+            element.style.setProperty(`--highlight-${key}` , value)
+
+            let hexCode = key == "base"
+                ? computed.getPropertyValue(`--${key}-${colorName}`).trim()
+                : computed.getPropertyValue(`--${colorName}-${key}`).trim()
+
+            colorsArray.push(hexCode)
+        }
+    
+        setHexColors(colorsArray)
+
+    // reset de cor ao trocar de página
+        return () => {
+            for (let key of arrayOrder) {
+                element.style.setProperty(`--highlight-${key}`, '');
+            }
+        };
+    }, [pageColors]);
 
     // state de opções dos inputs
     const [opcoesDeProduto, setOpcoesDeProduto] = useState([]);
@@ -183,7 +245,7 @@ const Statistics = () => {
     }
 
     return (
-        <div id={styles.statisticsPage}>
+        <div id={styles.statisticsPage} style={{color:"var(--highlight-base)"}}>
 
             {/* Área dos Inputs */}
             {/* Labels */}
@@ -261,7 +323,7 @@ const Statistics = () => {
 
 
             {/* Primeiras Informações da Página + mapa do brasil */}
-            <section id={styles.primaryInfos}>
+            <section id={styles.primaryInfos} style={{minHeight:"490px"}}>
                 {/* Mapa do Brasil */}
                 <div className={styles.navMap}>
 
@@ -293,7 +355,7 @@ const Statistics = () => {
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={balancoData?.map(bal => Number(bal.total))}
                                     dataName="Balança Comercial"
-                                    colorPalette={["#D92B66"]}
+                                    colorPalette={hexColors}
                                 />
                             </div>
                         </div>
@@ -324,7 +386,7 @@ const Statistics = () => {
                                     loading={isLoading}
                                     selectedRegion="Norte"
                                     tradeType="exportacao"
-                                    colorPalette={["#B81D4E", "#D92B66", "#F5A4C3", "#F1A1B5"]}
+                                    colorPalette={hexColors}
                                     countryDatas={{
                                         exportacao: (mainData?.overallCountries ?? []).map(c => ({
                                             country: c.NO_PAIS,
@@ -350,7 +412,7 @@ const Statistics = () => {
                                     skeleton={isLoading}
                                     items={mainData?.via?.map(via => via.NO_VIA)}
                                     values={mainData?.via?.map(via => Number(via.total))}
-                                    colorPalette={["#D92B66"]}
+                                    colorPalette={hexColors}
                                 />
                             </div>
                         </div>

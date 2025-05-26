@@ -14,8 +14,10 @@ function BarChart({ items, values, chartDescription, colorPalette , isQuarter = 
     //Ex.: <BarChart items={["Rodoviária" , "Aquífera" , "Aérea"]} values={[412,213,123]} Vias" colorPalette="#ff0011"/>
 
     //Opções de customização do gráfico
-    const [options, setOptions] = useState(
-        {
+    const [options, setOptions] = useState({})
+
+    useEffect(() => {
+        setOptions({
             chart: {
                 type: 'bar',
                 width: "100%",
@@ -67,6 +69,7 @@ function BarChart({ items, values, chartDescription, colorPalette , isQuarter = 
                 bar: {
                     barHeight: '100%',
                     horizontal: true,
+                    distributed: true,
                     borderRadius: 4,
                     borderRadiusApplication: 'end',
                     dataLabels: {
@@ -74,7 +77,10 @@ function BarChart({ items, values, chartDescription, colorPalette , isQuarter = 
                         hideOverflowingLabels: true,
                         maxItems: 3,
                     },
-                }
+                },
+            },
+            legend: {
+                show: false,
             },
             stroke: {
                 width: 1,
@@ -95,8 +101,8 @@ function BarChart({ items, values, chartDescription, colorPalette , isQuarter = 
                     return "\u00A0 \u00A0" + label
                 },
             },
-        }
-    )
+        })
+    } , [items , colorPalette , chartDescription])
 
     isQuarter && (
         options["responsive"] =
@@ -249,13 +255,6 @@ function BarChart({ items, values, chartDescription, colorPalette , isQuarter = 
     ])
 
     useEffect(() => {
-        setOptions({
-            ...options,
-            xaxis: {
-                categories: items,
-            },
-        })
-
         setSeries([{
             name: "Ocorrências",
             data: values
