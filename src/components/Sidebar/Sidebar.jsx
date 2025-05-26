@@ -6,6 +6,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Button from '../Buttons/Button/Button';
 import logoIcon from '../../assets/logos/LOGOSVG.svg';
 
+
 import styles from './Sidebar.module.css';
 
 const Sidebar = () => {
@@ -24,12 +25,12 @@ const Sidebar = () => {
       <div className={styles.sidebarContent}>
         <div className={styles.logo}>
           <Link to={'/'}>
-            <img src={logoIcon} alt="" />
+           <img src={logoIcon} alt="" />
           </Link>
         </div>
         <div className={styles.mainButtons}>
-          <Button variant={'Btn-icon'} icon={faChartLine} iconClassname={styles.navButtonIcon} className={`${styles.navButton} ${location.pathname === '/statistics' ? styles.active : ''}`} onClick={() => handleClick('/statistics')} />
-          <Button variant={'Btn-icon'} icon={faBalanceScale} iconClassname={styles.navButtonIcon} className={`${styles.navButton} ${location.pathname === '/comparison' ? styles.active : ''}`} onClick={() => handleClick('/comparison')} active={location.pathname === '/comparison'} />
+          <Button variant={'Btn-icon'} icon={faChartLine} iconClassname={styles.navButtonIcon} className={`${styles.navButton} ${location.pathname.startsWith('/statistics') ? styles.active : ''}`} onClick={() => handleClick('/statistics')}/>
+          <Button variant={'Btn-icon'} icon={faBalanceScale} iconClassname={styles.navButtonIcon} className={`${styles.navButton} ${location.pathname.startsWith('/comparison') ? styles.active : ''}`} onClick={() => handleClick('/comparison/statistics')} />
         </div>
         <Button variant={'Btn-icon'} icon={faInfo} iconClassname={styles.infoIcon} className={`${styles.infoButton} ${location.pathname === '/about' ? styles.active : ''}`} onClick={() => handleClick('/about')} />
       </div>

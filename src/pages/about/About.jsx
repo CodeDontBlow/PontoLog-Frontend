@@ -1,7 +1,20 @@
 import styles from './About.module.css'
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 
 const About = () => {
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.hash) {
+            const element = document.getElementById(location.hash.replace('#', ''));
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    }, [location]);
+
     return (
         <div className={styles.aboutContainer}>
             <header className={styles.header}>
@@ -22,7 +35,7 @@ const About = () => {
             <section className={styles.section}>
                 <h1 className={styles.title}>Sobre o .Log</h1>
                 <p className={styles.text}>
-                    Nosso projeto nasce com a missão de oferecer uma plataforma intuitiva e acessível para acompanhar o desempenho dos Estados Brasileiros no comércio exterior. Utilizando dados abertos do Ministério do Desenvolvimento, Indústria, Comércio e Serviços, transformamos informações complexas em insights estratégicos. Com gráficos interativos e análises detalhadas, ajudamos tomadores de decisão a identificar tendências, visualizar oportunidades e compreender o cenário econômico de diferentes municípios, seja em crescimento, estagnação ou declínio no mercado internacional.
+                    Nosso projeto nasce com a missão de oferecer uma plataforma intuitiva e acessível para acompanhar o desempenho dos Estados Brasileiros no comércio exterior. Utilizando dados abertos do Ministério do Desenvolvimento, Indústria, Comércio e Serviços, transformamos informações complexas em insights estratégicos. Com gráficos interativos e análises detalhadas, ajudamos tomadores de decisão a identificar tendências, visualizar oportunidades e compreender o cenário econômico de diferentes municípios, seja em crescimento, estagnação ou declínio no mercado internacional. Nosso compromisso é democratizar o acesso a informações relevantes, promovendo transparência e incentivando o desenvolvimento sustentável das regiões brasileiras. Com recursos personalizáveis, cada usuário pode adaptar a análise às suas necessidades, filtrando dados por produto, período, região ou tipo de comércio. Assim, contribuímos para um ambiente de negócios mais dinâmico e informado, onde decisões baseadas em dados impulsionam o crescimento econômico e a competitividade internacional.
                 </p>
             </section>
 
@@ -38,7 +51,7 @@ const About = () => {
                 </div>
             </section>
 
-            <section className={styles.section}>
+            <section id="tratamento-dados" className={styles.section}>
                 <h1 className={styles.title}>Tratamento de Dados</h1>
                 <p className={styles.text}>Nosso compromisso é oferecer dados precisos e relevantes. Para isso, aplicamos um rigoroso processo de limpeza, removendo milhares de linhas com informações inválidas, duplicadas ou irrelevantes. Esse refinamento garante que apenas dados confiáveis sejam utilizados em nossas análises, permitindo que gestores e empresas tenham insights mais assertivos sobre o comércio exterior e o desempenho dos Estados Brasileiros no mercado internacional. Você pode ter maiores detalhes no link a seguir:
                 </p><br />
@@ -49,7 +62,7 @@ const About = () => {
                 <div className={styles.sectionContent}>
                     <img src="src\assets\logos\LogoCOMEX.svg" alt="Logo Comex" className={styles.imageLeft} />
                     <p className={styles.text}>
-                        Os dados utilizados em nossa plataforma são provenientes do Comex Stat, um sistema do Ministério do Desenvolvimento, Indústria, Comércio e Serviços que disponibiliza informações detalhadas sobre exportações e importações brasileiras. A partir desses dados abertos, processamos e transformamos grandes volumes de informação em visualizações intuitivas e análises estratégicas, permitindo uma compreensão clara do desempenho econômico dos Estados e municípios no comércio exterior. <br />
+                        Os dados utilizados em nossa plataforma são provenientes do Comex Stat, um sistema do Ministério do Desenvolvimento, Indústria, Comércio e Serviços que disponibiliza informações detalhadas sobre exportações e importações brasileiras. A partir desses dados abertos, processamos e transformamos grandes volumes de informação em visualizações intuitivas e análises estratégicas, permitindo uma compreensão clara do desempenho econômico dos Estados e municípios no comércio exterior. <br /> 
                         <a href="https://comexstat.mdic.gov.br/pt/home" className={styles.link}>• Link de navegação para o Site do Comex Stat</a>
                     </p>
                 </div>
@@ -57,7 +70,7 @@ const About = () => {
 
             <section className={styles.section}>
                 <h1 className={styles.title}>Venha conhecer nosso GitHub!</h1>
-                <p className={styles.text}> Quer saber mais sobre nosso projeto? Acesse nosso repositório no GitHub para explorar o código, acompanhar atualizações e contribuir com melhorias! Além disso, confira o repositório da equipe Code Don't Blow e descubra outros projetos inovadores que estamos desenvolvendo. 🚀🔗
+                <p className={styles.text}> Se você é apaixonado por tecnologia, inovação e colaboração, vai encontrar muito valor em acompanhar nosso trabalho. Quer saber mais sobre nosso projeto? Acesse nosso repositório no GitHub para explorar o código, acompanhar atualizações e contribuir com melhorias! Você também pode abrir issues, sugerir novas funcionalidades ou relatar bugs, sua participação é muito bem-vinda! Além disso, confira a Organização da equipe Code Don't Blow e descubra outros projetos inovadores que estamos desenvolvendo. Juntos, podemos construir soluções cada vez mais impactantes🚀
                 </p> <br />
                 <a href="https://github.com/CodeDontBlow/PontoLog" className={styles.link}>• Link Para o Github do PontoLog</a> <br /> <br />
                 <a href="https://github.com/CodeDontBlow" className={styles.link}>• Link para o Github da Equipe Code Don’t Blow</a>

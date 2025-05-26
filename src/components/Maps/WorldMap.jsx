@@ -1,8 +1,9 @@
 import React , {useEffect} from "react";
 import { Chart } from "react-google-charts";
 import styles from "./Maps.module.css"
+import Loading from "../Loading/Loading";
 
-export default function WorldMap({ selectedRegion, countryDatas, tradeType, setTradeType , colorPalette}) {
+export default function WorldMap({ selectedRegion, countryDatas, tradeType, setTradeType , colorPalette, loading}) {
   const showData = Boolean(selectedRegion);
 
   let colors = colorPalette.slice(0).reverse()
@@ -50,7 +51,9 @@ export default function WorldMap({ selectedRegion, countryDatas, tradeType, setT
     tooltip: { isHtml: true  },
     legend: "none",
   };
-
+  if (loading) {
+    return <Loading />;
+  }
   return (
       <>
         {/* <button //botão apenas para vizualizar imp e exp separados

@@ -1,6 +1,10 @@
 import styles from "./Card.module.css"
+import Skeleton from "../../Skeleton/Skeleton";
 
-function Card({ title, fatorAgregado, produto }) {
+function Card({ title, fatorAgregado, produto, skeleton }) {
+  if (skeleton) {
+    return <Skeleton />;
+  }
   return (
     <div className={styles.card}>
       <h2 className={styles.title}>{title}</h2>

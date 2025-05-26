@@ -1,8 +1,9 @@
 import Chart from "react-apexcharts"
 import React, { useState, useEffect} from 'react'
+import Loading from '../Loading/Loading'
 
 //GRÁFICO DE DUAS LINHAS
-const DoubleLineChart = ({ period, values, dataName, chartDescription, colorPalette, legends = true }) => {
+const DoubleLineChart = ({ period, values, dataName, chartDescription, colorPalette, legends = true, loading }) => {
 
     let showLegends
     legends == "false" ? showLegends = false : showLegends = true
@@ -124,6 +125,9 @@ const DoubleLineChart = ({ period, values, dataName, chartDescription, colorPale
         ])
     }, [values, dataName])
 
+    if(loading) {
+        return <Loading />
+    }
     //Componente de gráfico do ApexCharts recebendo os valores definidos acima
     return (
         <Chart
