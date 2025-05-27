@@ -12,7 +12,7 @@ const Carrossel = () => {
   const API_KEY = 'f91b94e7398049eaafdeb5644274dd0c';
 
   useEffect(() => {
-    fetch(`https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=pt&sortBy=publishedAt&apiKey=${API_KEY}`)
+    fetch("https://pontolog.hopto.org:3000/news")
       .then(response => response.json())
       .then(data => {
         setNews(data.articles || []);
