@@ -380,7 +380,7 @@ const Statistics = () => {
                                     loading={isLoading}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={mainData?.vlAgregado?.map(value => Number(value.total))}
-                                    dataName="Balança Comercial"
+                                    dataName="Valor Agregado"
                                     colorPalette={["#D92B66"]}
                                     id="bottomInfo11"
                                     group="bottomInfo1"
