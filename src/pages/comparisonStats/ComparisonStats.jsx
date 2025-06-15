@@ -16,6 +16,7 @@ import IconTitle from '../../components/IconTitle/IconTitle'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import TabNavigation from '../../components/Tab/TabNavigation'
 import Alert from '../../components/Alert/Alert'
+import Tooltip from '../../components/Tooltip/Tooltip'
 
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 import { faX } from "@fortawesome/free-solid-svg-icons"
@@ -336,7 +337,10 @@ const ComparisonStats = () => {
                 <section className={`${styles.infoGridVertical} infoGridVertical`}>
                     <section className="topArea">
                         <div className="gridItem">
-                            <IconTitle title="Balança Comercial" variant="lineChart" />
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <IconTitle title="Balança Comercial" variant="lineChart" size='textMedium' />
+                                <Tooltip content="Balança comercial é o indicador econômico calculado com base no saldo entre o valor exportado e o valor importado por um país em determinado intervalo de tempo. " position="top" />
+                            </div>
                             <div className="componentWrapper">
                                 <DoubleLineChart
                                     loading={isLoading}
@@ -370,7 +374,10 @@ const ComparisonStats = () => {
                         </section>
                         <section className="midArea">
                             <div className="gridItem">
-                                <IconTitle variant="map" title="Principais Países" />
+                               <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <IconTitle variant="map" title="Principais Países" />
+                                    <Tooltip content="Os principais países são aqueles que mais exportam ou importam mercadorias do Brasil." position="right" />
+                                </div>
                                 <div className="componentWrapper">
                                     <WorldMap
                                         loading={isLoading}
@@ -395,7 +402,10 @@ const ComparisonStats = () => {
                         </section>
                         <section className="bottomArea">
                             <div className="gridItem">
-                                <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight' />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight' />
+                                    <Tooltip content="Vias usadas são os meios de transporte utilizados, como marítimo, aéreo, rodoviário, ferroviário, entre outros." position="top" />
+                                </div>
                                 <div className="componentWrapper" style={{ padding: 0 }}>
                                     <BarChart
                                         skeleton={isLoading}
@@ -407,7 +417,10 @@ const ComparisonStats = () => {
                                 </div>
                             </div>
                             <div className="gridItem">
-                                <IconTitle variant="barChart" title="Principais URF's Usadas" size='textLight' />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <IconTitle variant="barChart" title="Principais URFs" size='textLight' />
+                                    <Tooltip content="URFs (Unidades de Recebimento Fiscal) são os locais onde as mercadorias são recebidas e registradas para exportação ou importação." position="top" />
+                                </div>
                                 <div className="componentWrapper" style={{ padding: 0 }}>
                                     <BarChart
                                         skeleton={isLoading}
@@ -466,7 +479,7 @@ const ComparisonStats = () => {
                                 </div>
                             </div>
                             <div className="gridItem">
-                                <IconTitle variant="barChart" title="Principais URF's Usadas" size='textLight' />
+                                <IconTitle variant="barChart" title="Principais URFs" size='textLight' />
                                 <div className="componentWrapper" style={{ padding: 0 }}>
                                     <BarChart
                                         skeleton={isLoading}
@@ -484,7 +497,10 @@ const ComparisonStats = () => {
                 <section className="infoGridHorizontal lineChartsArea" id={styles.halfGrid}>
                     <section className="leftArea">
                         <div className="gridItem">
-                            <IconTitle title="Valor Agregado" variant="lineChart" />
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <IconTitle title="Valor Agregado" variant="lineChart" size='textMedium' />
+                                <Tooltip content="Valor agregado é o valor total das mercadorias, sem considerar os custos de transporte e seguros." position="top" />
+                            </div>
                             <div className="componentWrapper">
                                 <DoubleLineChart
                                     loading={isLoading}
@@ -498,7 +514,10 @@ const ComparisonStats = () => {
                     </section>
                     <section className="rightArea">
                         <div className="gridItem">
-                            <IconTitle title="Quilograma Líquido" variant="lineChart" size='textLight' />
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <IconTitle title="Quilograma Líquido" variant="lineChart" size='textLight' />
+                                <Tooltip content="Quilograma líquido é a medida do peso das mercadorias, excluindo o peso da embalagem e outros materiais." position="top" />
+                            </div>
                             <div className="componentWrapper">
                                 <DoubleLineChart
                                     loading={isLoading}
@@ -511,7 +530,10 @@ const ComparisonStats = () => {
                             </div>
                         </div>
                         <div className="gridItem">
-                            <IconTitle title="Valor FOB" variant="lineChart" size="textLight" />
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <IconTitle title="Valor FOB" variant="lineChart" size='textLight' />
+                                <Tooltip content="Valor FOB (Free on Board) é o valor das mercadorias, incluindo os custos de transporte e seguros até o porto de embarque." position="top" />
+                            </div>
                             <div className="componentWrapper">
                                 <DoubleLineChart
                                     loading={isLoading}

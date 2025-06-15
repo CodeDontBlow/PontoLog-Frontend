@@ -29,7 +29,7 @@ const Home = () => {
                     <div className={styles.titleContainer}>
                         <h2 className={styles.title}>
                             <img
-                                src="src/assets/logos/LOGOSVG_BASEPINK.svg"
+                                src="src/assets/logos/LOGOPINK.svg"
                                 alt="Logo PontoLog"
                                 className={styles.customIcon}
                             />

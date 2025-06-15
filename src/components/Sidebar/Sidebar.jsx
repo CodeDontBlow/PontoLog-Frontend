@@ -4,7 +4,8 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 // importando components e assets necessários
 import Button from '../Buttons/Button/Button';
-import logoIcon from '../../assets/logos/LOGOSVG.svg';
+import logoBlack from '../../assets/logos/LOGOSVG.svg';
+import logoPink from '../../assets/logos/LOGOPINK.svg';
 
 
 import styles from './Sidebar.module.css';
@@ -24,8 +25,11 @@ const Sidebar = () => {
       {/*  O conteúdo da sidebar foi colocado em um elemento filho de '.sidebar' para que possa grudar na parte de cima da tela enquanto ocupa 100vh  */}
       <div className={styles.sidebarContent}>
         <div className={styles.logo}>
-          <Link to={'/'}>
-           <img src={logoIcon} alt="" />
+           <Link to="/">
+            <img 
+              src={location.pathname === '/' ? logoPink : logoBlack} 
+              alt="Logo" 
+            />
           </Link>
         </div>
         <div className={styles.mainButtons}>

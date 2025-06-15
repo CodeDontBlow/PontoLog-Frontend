@@ -34,18 +34,16 @@ section#inputArea {
     gap: 3px;
 }
 
-section#inputArea > div{
+section#inputArea>div {
     display: grid;
     grid-template-columns: 4fr 2fr;
     gap: 1.25rem;
 }
 
 /* Área dos Labels */
-div.labelsContainer{
+div.labelsContainer {}
 
-}
-
-div.labelsContainer > *{
+div.labelsContainer>* {
     width: 100%;
 
     color: var(--black-500);
@@ -56,26 +54,25 @@ div.labelsContainer > *{
 }
 
 /* Área dos Inputs */
-div.inputsContainer{
-}
+div.inputsContainer {}
 
-.periodInputs{
+.periodInputs {
     display: flex;
     gap: 10px;
 }
 
-.periodInputs > div{
+.periodInputs>div {
     flex: 1 1 50%;
 }
 
 
 /* Área das Opções de Input (botões e checkbox) */
-div.optionsContainer{
+div.optionsContainer {
     margin-top: 5px;
 }
 
 /* Botões SH4 e SH6 */
-.productOptions{
+.productOptions {
     display: flex;
     gap: 7px;
 }
@@ -126,51 +123,50 @@ section#primaryInfos .navMap {
     height: 100%;
 }
 
-    .navMap .mapDescription {
-        color: var(--black-500);
-        font: var(--text-medium);
-    }
+.navMap .mapDescription {
+    color: var(--black-500);
+    font: var(--text-medium);
+}
 
-    div#statesListContainer{
-    }
+div#statesListContainer {}
 
-        div#statesListContainer p.statesList{
-            display: flex;
-            align-items: center;
-            gap: 20px;
+div#statesListContainer p.statesList {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 
-            color: var(--black-500);
-            font: var(--text-medium);
-            text-align: center;
-        }
+    color: var(--black-500);
+    font: var(--text-medium);
+    text-align: center;
+}
 
-            div#statesListContainer p.statesList span{
-                cursor: pointer;
+div#statesListContainer p.statesList span {
+    cursor: pointer;
 
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
 
-                transition: all 150ms ease-out;
-            }
+    transition: all 150ms ease-out;
+}
 
-                div#statesListContainer p.statesList span:hover{
-                    transform: scale(1.03);
-                }
+div#statesListContainer p.statesList span:hover {
+    transform: scale(1.03);
+}
 
-                div#statesListContainer p.statesList span .icon{
-                    color: var(--black-500);
-                    font: var(--label-medium);
-                }
+div#statesListContainer p.statesList span .icon {
+    color: var(--black-500);
+    font: var(--label-medium);
+}
 
-    /* Legenda do mapa do brasil */
-    .navMap .mapCurrentState{
-        margin-top: 0.875rem;
-        color: var(--black-500);
-        font: var(--title-regular);
-        text-align: center;
-    }
+/* Legenda do mapa do brasil */
+.navMap .mapCurrentState {
+    margin-top: 0.875rem;
+    color: var(--black-500);
+    font: var(--title-regular);
+    text-align: center;
+}
 
 /* Dados de Exportação / Importação */
 section#ExpImpInfos {
@@ -180,7 +176,7 @@ section#ExpImpInfos {
     gap: 1.875rem;
 }
 
-section#mainInfosArea{
+section#mainInfosArea {
     width: 100%;
 
     display: grid;
@@ -188,7 +184,7 @@ section#mainInfosArea{
     gap: 20px;
 }
 
-section#mainInfosArea .stateTitle{
+section#mainInfosArea .stateTitle {
     color: var(--base-pink);
     font: var(--title-regular);
     font-weight: 600;
