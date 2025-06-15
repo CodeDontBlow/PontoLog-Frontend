@@ -31,6 +31,9 @@ function BarChart({ items, values, chartDescription, colorPalette , isQuarter = 
             xaxis: {
                 categories: items,
                 labels: {
+                    style: {
+                        colors: "var(--black-500)",
+                    },
                     //Formatação para resumir os números
                     formatter: function (items){
                         if((Math.abs(items) / 10**9) >= 1 ){
@@ -85,7 +88,7 @@ function BarChart({ items, values, chartDescription, colorPalette , isQuarter = 
                 textAnchor: 'start',
                 style: {
                     fontSize: "14px",
-                    colors: ["var(--white-500)"],
+                    colors: [" #E2E5E9"],
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                 },
