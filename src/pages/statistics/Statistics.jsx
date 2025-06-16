@@ -363,7 +363,7 @@ const Statistics = () => {
                                     loading={isLoading}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     // values={balancoData?.map(bal => Number(bal.total))}
-                                    values={[1,2,3,4,5,6]}
+                                    values={[100,200,300,1000,500,600]}
                                     dataName="Balança Comercial"
                                     colorPalette={hexColors}
                                 />
