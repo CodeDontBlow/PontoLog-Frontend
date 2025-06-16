@@ -104,6 +104,7 @@ const ComparisonStats = () => {
             return "Para começar a comparação entre estados, escolha uma das regiões do mapa abaixo."
         }
     };
+    
 
     const debounce = (func, delay) => {
         let timer;
@@ -335,8 +336,8 @@ const ComparisonStats = () => {
 
                 <section className={`${styles.infoGridVertical} infoGridVertical`}>
                     <section className="topArea">
-                        <div className="gridItem">
-                            <IconTitle title="Balança Comercial" variant="lineChart" />
+                        <div className="gridItem" style={{color:`var(--base-pink)`}}>
+                            <IconTitle title="Balança Comercial" variant="lineChart" color='var(--base-pink)'/>
                             <div className="componentWrapper">
                                 <DoubleLineChart
                                     loading={isLoading}
@@ -363,8 +364,9 @@ const ComparisonStats = () => {
             <section id={styles.ExpImpInfos}>
                 <TabNavigation tab={tab} onTabClick={(tabTradeType) => (setTradeType(tabTradeType))} />
                 <section id={styles.mainInfosArea}>
+
                     {/* Estado 1 */}
-                    <section className="infoGridVertical">
+                    <section className="infoGridVertical" style={{color:`var(--base-teal)`}}>
                         <section className="topArea">
                             <h3 className={styles.stateTitle}>{statesList[0] ? statesList[0].state : 'Estado 1'}</h3>
                         </section>
@@ -422,9 +424,9 @@ const ComparisonStats = () => {
                     </section>
 
                     {/* Estado 2 */}
-                    <section className="infoGridVertical">
+                    <section className="infoGridVertical" style={{color:`var(--base-sun)`}}>
                         <section className="topArea">
-                            <h3 className={styles.stateTitle}> {statesList[1] ? statesList[1].state : 'Estado 2'}</h3>
+                            <h3 className={styles.stateTitle}> {statesList[1] ? statesList[1].state : 'Estado 2'} </h3>
                         </section>
                         <section className="midArea">
                             <div className="gridItem">
@@ -484,7 +486,7 @@ const ComparisonStats = () => {
                 <section className="infoGridHorizontal lineChartsArea" id={styles.halfGrid}>
                     <section className="leftArea">
                         <div className="gridItem">
-                            <IconTitle title="Valor Agregado" variant="lineChart" />
+                            <IconTitle title="Valor Agregado" variant="lineChart" color='var(--base-pink)'/>
                             <div className="componentWrapper">
                                 <DoubleLineChart
                                     loading={isLoading}
@@ -498,7 +500,7 @@ const ComparisonStats = () => {
                     </section>
                     <section className="rightArea">
                         <div className="gridItem">
-                            <IconTitle title="Quilograma Líquido" variant="lineChart" size='textLight' />
+                            <IconTitle title="Quilograma Líquido" variant="lineChart" size='textLight' color='var(--base-pink)'/>
                             <div className="componentWrapper">
                                 <DoubleLineChart
                                     loading={isLoading}
@@ -511,7 +513,7 @@ const ComparisonStats = () => {
                             </div>
                         </div>
                         <div className="gridItem">
-                            <IconTitle title="Valor FOB" variant="lineChart" size="textLight" />
+                            <IconTitle title="Valor FOB" variant="lineChart" size="textLight" color='var(--base-pink)' />
                             <div className="componentWrapper">
                                 <DoubleLineChart
                                     loading={isLoading}
