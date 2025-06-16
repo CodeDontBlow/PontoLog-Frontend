@@ -458,13 +458,13 @@ const ComparisonStats = () => {
                     <section className="bottomArea">
                         <ColorCard 
                             color= { hexColors [0]?.main }  
-                            title= { statesList[0] ? statesList[0].uf : 'UF 1' } 
-                            region={ statesList[0] ? statesList[0].state : 'Estado 1' } 
+                            title= { statesDisplay[0]?.uf } 
+                            region={ statesDisplay[0]?.state } 
                         />
                         <ColorCard 
                             color= { hexColors [1]?.main}  
-                            title= { statesList[1] ? statesList[1].uf : 'UF 2'} 
-                            region={ statesList[1] ? statesList[1].state : 'Estado 2'} 
+                            title= { statesDisplay[1]?.uf } 
+                            region={ statesDisplay[1]?.state } 
                         />
                     </section>
                 </section>
@@ -517,7 +517,9 @@ const ComparisonStats = () => {
                                         skeleton={isLoading}
                                         items={statesData[0]?.[mainData]?.via?.map(item => item.NO_VIA)}
                                         values={statesData[0]?.exportData?.via?.map(item => item.total)}
-                                        colorPalette={["#D92B66"]}
+                                        colorPalette={[
+                                            hexColors[0]['main']
+                                        ]}
                                         isQuarter={true}
                                     />
                                 </div>
@@ -583,7 +585,9 @@ const ComparisonStats = () => {
                                         skeleton={isLoading}
                                         items={statesData[1]?.[mainData]?.via?.map(item => item.NO_VIA)}
                                         values={statesData[1]?.[mainData]?.via?.map(item => item.total)}
-                                        colorPalette={["#028391"]}
+                                        colorPalette={[
+                                            hexColors[1]['main']
+                                        ]}
                                         isQuarter={true}
                                     />
                                 </div>

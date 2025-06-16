@@ -362,8 +362,7 @@ const Statistics = () => {
                                 <LineChart
                                     loading={isLoading}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    // values={balancoData?.map(bal => Number(bal.total))}
-                                    values={[1,2,3,4,5,6]}
+                                    values={balancoData?.map(bal => Number(bal.total))}
                                     dataName="Balança Comercial"
                                     colorPalette={hexColors}
                                 />
@@ -453,9 +452,7 @@ const Statistics = () => {
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={mainData?.vlAgregado?.map(value => Number(value.total))}
                                     dataName="Valor Agregado"
-                                    colorPalette={["#D92B66"]}
-                                    id="bottomInfo11"
-                                    group="bottomInfo1"
+                                    colorPalette={hexColors}
                                 />
                             </div>
                         </div>
@@ -472,7 +469,7 @@ const Statistics = () => {
                                     values={mainData?.kgLiquido?.map(value => Number(value.total))}
                                     dataName="kg_liquido"
                                     colorPalette={hexColors}
-                                    id="bottomInfo12"
+                                    id="bottomInfo11"
                                     group="bottomInfo1"
                                 />
                             </div>
@@ -487,7 +484,7 @@ const Statistics = () => {
                                     values={mainData?.vlFob?.map(value => Number(value.total))}
                                     dataName="vl_fob"
                                     colorPalette={hexColors}
-                                    id="bottomInfo13"
+                                    id="bottomInfo11"
                                     group="bottomInfo1"
                                 />
                             </div>
