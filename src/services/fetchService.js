@@ -36,11 +36,12 @@ const getProductByLetter = async (searchTerm, setter, sh) => {
 const fetchData = async ({ endpoint = null, initYear, tradeType, region, uf, product, sh, finalYear, periodoUnico, signal }) => {
     try {
         const params = buildQueryParams({ endpoint, region, uf, product, sh, finalYear, periodoUnico });
+        const paramsBalanco = buildQueryParams({ endpoint, region, uf, sh, finalYear, periodoUnico }); 
 
         let url;
         switch (endpoint) {
             case 'balanco':
-                url = `/balanco/${initYear}?${params}`;
+                url = `/balanco/${initYear}?${paramsBalanco}`;
                 break;
             case 'product':
                 url = `/${tradeType}/product/no_${sh}_por/${initYear}?${params}`;
@@ -53,6 +54,7 @@ const fetchData = async ({ endpoint = null, initYear, tradeType, region, uf, pro
                 break;
         }
 
+        console.log(url)
         const response = await api.get(url, { signal });
         const responseData = response.data;
         const data = responseData.data;

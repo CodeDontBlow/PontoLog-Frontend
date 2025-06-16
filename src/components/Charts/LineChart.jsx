@@ -1,9 +1,9 @@
 import Chart from "react-apexcharts";
-import React , {useState , useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Loading from "../Loading/Loading";
 
 //GRÁFICO DE LINHA
-const LineChart = ({period , values , dataName , chartDescription , colorPalette , id , group, loading}) => {
+const LineChart = ({ period, values, dataName, chartDescription, colorPalette, id, group, loading }) => {
 
     //PROPS
     //period: Periodo de tempo (eixo x) [lista]
@@ -24,40 +24,49 @@ const LineChart = ({period , values , dataName , chartDescription , colorPalette
                 id: id,
                 group: group,
                 type: "line",
-                zoom : {
+                zoom: {
                     enabled: false,
                 },
-                toolbar : {
+                toolbar: {
                     show: false,
                 },
                 events: {
-                    animationEnd: () => {window.dispatchEvent(new Event('resize'))},
+                    animationEnd: () => { window.dispatchEvent(new Event('resize')) },
                 }
             },
             xaxis: {
-                categories: period
+                categories: period,
+                labels: {
+                    style: {
+                        colors: "var(--black-500)",
+                        fontSize: '12px',
+                    }
+                }
             },
             yaxis: {
                 labels: {
                     //Formatação para resumir os números
-                    formatter: function (items){
-                        if((Math.abs(items) / 10**9) >= 1 ){
-                            return(items / 10**9) + "B"
+                    formatter: function (items) {
+                        if ((Math.abs(items) / 10 ** 9) >= 1) {
+                            return (items / 10 ** 9) + "B"
                         }
-                        else if((Math.abs(items) / 10**6) >= 1 ){
-                            return(items / 10**6) + "M"
+                        else if ((Math.abs(items) / 10 ** 6) >= 1) {
+                            return (items / 10 ** 6) + "M"
                         }
-                        else if ((Math.abs(items) / 1000) >= 1){
+                        else if ((Math.abs(items) / 1000) >= 1) {
                             return (items / 1000) + "k"
                         }
-                        else{
+                        else {
                             return items
                         }
+                    },
+                    style: {
+                        colors: "var(--black-500)",
                     },
                 },
             },
             title: {
-                text: chartDescription,                
+                text: chartDescription,
                 style: {
                     fontSize: "1rem",
                     fontWeight: "regular",
@@ -69,11 +78,11 @@ const LineChart = ({period , values , dataName , chartDescription , colorPalette
                 show: true,
                 borderColor: "var(--white-700)",
                 row: {
-                    colors: ["#ffffff25" , "transparent"]
+                    colors: ["#ffffff25", "transparent"]
                 },
-                padding: { left: 15 , right: 0, top: 0, bottom: 0 },
+                padding: { left: 15, right: 0, top: 0, bottom: 0 },
             },
-            stroke : {
+            stroke: {
                 curve: "smooth",
                 width: "3",
             },
@@ -95,33 +104,33 @@ const LineChart = ({period , values , dataName , chartDescription , colorPalette
 
     //Valores do gráfico
     const [series, setSeries] = useState([
-        { 
-            name:dataName, 
+        {
+            name: dataName,
             data: values,
         },
     ])
 
     useEffect(() => {
         setSeries([
-            { 
-                name:dataName, 
+            {
+                name: dataName,
                 data: values,
             },
         ])
     }, [values])
 
-    if(loading) {
+    if (loading) {
         return <Loading />
     }
 
     //Componente de gráfico do ApexCharts recebendo os valores definidos acima
-    return(
+    return (
         <Chart
-            options = {options}
-            series = {series}
+            options={options}
+            series={series}
             width="100%"
             height="100%"
-            type = "line"
+            type="line"
         />
     )
 }

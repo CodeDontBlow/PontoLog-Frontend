@@ -283,7 +283,7 @@ const Statistics = () => {
                         {periodoUnico &&
                             <div className={styles.lastYear}>
                                 {/* <Input label="..." placeholder="Ano de Término" type="Number" id="lastYear" / */}
-                                <Dropdown label={"Ano de Término"} options={years} placeholder={"Ano de Término"} value={finalYear} onSelect={(year) => setFinalYear(year)} disable={periodoUnico} />
+                                <Dropdown label={"Ano de Término"} options={years} placeholder={"Ano de Término"} value={finalYear} onSelect={(year) => setFinalYear(year)}/>
                             </div>
                         }
                     </div>
@@ -428,7 +428,7 @@ const Statistics = () => {
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
-                            <IconTitle variant="barChart" title="Principais URFs" size='light'  color={pageColors.base}/>
+                            <IconTitle variant="barChart" title="Principais URFs" size='textLight'  color={pageColors.base}/>
                             <div className="componentWrapper">
                                 <BarChart
                                     skeleton={isLoading}
@@ -453,7 +453,7 @@ const Statistics = () => {
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
                                     values={mainData?.vlAgregado?.map(value => Number(value.total))}
                                     dataName="Valor Agregado"
-                                    colorPalette={hexColors}
+                                    colorPalette={["#D92B66"]}
                                     id="bottomInfo11"
                                     group="bottomInfo1"
                                 />

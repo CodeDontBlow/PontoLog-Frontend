@@ -312,7 +312,7 @@ const ComparisonStats = () => {
                             <p className={styles.statesList}>
                                 [
                                 {statesList[0] && <>
-                                    <span onClick={() => { removeStateByIndex(0) }} style={{ color: 'var(--base-green)' }}> <FontAwesomeIcon icon={faX} className={styles.icon} /> {statesList[0].state} </span> </>}
+                                    <span onClick={() => { removeStateByIndex(0) }} style={{ color: 'var(--base-pink)' }}> <FontAwesomeIcon icon={faX} className={styles.icon} /> {statesList[0].state} </span> </>}
                                 {statesList[1] && <> |
                                     <span onClick={() => { removeStateByIndex(1) }} style={{ color: 'var(--base-teal)' }}> <FontAwesomeIcon icon={faX} className={styles.icon} /> {statesList[1].state} </span> </>}
                                 ]
