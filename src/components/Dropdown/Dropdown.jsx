@@ -5,15 +5,15 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import Input from "../Input/Input";
 import styles from './Dropdown.module.css';
 
-const Dropdown = ({ label, options = [], value, classname = '', search = false, onSelect, placeholder, onChange, disable}) => {
+const Dropdown = ({ label, options = [], value, classname = '', search = false, onSelect, placeholder, onChange, disable }) => {
     const [isOpen, setIsOpen] = useState(false);
-    // const [selectedOption, setSelectedOption] = useState(null);
     const [focused, setFocused] = useState(false);
     const dropdownRef = useRef(null);
+    const optionRefs = useRef([]);
+
 
     const handleSelectOption = (option) => {
         setIsOpen(false);
-        // setSelectedOption(option);
         onSelect && onSelect(option);
     };
 
@@ -30,6 +30,22 @@ const Dropdown = ({ label, options = [], value, classname = '', search = false, 
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
+    useEffect(() => {
+        if (isOpen && value) {
+            const index = options.findIndex((opt) => opt === value);
+            if (index !== -1 && optionRefs.current[index]) {
+                setTimeout(() => {
+                    optionRefs.current[index].scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest',
+                    });
+                }, 0);
+            }
+        }
+    }, [isOpen, value, options]);
+
+
 
     return (
         <div className={`${styles.dropdown} ${classname}`} ref={dropdownRef}>
@@ -59,7 +75,8 @@ const Dropdown = ({ label, options = [], value, classname = '', search = false, 
                     {options.map((option, index) => (
                         <li
                             key={index}
-                            className={styles.option}
+                            ref={(el) => optionRefs.current[index] = el}
+                            className={`${styles.option} ${value === option ? styles.selected : ''}`}
                             onClick={() => handleSelectOption(option)}
                         >
                             {option}
