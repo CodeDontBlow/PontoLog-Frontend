@@ -26,3 +26,15 @@ section#contentSection{
   padding: 2.1rem;
   padding-top: 1.25rem;
 }
+
+@media (max-width: 750px) {
+  section#pageGridLayout{
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr min-content min-content;
+    grid-template-areas: 
+    'content' 
+    'footer'
+    'sidebar';
+  }
+  
+}
