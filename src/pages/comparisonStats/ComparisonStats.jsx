@@ -17,6 +17,7 @@ import Dropdown from '../../components/Dropdown/Dropdown'
 import TabNavigation from '../../components/Tab/TabNavigation'
 import Alert from '../../components/Alert/Alert'
 
+import { regionColors } from '../../components/Maps/BrazilMap'
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 import { faX } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -81,9 +82,19 @@ const ComparisonStats = () => {
         }
     }, [state])
 
+    
     const removeStateByIndex = (index) => {
         setStatesList(previewList => [
             ...previewList.slice(0, index),
+            ...previewList.slice(index + 1)
+        ])
+
+        removeColorByIndex(index)
+    }
+
+    const removeColorByIndex = (index) => {
+        setHexColors(previewList => [
+            ...previewList.slice(0 , index),
             ...previewList.slice(index + 1)
         ])
     }
@@ -104,6 +115,67 @@ const ComparisonStats = () => {
             return "Para começar a comparação entre estados, escolha uma das regiões do mapa abaixo."
         }
     };
+
+     // TROCA DINAMICA DE CORES
+    // Lista com o código das cores atuais
+    const [hexColors , setHexColors] = useState([
+        // Teal para SP
+        {
+            state: 'São Paulo',
+            700: '#16707A',
+            main: '#028391',
+            base: '#028391',
+            500: '#80B8B8',
+            300: '#A0D0D0',
+        },
+        // Sun para o DF
+        {
+            state: 'Distrito Federal',
+            700: '#D88938',
+            main: '#F79F44',
+            base: '#F79F44',
+            500: '#FDD080',
+            300: '#EBD29B',
+        }
+    ])
+
+    // Muda o array HexColors, que recebe os valores das cores atuais
+    useEffect(() => {
+        if (statesList.length === 2) {
+            const computed = getComputedStyle(document.documentElement);
+            const objectKeys = [700, "base", 500, 300];
+
+            const updatedHexColors = statesList.map((stateObj , index) => {
+                let regiao = regiaoFormatada(stateObj.region)
+                let colorName = regionColors[regiao]
+                
+                let colorsObject = {state: stateObj.state}
+                for(let key of objectKeys){
+                    let hexCode = key === 'base' 
+                    ? computed.getPropertyValue(`--base-${colorName}`)
+                    : computed.getPropertyValue(`--${colorName}-${key}`)
+
+                    colorsObject[key] = hexCode
+                }
+
+                if(statesList[0].region === statesList[1].region){
+                    if(index === 0){
+                        colorsObject.main = colorsObject[700]
+                    }
+                    else{
+                        colorsObject.main = colorsObject[500]
+                    }
+                }
+                else{
+                    colorsObject.main = colorsObject.base
+                }
+                return colorsObject
+            })
+
+            setHexColors(updatedHexColors);
+        }
+    }, [statesList]);
+
     
 
     const debounce = (func, delay) => {
@@ -226,8 +298,8 @@ const ComparisonStats = () => {
         { id: 2, label: "Importações", tradeType: "importacao" },
     ]
 
-    const regiaoFormatada = () => {
-        const prefixRemoved = region.replace("REGIAO ", '');
+    const regiaoFormatada = (r) => {
+        const prefixRemoved = r.replace("REGIAO ", '');
 
         const finalRegionStr = prefixRemoved[0] + prefixRemoved.slice(1).toLowerCase();
 
@@ -312,10 +384,19 @@ const ComparisonStats = () => {
                             <p className={styles.statesList}>
                                 [
                                 {statesList[0] && <>
-                                    <span onClick={() => { removeStateByIndex(0) }} style={{ color: 'var(--base-pink)' }}> <FontAwesomeIcon icon={faX} className={styles.icon} /> {statesList[0].state} </span> </>}
+                                    <span 
+                                        onClick={() => { removeStateByIndex(0) }} 
+                                        style={{color : hexColors[0]?.main}}> 
+                                        <FontAwesomeIcon icon={faX} className={styles.icon} /> {statesList[0].state} 
+                                    </span> </>
+                                }
                                 {statesList[1] && <> |
-                                    <span onClick={() => { removeStateByIndex(1) }} style={{ color: 'var(--base-teal)' }}> <FontAwesomeIcon icon={faX} className={styles.icon} /> {statesList[1].state} </span> </>}
-                                ]
+                                    <span 
+                                        onClick={() => { removeStateByIndex(1) }}
+                                        style={{ color: hexColors[1]?.main}}> 
+                                        <FontAwesomeIcon icon={faX} className={styles.icon} /> {statesList[1].state}
+                                    </span> </>
+                                }]
                             </p>
                         }
                     </div>
@@ -324,7 +405,7 @@ const ComparisonStats = () => {
                     {(region && !state) &&
 
                         (
-                            <h2 className={styles.mapCurrentState}>Região {regiaoFormatada()}</h2>
+                            <h2 className={styles.mapCurrentState}>Região {regiaoFormatada(region)}</h2>
                         )}
 
                     <MultiBrazilMap onRegionChange={({ regiao, estado, uf }) => {
@@ -342,9 +423,10 @@ const ComparisonStats = () => {
                                 <DoubleLineChart
                                     loading={isLoading}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={statesData.map(state => state.balancoData?.map(item => item.total))}
+                                    // values={statesData.map(state => state.balancoData?.map(item => item.total))}
+                                    values={[[4,3,6,2],[2,5,6,4]]}
                                     dataName={statesList.map((state) => state.state)}
-                                    colorPalette={["#D92B66", "#028391"]}
+                                    colorPalette={hexColors}
                                 />
                             </div>
                         </div>
@@ -355,8 +437,16 @@ const ComparisonStats = () => {
                     </section>
 
                     <section className="bottomArea">
-                        <ColorCard color="#D92B66" title={statesList[0] ? statesList[0].uf : 'UF 1'} region={statesList[0] ? statesList[0].state : 'Estado 1'} />
-                        <ColorCard color="#028391" title={statesList[1] ? statesList[1].uf : 'UF 2'} region={statesList[1] ? statesList[1].state : 'Estado 2'} />
+                        <ColorCard 
+                            color= { hexColors[1] ? hexColors[0]?.main : 'var(--base-teal)' }  
+                            title= { statesList[0] ? statesList[0].uf : 'UF 1'} 
+                            region={ statesList[0] ? statesList[0].state : 'Estado 1'} 
+                        />
+                        <ColorCard 
+                            color= { hexColors[1] ? hexColors[1]?.main : 'var(--base-sun)' }  
+                            title= { statesList[1] ? statesList[1].uf : 'UF 2'} 
+                            region={ statesList[1] ? statesList[1].state : 'Estado 2'} 
+                        />
                     </section>
                 </section>
             </section>
