@@ -26,3 +26,9 @@ section#contentSection{
   padding: 2.1rem;
   padding-top: 1.25rem;
 }
+
+/* Define a cor preta para o texto e título da tooltip do gráfico DoubleLineChart */
+.apexcharts-tooltip-text,
+.apexcharts-tooltip-title {
+  color: black !important;
+}

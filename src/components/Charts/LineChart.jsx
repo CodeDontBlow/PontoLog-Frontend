@@ -98,7 +98,20 @@ const LineChart = ({ period, values, dataName, chartDescription, colorPalette, i
                 size: 3,
                 strokeColors: "var(--white-300)",
                 strokeWidth: 2,
+            },
+            tooltip: {
+            y: {
+                formatter: function (value) {
+                    return value.toLocaleString('pt-BR', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                },
+                title: {
+                    formatter: () => dataName + ":"
+                }
             }
+        }
         })
     }, [colorPalette, period, chartDescription, id, group])
 
