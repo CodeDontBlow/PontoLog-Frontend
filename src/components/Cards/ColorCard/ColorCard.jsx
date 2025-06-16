@@ -15,7 +15,7 @@ const ColorCard = ({title , color , region , content}) => {
                     <p className={styles.text}>
                         {"Dados de "}
                         <span style={{color: color}} className={styles.highlightText}>{region}</span> 
-                        {" serão exibidos por essa cor"}.
+                        {" serão exibidos nessa cor"}.
                     </p>
                 }
                 {(content) &&
