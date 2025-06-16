@@ -70,3 +70,8 @@
 .options::-webkit-scrollbar-thumb:hover {
     background-color: var(--black-700);
 }
+
+.selected {
+    background-color: var(--base-pink);
+    font-weight: bold;
+}
