@@ -443,7 +443,7 @@ const ComparisonStats = () => {
                                 <DoubleLineChart
                                     loading={isLoading}
                                     period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
-                                    values={[[1000, 7000, 3000, 2500, 4000], [800, 2200, 2800, 1000, 3900]]}
+                                    values={statesData.map(state => state.balancoData?.map(item => item.total))}
                                     dataName={statesList.map((state) => state.state)}
                                     colorPalette={[hexColors[0].main , hexColors[1].main]}
                                 />

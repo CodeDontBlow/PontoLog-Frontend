@@ -19,8 +19,10 @@ const DoubleLineChart = ({ period, values, dataName, chartDescription, colorPale
     //Ex.: <DoubleLineChart values={[[10,-10,10,-10,-50] , [-10,10,-10,10,50]]} period={[2014,2015,2016,2017,2018]} dataName={["Brasil" , "SP"]} colorPalette="#ff0011" id="id" group="grupo"/>
 
     //Opções de customização do gráfico
-    const [options] = useState(
-        {
+    const [options , setOptions] = useState({})
+    useEffect(() => {
+        setOptions(
+            {
             colors: colorPalette,
             chart: {
                 type: "line",
@@ -60,10 +62,19 @@ const DoubleLineChart = ({ period, values, dataName, chartDescription, colorPale
                             return items
                         }
                     },
+                    style: {
+                        colors: "var(--black-500)",
+                    },
                 },
             },
             xaxis: {
-                categories: period
+                categories: period,
+                labels: {
+                    style: {
+                        colors: "var(--black-500)",
+                        fontSize: '12px',
+                    }
+                }
             },
             stroke: {
                 curve: "smooth",
@@ -87,27 +98,16 @@ const DoubleLineChart = ({ period, values, dataName, chartDescription, colorPale
                     shape: "square",
                 },
                 labels: {
-
+                    colors: colorPalette
                 },
                 itemMargin: {
                     horizontal: 10,
                     vertical: 7,
                 },
-            },
-            tooltip: {
-            y: {
-                formatter: function (value) {
-                    return value.toLocaleString('pt-BR', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                    });
-                }
-            },
-            title: {
-                formatter: (seriesName) => seriesName + ":"
             }
-        }
-    })
+        })
+    } , [period , values , dataName , chartDescription , colorPalette , legends])
+        
 
     //Valores do gráfico
     const [series, setSeries] = useState([

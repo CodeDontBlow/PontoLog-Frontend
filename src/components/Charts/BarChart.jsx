@@ -5,7 +5,6 @@ import Skeleton from "../Skeleton/Skeleton";
 //GRÁFICO DE BARRA
 function BarChart({ items, values, chartDescription, colorPalette , isQuarter = false, skeleton }) {
 
-
     //PROPS
     //items: Itens que estão sendo exibidos (eixo y, ex.: nomes de vias) [lista]
     //values: Valores (eixo x) [lista]
@@ -34,7 +33,7 @@ function BarChart({ items, values, chartDescription, colorPalette , isQuarter = 
                 categories: items,
                 labels: {
                     style: {
-                        colors: "var(--black-500)",
+                        colors: ["var(--black-500)"],
                     },
                     //Formatação para resumir os números
                     formatter: function (items){
@@ -62,7 +61,7 @@ function BarChart({ items, values, chartDescription, colorPalette , isQuarter = 
                     fontSize: "1rem",
                     fontWeight: "regular",
                     fontFamily: "'Roboto', sans-serif",
-                    color: "var(--black-500)",
+                    color: ["var(--black-500)"],
                 },
             },
             colors: colorPalette,
@@ -256,13 +255,21 @@ function BarChart({ items, values, chartDescription, colorPalette , isQuarter = 
             data: values
         },
     ])
-
+    
     useEffect(() => {
-        setSeries([{
-            name: "Ocorrências",
-            data: values
-        }])
-    }, [values, items])
+    setOptions(prev => ({
+        ...prev,
+        xaxis: {
+            ...prev.xaxis,
+            categories: items,
+        },
+    }));
+
+    setSeries([{
+        name: "Ocorrências",
+        data: values
+    }]);
+}, [values, items]);
     
     if (skeleton) {
         return <Skeleton />
