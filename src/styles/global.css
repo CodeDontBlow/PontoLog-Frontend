@@ -32,6 +32,83 @@
     border: 0.188rem solid var(--white-700);
     border-radius: 0.625rem;
   }
+
+    /* Layout Dos INPUTS */
+    section#inputArea {
+        display: grid;
+        grid-template-columns: 4fr 2fr;
+        gap: 1.25rem;
+    }
+
+        /* Labels */
+        section#inputArea .labels{
+            width: 100%;
+
+            color: var(--black-500);
+            font: var(--text-medium);
+            font-weight: 600;
+            text-align: left;
+            text-indent: 0.313rem;
+        }
+
+        /* Opções */
+        section#inputArea .options{
+            margin-top: 0.438rem;
+        }
+
+        /* Área dos Produtos */
+        div#productContainer { }
+
+            #productContainer .productOptions {
+                display: flex;
+                gap: 0.438rem;
+            }
+
+                #productContainer .productOptions > input[type="radio"]{
+                    display: none;
+                }
+                            
+                #productContainer .productOptions > label {
+                    background-color: var(--white-700);
+                    padding: 0.313rem 1.25rem;
+
+                    color: var(--black-500);
+                    font: var(--text-light);
+                    text-align: center;
+
+                    border: none;
+                    border-radius: 0.438rem;
+
+                    transition: all 200ms ease-out;
+                    user-select: none;
+                }
+
+                #productContainer .productOptions > label:hover {
+                    font-weight: 500;
+                    cursor: pointer;
+                    transform: scale(1.05);
+                }
+
+                #productContainer .productOptions > input[type="radio"]:checked+label {
+                    background-color: var(--base-pink);
+
+                    color: var(--white-500);
+                    font-weight: 500;
+                }
+
+
+        /* Área do Período */
+        div#periodContainer { }
+
+            #periodContainer .periodInputs {
+                display: flex;
+                gap: 0.625rem;
+            }
+
+                #periodContainer .periodInputs > div{
+                    flex: 1 1 50%;
+                }
+
   
 
 
@@ -112,3 +189,65 @@
         flex-direction: column;
         gap: 0.313rem;
     }
+
+@media (max-width:910px) {
+    /* Layout dos INPUTS */
+    section#inputArea {
+        display: grid;
+        grid-template-columns: 4fr 3fr;
+        gap: .5rem;
+    }
+    
+        #productContainer .productOptions {
+            width: 50%;
+        }
+        
+            #productContainer .productOptions > label{
+                flex-grow: 1;
+            }
+
+    /* Layout de Grid Vertical */
+    section.infoGridVertical section.bottomArea{
+        gap: 0.438rem;
+    }
+
+    /* Layout de Grid Horizontal */
+    section.infoGridHorizontal{
+        height: 100%;
+
+        grid-template-columns: 1fr;
+        grid-template-rows: 3fr 2fr;
+        gap: .5rem;
+    }
+
+        /* Item 2 do grid (recebe 2 elementos filho) */
+        section.infoGridHorizontal section.rightArea{
+            grid-template-rows: 1fr;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.625rem
+        }
+    
+}
+
+@media (max-width: 500px){
+    /* Layout dos INPUTS */
+    section#inputArea {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+    }
+
+    /* Layout de Grid Horizontal */
+    section.infoGridHorizontal{
+        grid-template-columns: 1fr;
+        grid-template-rows: 2fr 3fr;
+        gap: .5rem;
+    }
+
+        /* Item 2 do grid (recebe 2 elementos filho) */
+        section.infoGridHorizontal section.rightArea{
+            grid-template-rows: 1fr 1fr;
+            grid-template-columns: 1fr;
+            gap: 0.625rem
+        }
+
+}
