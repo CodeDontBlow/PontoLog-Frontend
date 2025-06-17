@@ -30,7 +30,7 @@ const Statistics = () => {
     const [initYear, setInitYear] = useState(2014);
     const [finalYear, setFinalYear] = useState(2024);
     const [periodoUnico, setPeriodoUnico] = useState(false);
-    const [period, setPeriod] = useState([initYear, finalYear]);
+    const [period, setPeriodo] = useState([initYear, finalYear]);
 
     // Estado
     const [region, setRegion] = useState('');
@@ -144,18 +144,24 @@ const Statistics = () => {
 
     const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 50), [sh]);
 
-    // useEffect(() => {
-    //     if (initYear && finalYear) {
-    //         const anosFormat = Array.from(
-    //             { length: finalYear - initYear + 1 },
-    //             (_, i) => (initYear + i).toString()
-    //         );
-    //         setAnos(anosFormat);
-    //     }
-    // }, [initYear, finalYear, periodoUnico]);
+        useEffect(() => {
+        if (periodoUnico && finalYear) { 
+            setPeriodo([initYear, finalYear])
+        } else {
+            setPeriodo([initYear])
+        }
+    }, [initYear, finalYear, periodoUnico])
 
-    // useEffect(() => {
-    //     console.log(anos)
+
+    // Filtra os anos de término para serem > initYear (se initYear existir)
+    const filteredFinalYears = initYear 
+        ? years.filter(year => year > initYear) 
+        : years;
+
+    // Filtra os anos de início para serem < finalYear (se finalYear existir)
+    const filteredInitYears = finalYear 
+        ? years.filter(year => year < finalYear) 
+        : years;
 
 
     useEffect(() => {
@@ -319,13 +325,13 @@ const Statistics = () => {
                     <div className="periodInputs">
                         {/* Primeiro Ano do Período*/}
                         <div className="firstYear">
-                            <Dropdown label={"Ano de Início"} options={years} placeholder={"Ano de Início"} value={initYear} onSelect={(year) => setInitYear(year)} />
+                            <Dropdown label={"Ano de Início"} options={filteredInitYears} placeholder={"Ano de Início"} value={initYear} onSelect={(year) => setInitYear(year)} />
                         </div>
 
                         {/* Último Ano do Período */}
                         {periodoUnico &&
                             <div className="lastYear">
-                                <Dropdown label={"Ano de Término"} options={years} placeholder={"Ano de Término"} value={finalYear} onSelect={(year) => setFinalYear(year)} />
+                                <Dropdown label={"Ano de Término"} options={filteredFinalYears} placeholder={"Ano de Término"} value={finalYear} onSelect={(year) => setFinalYear(year)} />
                             </div>
                         }
                     </div>
@@ -340,8 +346,7 @@ const Statistics = () => {
             </section>
 
             {/* Alerta de quais Informações estão sendo exibidas */}
-            <AlertCard variant="allInfo" icon={faCircleInfo} product="Todos os Produtos" region="Brasil" period={period} />
-
+            <AlertCard variant="allInfo" icon={faCircleInfo} product={product} region={state} period={period} />
 
 
             {/* Primeiras Informações da Página + mapa do brasil */}
