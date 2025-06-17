@@ -4,8 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 // importando components e assets necessários
 import Button from '../Buttons/Button/Button';
-import logoBlack from '../../assets/logos/LOGOSVG.svg';
-import logoPink from '../../assets/logos/LOGOPINK.svg';
+import logoIcon from '../../assets/logos/LOGOSVG.svg';
 
 
 import styles from './Sidebar.module.css';
@@ -24,11 +23,8 @@ const Sidebar = ({ theme, setTheme }) => {
     <div className={styles.sidebar}>
       <div className={styles.sidebarContent}>
         <div className={styles.logo}>
-           <Link to="/">
-            <img 
-              src={location.pathname === '/' ? logoPink : logoBlack} 
-              alt="Logo" 
-            />
+          <Link to={'/'}>
+            <img src={logoIcon} alt="" />
           </Link>
         </div>
         <div className={styles.mainButtons}>
