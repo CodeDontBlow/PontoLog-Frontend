@@ -42,6 +42,11 @@ const Statistics = () => {
     const [opcoesDeProduto, setOpcoesDeProduto] = useState([]);
     const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
 
+    const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+    const [anos, setAnos] = useState(() =>
+        Array.from({ length: finalYear - initYear + 1 }, (_, i) => initYear + i)
+    );
+
     const [balancoData, setBalancoData] = useState();
     const [exportProduct, setExportProduct] = useState();
     const [importProduct, setImportProduct] = useState();
@@ -76,9 +81,23 @@ const Statistics = () => {
 
     const debouncedGetProductByLetter = useCallback(debounce(getProductByLetter, 50), [sh]);
 
+    // useEffect(() => {
+    //     if (initYear && finalYear) {
+    //         const anosFormat = Array.from(
+    //             { length: finalYear - initYear + 1 },
+    //             (_, i) => (initYear + i).toString()
+    //         );
+    //         setAnos(anosFormat);
+    //     }
+    // }, [initYear, finalYear, periodoUnico]);
+
+    // useEffect(() => {
+    //     console.log(anos)
+
+
     useEffect(() => {
         const controller = new AbortController();
-        let isCancelled = false; // flag de cancelamento
+        let isCancelled = false;
 
         const fetchAllData = async () => {
             setIsLoading(true);
@@ -131,7 +150,7 @@ const Statistics = () => {
                 if (!isCancelled) {
                     setAlertMessage(
                         `Dados atualizados! ${uf ? `Exibindo informações para ${state}. ` : ''}Os resultados refletem os parâmetros escolhidos na pesquisa.`
-                    )        ;            
+                    );
                     setAlertVariant('success')
                     setShowAlert(true)
                     setIsLoading(false);
@@ -166,6 +185,10 @@ const Statistics = () => {
         }
     }, [tradeType, importData]);
 
+    useEffect(() => {
+        console.log(periodoUnico)
+    }, [periodoUnico])
+
     // Criando objetos TAB
     const tab = [
         { id: 1, label: "Exportações", tradeType: "exportacao" },
@@ -191,14 +214,14 @@ const Statistics = () => {
                 <div id="productContainer">
                     {/* LABEL */}
                     <label htmlFor="" className="productLabel labels"> Produtos </label>
-                    
+
                     {/* INPUT */}
                     <Dropdown search={true} placeholder={"Pesquisar..."} options={opcoesDeProduto.length > 0 ? opcoesDeProduto : ['...']} value={product} onChange={(e) => {
-                            const value = e.target.value;
-                            setProduct(value);
-                            debouncedGetProductByLetter(value);
-                        }}
-                    onSelect={(produto) => setProduct(produto)} />
+                        const value = e.target.value;
+                        setProduct(value);
+                        debouncedGetProductByLetter(value);
+                    }}
+                        onSelect={(produto) => setProduct(produto)} />
 
                     {/* OPÇÕES */}
                     <div className="productOptions options">
@@ -238,7 +261,7 @@ const Statistics = () => {
                         {/* Último Ano do Período */}
                         {periodoUnico &&
                             <div className="lastYear">
-                                <Dropdown label={"Ano de Término"} options={years} placeholder={"Ano de Término"} value={finalYear} onSelect={(year) => setFinalYear(year)}/>
+                                <Dropdown label={"Ano de Término"} options={years} placeholder={"Ano de Término"} value={finalYear} onSelect={(year) => setFinalYear(year)} />
                             </div>
                         }
                     </div>
@@ -287,7 +310,7 @@ const Statistics = () => {
                             <div className="componentWrapper">
                                 <LineChart
                                     loading={isLoading}
-                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                    period={!periodoUnico ? meses : anos}
                                     values={balancoData?.map(bal => Number(bal.total))}
                                     dataName="Balança Comercial"
                                     colorPalette={["#D92B66"]}
@@ -309,7 +332,7 @@ const Statistics = () => {
             {/* Informação completas de Exportação ou Importação */}
             <section id={styles.ExpImpInfos}>
 
-                
+
                 {/* Deve-se definir melhor o uso do tab navigation!!! */}
                 <TabNavigation tab={tab} onTabClick={(tabTradeType) => (setTradeType(tabTradeType))} />
 
@@ -379,7 +402,7 @@ const Statistics = () => {
                             <div className="componentWrapper">
                                 <LineChart
                                     loading={isLoading}
-                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                    period={!periodoUnico ? meses : anos}
                                     values={mainData?.vlAgregado?.map(value => Number(value.total))}
                                     dataName="Valor Agregado"
                                     colorPalette={["#D92B66"]}
@@ -397,7 +420,7 @@ const Statistics = () => {
                             <div className="componentWrapper">
                                 <LineChart
                                     loading={isLoading}
-                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                    period={!periodoUnico ? meses : anos}
                                     values={mainData?.kgLiquido?.map(value => Number(value.total))}
                                     dataName="kg_liquido"
                                     colorPalette={["#D92B66"]}
@@ -412,7 +435,7 @@ const Statistics = () => {
                             <div className="componentWrapper">
                                 <LineChart
                                     loading={isLoading}
-                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                    period={!periodoUnico ? meses : anos}
                                     values={mainData?.vlFob?.map(value => Number(value.total))}
                                     dataName="vl_fob"
                                     colorPalette={["#D92B66"]}
