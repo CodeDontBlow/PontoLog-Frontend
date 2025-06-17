@@ -331,63 +331,72 @@ const ComparisonStats = () => {
     return (
         <div id={styles.statisticsPage}>
 
+            
             {/* Área dos Inputs */}
-            {/* Labels */}
-            <section id={styles.inputArea}>
-                <div className={styles.labelsContainer}>
-                    <label className={styles.productLabel} htmlFor="">Produtos</label>
-
-                    <label className={styles.periodLabel} htmlFor="">Período de Tempo</label>
-                </div>
-
-                {/* Inputs */}
-                <div className={styles.inputsContainer}>
-
-                    {/* Input do Produto */}
-                    <div className={styles.productInput}>
-                        {/* <Input label="Nome do Produto" type="text" placeholder="Produto" id="product"/> */}
-                        <Dropdown search={true} placeholder={"Pesquisar..."} options={opcoesDeProduto} value={product} onChange={(e) => {
+            <section id="inputArea">
+                {/* PRODUTO */}
+                <div id="productContainer">
+                    {/* LABEL */}
+                    <label htmlFor="" className="productLabel labels"> Produtos </label>
+                    
+                    {/* INPUT */}
+                    <Dropdown search={true} placeholder={"Pesquisar..."} options={opcoesDeProduto.length > 0 ? opcoesDeProduto : ['...']} value={product} onChange={(e) => {
                             const value = e.target.value;
                             setProduct(value);
                             debouncedGetProductByLetter(value);
-                        }} onSelect={(produto) => setProduct(produto)} />
+                        }}
+                    onSelect={(produto) => setProduct(produto)} />
+
+                    {/* OPÇÕES */}
+                    <div className="productOptions options">
+                        {/* SH4 */}
+                        <input type="radio" name="sh-selection" id="sh4" defaultChecked
+                            onClick={() => {
+                                setSh('sh4');
+                                setProduct('');
+                                setOpcoesDeProduto([])
+                            }} />
+                        <label htmlFor="sh4"> SH4 </label>
+
+                        {/* SH6 */}
+                        <input type="radio" name="sh-selection" id="sh6"
+                            onClick={() => {
+                                setSh('sh6');
+                                setProduct('');
+                                setOpcoesDeProduto('')
+                            }} />
+                        <label htmlFor="sh6"> SH6 </label>
                     </div>
 
-                    {/* Input dos Anos */}
-                    <div className={styles.periodInputs}>
-                        <div className={styles.firstYear}>
-                            {/* <Input label="Período de Tempo" placeholder="Ano de Início" type="number" id="firstYear" /> */}
+                </div>
+
+                {/* PERÍODO */}
+                <div id="periodContainer">
+                    {/* LABEL */}
+                    <label className="periodLabel labels" htmlFor="">Período de Tempo</label>
+
+                    {/* INPUT */}
+                    <div className="periodInputs">
+                        {/* Primeiro Ano do Período*/}
+                        <div className="firstYear">
                             <Dropdown label={"Ano de Início"} options={years} placeholder={"Ano de Início"} value={initYear} onSelect={(year) => setInitYear(year)} />
                         </div>
 
                         {/* Último Ano do Período */}
                         {periodoUnico &&
-                            <div className={styles.lastYear}>
-                                {/* <Input label="..." placeholder="Ano de Término" type="Number" id="lastYear" / */}
-                                <Dropdown label={"Ano de Início"} options={years} placeholder={"Ano de Início"} value={finalYear} onSelect={(year) => setFinalYear(year)} />
+                            <div className="lastYear">
+                                <Dropdown label={"Ano de Término"} options={years} placeholder={"Ano de Término"} value={finalYear} onSelect={(year) => setFinalYear(year)}/>
                             </div>
                         }
                     </div>
-                </div>
 
-                {/* Opções */}
-                <div className={styles.optionsContainer}>
-                    {/* Botões SH's */}
-                    <div className={styles.productOptions}>
-                        {/* SH4 */}
-                        <input type="radio" name="sh-selection" id="sh4" defaultChecked onClick={() => setSh('sh4')} />
-                        <label htmlFor="sh4"> SH4 </label>
-
-                        {/* SH6 */}
-                        <input type="radio" name="sh-selection" id="sh6" onClick={() => setSh('sh6')} />
-                        <label htmlFor="sh6"> SH6 </label>
-                    </div>
-
-                    {/* Checkbox Período de Tempo */}
-                    <div className={styles.periodOptions}>
+                    {/* OPÇÕES */}
+                    <div className="periodOptions options">
                         <Checkbox label="Ativar busca por um período entre 2 anos" value={periodoUnico} checked={periodoUnico} onChange={() => { setPeriodoUnico(!periodoUnico) }} />
                     </div>
+
                 </div>
+
             </section>
 
             <AlertCard variant='allInfo' icon={faCircleInfo} product="Todos os Produtos" period={perido} />
