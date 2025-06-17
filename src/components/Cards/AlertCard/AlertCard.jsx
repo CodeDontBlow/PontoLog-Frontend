@@ -64,12 +64,13 @@ const AlertCard = ({variant = "text" , icon , text , product , region , period ,
                     <>
                     {", pelo período de "}
                     {/* Verifica se há dois anos na array de período de tempo */}
+
                     {period.length === 2 ?
                         // Se sim, exibe ambos os períodos
                         <>
-                            <span className={styles.dataDisplay} style={{color:`${colorPalette[0]}`}}>{period[0]}</span>
+                            <span className={styles.dataDisplay} >{period[0]}</span>
                             {" até "}
-                            <span className={styles.dataDisplay}style={{color:`${colorPalette[1]}`}} >{period[1]}</span>
+                            <span className={styles.dataDisplay} >{period[1]}</span>
                         </>
                         
                         // Se não, exibe apenas o primeiro ano da array de período
@@ -79,6 +80,17 @@ const AlertCard = ({variant = "text" , icon , text , product , region , period ,
                     }
                     </>
                 }
+                </p>
+            }
+
+            
+            {/* Variante 'comparisonInfo' (Informações de regiões sendo comparadas) */}
+            {(variant == "comparisonInfo" && region.length > 1) &&
+                <p className={styles.text}>
+                    {"Comparando "}
+                    <span className={styles.dataDisplay} style={{color:`${colorPalette[0]}`}}>{region[0]}</span>
+                    {" com "} 
+                    <span className={styles.dataDisplay}style={{color:`${colorPalette[1]}`}} >{region[1]}</span>
                 </p>
             }
 

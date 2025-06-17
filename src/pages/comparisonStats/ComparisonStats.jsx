@@ -481,7 +481,14 @@ const ComparisonStats = () => {
                     </section>
 
                     <section className="midArea">
-                        <AlertCard variant='comparisonInfo' icon={faCircleInfo} region={[statesDisplay[0]?.state , statesDisplay[1]?.state]} colorPalette={[hexColors[0].base , hexColors[1].base]}/>
+                        <AlertCard variant='comparisonInfo' icon={faCircleInfo} region={[
+                            statesDisplay[0]?.state, 
+                            statesDisplay[1]?.state
+                        ]} 
+                        colorPalette={[
+                            hexColors[0].base, 
+                            hexColors[1].base
+                            ]}/>
                     </section>
 
                     <section className="bottomArea">
