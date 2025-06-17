@@ -131,7 +131,7 @@ section#mainInfosArea{
 }
 
 section#mainInfosArea .stateTitle{
-    color: var(--base-pink);
+    color: currentColor;
     font: var(--title-regular);
     font-weight: 600;
 }

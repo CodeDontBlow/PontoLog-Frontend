@@ -15,6 +15,7 @@ import WorldMap from '../../components/Maps/WorldMap'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import IconTitle from '../../components/IconTitle/IconTitle'
 import TabNavigation from '../../components/Tab/TabNavigation'
+import { regionColors } from '../../components/Maps/BrazilMap'
 
 import styles from './Statistics.module.css'
 import Alert from '../../components/Alert/Alert'
@@ -70,6 +71,68 @@ const Statistics = () => {
             return "Para ver estatísticas de um estado, escolha uma das regiões do mapa abaixo.";
         }
     };
+
+    // TROCA DINAMICA DE CORES
+    // Objeto com as cores atuais
+    const [pageColors , setPageColors] = useState(
+        {
+            700: "var(--pink-700)",
+            base: "var(--base-pink)",
+            500: "var(--pink-500)",
+            300: "var(--pink-300)",
+        }
+    )
+
+    const [hexColors , setHexColors] = useState(['#B81D4E' , '#D92B66' , '#F5A4C3' , '#F1A1B5'])
+
+    // Mudando o objeto pageColors
+    useEffect(() => {
+        let regiao = regiaoFormatada()
+        // Pega o nome da cor de acordo com a região || ou define como rosa
+        let colorName = (regiao && state) ? regionColors[regiao] : 'pink'
+
+        // Muda o objeto pageColors para a cor da região
+        setPageColors(
+            {
+                700: `var(--${colorName}-700)`,
+                base: `var(--base-${colorName})`,
+                500: `var(--${colorName}-500)`,
+                300: `var(--${colorName}-300)`,
+            }
+        )
+    }, [state , region]);
+
+    // Muda a variável CSS highlight, que recebe o valor da cor atual
+    useEffect( () => {
+        let regiao = regiaoFormatada()
+        let colorName = state ? regionColors[regiao] : 'pink'
+        let colorsArray = []
+        let arrayOrder = [700 , "base" , 500 , 300]
+
+        let element = document.documentElement
+        let computed = getComputedStyle(element)
+
+        for(let key of arrayOrder){
+            let value = pageColors[key]
+            element.style.setProperty(`--highlight-${key}` , value)
+
+            let hexCode = key == "base"
+                ? computed.getPropertyValue(`--${key}-${colorName}`).trim()
+                : computed.getPropertyValue(`--${colorName}-${key}`).trim()
+
+            colorsArray.push(hexCode)
+        }
+    
+        setHexColors(colorsArray)
+
+    // reset de cor ao trocar de página
+        return () => {
+            for (let key of arrayOrder) {
+                element.style.setProperty(`--highlight-${key}`, '');
+            }
+        };
+    }, [pageColors]);
+
 
     const debounce = (func, delay) => {
         let timer;
@@ -196,8 +259,9 @@ const Statistics = () => {
     ]
 
     const regiaoFormatada = () => {
-        const prefixRemoved = region.replace("REGIAO ", '');
+        if (!region) return null
 
+        const prefixRemoved = region.replace("REGIAO ", '');
         const finalRegionStr = prefixRemoved[0] + prefixRemoved.slice(1).toLowerCase();
 
         if (finalRegionStr === 'Centro oeste') return 'Centro-Oeste';
@@ -295,10 +359,17 @@ const Statistics = () => {
                         <h2 className={styles.mapCurrentState}>Região {regiaoFormatada()}</h2>
                     ) : null}
                     <BrazilMap onRegionChange={({ regiao, estado, uf }) => {
-                        setRegion(`REGIAO ${regiao.toUpperCase().replace('-', ' ')}`);
-                        setState(estado || '');
-                        setUf(uf || '');
-                    }} />
+                        if (regiao === null) {
+                            setRegion('');
+                            setState('');
+                            setUf('');
+                        } else {
+                            setRegion(`REGIAO ${regiao.toUpperCase().replace('-', ' ')}`);
+                            setState(estado || '');
+                            setUf(uf || '');
+                        }
+                    }} 
+                    />
                 </div>
 
                 {/* Molde de Grid Vertical Reutilizável */}
@@ -306,14 +377,14 @@ const Statistics = () => {
                     {/* Parte de Cima */}
                     <section className="topArea">
                         <div className="gridItem">
-                            <IconTitle title="Balança Comercial" variant="lineChart" size='textMedium' />
+                            <IconTitle title="Balança Comercial" variant="lineChart" size='textMedium' color={pageColors.base}/>
                             <div className="componentWrapper">
                                 <LineChart
                                     loading={isLoading}
                                     period={!periodoUnico ? meses : anos}
                                     values={balancoData?.map(bal => Number(bal.total))}
                                     dataName="Balança Comercial"
-                                    colorPalette={["#D92B66"]}
+                                    colorPalette={hexColors}
                                 />
                             </div>
                         </div>
@@ -342,13 +413,13 @@ const Statistics = () => {
                     {/* Parte da Esquerda (Mapa do Mundo) */}
                     <section className="leftArea">
                         <div className="gridItem">
-                            <IconTitle variant="map" title="Principais Países" size='textMedium' />
-                            <div className="componentWrapper">
+                            <IconTitle variant="map" title="Principais Países" size='textMedium' color={pageColors.base} />
+                            <div className="componentWrapper" color={pageColors.base}>
                                 <WorldMap
                                     loading={isLoading}
                                     selectedRegion="Norte"
                                     tradeType="exportacao"
-                                    colorPalette={["#B81D4E", "#D92B66", "#F5A4C3", "#F1A1B5"]}
+                                    colorPalette={hexColors}
                                     countryDatas={{
                                         exportacao: (mainData?.overallCountries ?? []).map(c => ({
                                             country: c.NO_PAIS,
@@ -367,26 +438,26 @@ const Statistics = () => {
                     <section className="rightArea">
                         {/* Item 1 */}
                         <div className="gridItem">
-                            <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight' />
+                            <IconTitle variant="barChart" title="Principais Vias Usadas" size='textLight' color={pageColors.base}/>
 
                             <div className="componentWrapper">
                                 <BarChart
                                     skeleton={isLoading}
                                     items={mainData?.via?.map(via => via.NO_VIA)}
                                     values={mainData?.via?.map(via => Number(via.total))}
-                                    colorPalette={["#D92B66"]}
+                                    colorPalette={hexColors}
                                 />
                             </div>
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
-                            <IconTitle variant="barChart" title="Principais URFs" size='textLight' />
+                            <IconTitle variant="barChart" title="Principais URFs" size='textLight'  color={pageColors.base}/>
                             <div className="componentWrapper">
                                 <BarChart
                                     skeleton={isLoading}
                                     items={mainData?.urf?.map(urf => urf.NO_URF)}
                                     values={mainData?.urf?.map(urf => Number(urf.total))}
-                                    colorPalette={["#D92B66"]}
+                                    colorPalette={hexColors}
                                 />
                             </div>
                         </div>
@@ -398,16 +469,14 @@ const Statistics = () => {
                     {/* Parte da Esquerda */}
                     <section className="leftArea">
                         <div className="gridItem">
-                            <IconTitle title="Valor Agregado" variant="lineChart" size='textMedium' />
+                            <IconTitle title="Valor Agregado" variant="lineChart" size='textMedium' color={pageColors.base} />
                             <div className="componentWrapper">
                                 <LineChart
                                     loading={isLoading}
                                     period={!periodoUnico ? meses : anos}
                                     values={mainData?.vlAgregado?.map(value => Number(value.total))}
                                     dataName="Valor Agregado"
-                                    colorPalette={["#D92B66"]}
-                                    id="bottomInfo11"
-                                    group="bottomInfo1"
+                                    colorPalette={hexColors}
                                 />
                             </div>
                         </div>
@@ -416,30 +485,30 @@ const Statistics = () => {
                     <section className="rightArea">
                         {/* Item 1 */}
                         <div className="gridItem">
-                            <IconTitle title="Quilograma Líquido" variant="lineChart" size='textLight' />
+                            <IconTitle title="Quilograma Líquido" variant="lineChart" size='textLight' color={pageColors.base} />
                             <div className="componentWrapper">
                                 <LineChart
                                     loading={isLoading}
                                     period={!periodoUnico ? meses : anos}
                                     values={mainData?.kgLiquido?.map(value => Number(value.total))}
                                     dataName="kg_liquido"
-                                    colorPalette={["#D92B66"]}
-                                    id="bottomInfo12"
+                                    colorPalette={hexColors}
+                                    id="bottomInfo11"
                                     group="bottomInfo1"
                                 />
                             </div>
                         </div>
                         {/* Item 2 */}
                         <div className="gridItem">
-                            <IconTitle title="Valor FOB" variant="lineChart" size='textLight' />
+                            <IconTitle title="Valor FOB" variant="lineChart" size='textLight' color={pageColors.base} />
                             <div className="componentWrapper">
                                 <LineChart
                                     loading={isLoading}
                                     period={!periodoUnico ? meses : anos}
                                     values={mainData?.vlFob?.map(value => Number(value.total))}
                                     dataName="vl_fob"
-                                    colorPalette={["#D92B66"]}
-                                    id="bottomInfo13"
+                                    colorPalette={hexColors}
+                                    id="bottomInfo11"
                                     group="bottomInfo1"
                                 />
                             </div>

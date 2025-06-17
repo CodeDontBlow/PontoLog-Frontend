@@ -50,15 +50,12 @@
     height: 2.8rem;
     background-color: var(--white-300);
 }
-
-.mainButtons .navButton.active,
-.infoButton.active {
-    background-color: var(--base-pink);
+.mainButtons .navButton.active, .infoButton.active {
+    background-color: var(--highlight-base);
 }
 
-.mainButtons .navButton.active .navButtonIcon,
-.infoButton.active .infoIcon {
-    color: var(--pink-500);
+.mainButtons .navButton.active .navButtonIcon, .infoButton.active .infoIcon {
+    color: var(--highlight-500);
 }
 
 .mainButtons .navButtonIcon,

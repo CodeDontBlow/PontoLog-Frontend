@@ -1,7 +1,7 @@
 import styles from "./AlertCard.module.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
-const AlertCard = ({variant = "text" , icon , text , product , region , period}) => {
+const AlertCard = ({variant = "text" , icon , text , product , region , period , colorPalette}) => {
     return(
         <div className={styles.card}>
             {/* Se o ícone for definido, exibe ele */}
@@ -51,9 +51,9 @@ const AlertCard = ({variant = "text" , icon , text , product , region , period})
             {(variant == "comparisonInfo" && region.length > 1) &&
                 <p className={styles.text}>
                     {"Comparando "}
-                    <span className={styles.dataDisplay}>{region[0]}</span>
+                    <span className={styles.dataDisplay} style={{color:`${colorPalette[0]}`}}>{region[0]}</span>
                     {" com "} 
-                    <span className={styles.dataDisplay}>{region[1]}</span>
+                    <span className={styles.dataDisplay}style={{color:`${colorPalette[1]}`}} >{region[1]}</span>
                 </p>
             }
 
