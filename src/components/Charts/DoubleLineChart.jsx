@@ -1,5 +1,5 @@
 import Chart from "react-apexcharts"
-import React, { useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import Loading from '../Loading/Loading'
 
 //GRÁFICO DE DUAS LINHAS
@@ -48,17 +48,17 @@ const DoubleLineChart = ({ period, values, dataName, chartDescription, colorPale
             yaxis: {
                 labels: {
                     //Formatação para resumir os números
-                    formatter: function (items){
-                        if((Math.abs(items) / 10**9) >= 1 ){
-                            return(items / 10**9) + "B"
+                    formatter: function (items) {
+                        if ((Math.abs(items) / 10 ** 9) >= 1) {
+                            return (items / 10 ** 9) + "B"
                         }
-                        else if((Math.abs(items) / 10**6) >= 1 ){
-                            return(items / 10**6) + "M"
+                        else if ((Math.abs(items) / 10 ** 6) >= 1) {
+                            return (items / 10 ** 6) + "M"
                         }
-                        else if ((Math.abs(items) / 1000) >= 1){
+                        else if ((Math.abs(items) / 1000) >= 1) {
                             return (items / 1000) + "k"
                         }
-                        else{
+                        else {
                             return items
                         }
                     },
@@ -134,7 +134,17 @@ const DoubleLineChart = ({ period, values, dataName, chartDescription, colorPale
         ])
     }, [values, dataName])
 
-    if(loading) {
+    useEffect(() => {
+        setOptions(prev => ({
+            ...prev,
+            xaxis: {
+                ...prev.xaxis,
+                categories: period,
+            }
+        }));
+    }, [period]);
+
+    if (loading) {
         return <Loading />
     }
     //Componente de gráfico do ApexCharts recebendo os valores definidos acima

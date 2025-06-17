@@ -69,6 +69,11 @@ const ComparisonStats = () => {
     const [alertMessage, setAlertMessage] = useState('');
     const [alertVariant, setAlertVariant] = useState('');
 
+    const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+    const [anos, setAnos] = useState(() =>
+        Array.from({ length: finalYear - initYear + 1 }, (_, i) => initYear + i)
+    );
+
     // Mudando a lista de estados quando um estado novo for selecionado
     useEffect(() => {
         // Se o estado 2 for igual ao estado 1, retorna como erro
@@ -451,7 +456,7 @@ const ComparisonStats = () => {
                             <div className="componentWrapper">
                                 <DoubleLineChart
                                     loading={isLoading}
-                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                     period={!periodoUnico ? meses : anos}
                                     values={statesData.map(state => state.balancoData?.map(item => item.total))}
                                     dataName={statesList.map((state) => state.state)}
                                     colorPalette={[hexColors[0].main , hexColors[1].main]}
@@ -626,7 +631,7 @@ const ComparisonStats = () => {
                             <div className="componentWrapper">
                                 <DoubleLineChart
                                     loading={isLoading}
-                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                     period={!periodoUnico ? meses : anos}
                                     values={statesData.map(state => state[mainData]?.vlAgregado?.map(item => item.total))}
                                     dataName={statesList.map((state) => state.state)}
                                     colorPalette={ [hexColors[0].main , hexColors[1].main] }
@@ -640,7 +645,7 @@ const ComparisonStats = () => {
                             <div className="componentWrapper">
                                 <DoubleLineChart
                                     loading={isLoading}
-                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                     period={!periodoUnico ? meses : anos}
                                     values={statesData.map(state => state[mainData]?.kgLiquido?.map(item => item.total))}
                                     dataName={statesList.map((state) => state.state)}
                                     colorPalette={ [hexColors[0].main , hexColors[1].main] }
@@ -653,7 +658,7 @@ const ComparisonStats = () => {
                             <div className="componentWrapper">
                                 <DoubleLineChart
                                     loading={isLoading}
-                                    period={["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]}
+                                     period={!periodoUnico ? meses : anos}
                                     values={statesData.map(state => state[mainData]?.vlFob?.map(item => item.total))}
                                     dataName={statesList.map((state) => state.state)}
                                     colorPalette={ [hexColors[0].main , hexColors[1].main] }

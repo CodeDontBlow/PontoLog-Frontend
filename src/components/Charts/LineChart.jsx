@@ -123,6 +123,7 @@ const LineChart = ({ period, values, dataName, chartDescription, colorPalette, i
         },
     ])
 
+
     useEffect(() => {
         setSeries([
             {
@@ -131,6 +132,17 @@ const LineChart = ({ period, values, dataName, chartDescription, colorPalette, i
             },
         ])
     }, [values])
+
+
+    useEffect(() => {
+        setOptions(prev => ({
+            ...prev,
+            xaxis: {
+                ...prev.xaxis,
+                categories: period,
+            }
+        }));
+    }, [period]);
 
     if (loading) {
         return <Loading />
