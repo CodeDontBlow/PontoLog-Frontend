@@ -433,7 +433,7 @@ const Statistics = () => {
                         onClose={() => setShowAlert(false)}
                     />
                 )
-            };
+            }
 
         </div>
     )

@@ -62,18 +62,31 @@ section#ExpImpInfos {
     gap: 1.875rem;
 }
 
-
-
-
-
-@media(max-width: 750px){
-
+@media (max-width:910px) {
     /* Dados iniciais */
     section#primaryInfos {
-        display: grid;
-        grid-template-rows: 1fr 1fr;
         grid-template-columns: 1fr;
-        gap: 2.5rem;
+        grid-template-rows: 1fr 1fr;
+        gap: 0.5rem;
     }
 
+
+    /* Dados de Exportação / Importação */
+    section#ExpImpInfos {
+        padding: 0.625rem 1rem;
+        gap: 1.875rem;
+    }
+
+}
+
+@media (max-width: 550px) {
+    /* Dados iniciais */
+    section#primaryInfos {
+        gap: 0rem;
+    }
+
+    /* Elemento que engloba todos os demais  */
+    #statisticsPage {
+        gap: .8rem;
+    }
 }

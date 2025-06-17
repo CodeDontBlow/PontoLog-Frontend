@@ -27,7 +27,16 @@ section#contentSection{
   padding-top: 1.25rem;
 }
 
-@media (max-width: 750px) {
+
+
+@media (max-width: 910px) {  
+  section#contentSection{
+    padding: 2.7rem;
+    padding-top: 1rem;
+  }
+}
+
+@media (max-width: 760px) {
   section#pageGridLayout{
     grid-template-columns: 1fr;
     grid-template-rows: 1fr min-content min-content;
