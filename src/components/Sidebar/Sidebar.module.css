@@ -83,6 +83,7 @@
 }
 
 .navButton:hover,
-.infoButton:hover {
+.infoButton:hover,
+.themeButton:hover {
     background-color: var(--white-500);
 }

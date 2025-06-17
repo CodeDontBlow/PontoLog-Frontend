@@ -60,10 +60,19 @@ const DoubleLineChart = ({ period, values, dataName, chartDescription, colorPale
                             return items
                         }
                     },
+                    style: {
+                        colors: "var(--black-500)",
+                    },
                 },
             },
             xaxis: {
-                categories: period
+                categories: period,
+                labels: {
+                    style: {
+                        colors: "var(--black-500)",
+                        fontSize: '12px',
+                    }
+                }
             },
             stroke: {
                 curve: "smooth",
