@@ -135,3 +135,31 @@ section#mainInfosArea .stateTitle{
     font: var(--title-regular);
     font-weight: 600;
 }
+@media (max-width:910px) {
+    /* Dados iniciais */
+    section#primaryInfos {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 0.5rem;
+    }
+
+
+    /* Dados de Exportação / Importação */
+    section#ExpImpInfos {
+        padding: 0.625rem 1rem;
+        gap: 1.875rem;
+    }
+
+}
+
+@media (max-width: 550px) {
+    /* Dados iniciais */
+    section#primaryInfos {
+        gap: 0rem;
+    }
+
+    /* Elemento que engloba todos os demais  */
+    #statisticsPage {
+        gap: .8rem;
+    }
+}
